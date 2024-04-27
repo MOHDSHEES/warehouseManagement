@@ -10,7 +10,7 @@ import { TreeItem } from "@mui/x-tree-view/TreeItem";
 import axios from "axios";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import { Alert, Button, IconButton } from "@mui/material";
+import { Alert, Button, IconButton, Skeleton, Stack } from "@mui/material";
 import AddSubShelf from "../addsubShelfModel";
 import findParentShelfRecursively from "../../../functions/recursiveFunctions/findRecursive";
 import updateShelvesRecursively from "@/src/components/functions/recursiveFunctions/updateRecursive";
@@ -119,7 +119,10 @@ const renderTreeItemsRecursively = (
           )
         : shelf.childrenShelves &&
           shelf.childrenShelves.length > 0 && (
-            <TreeItem nodeId={1} label="Loading..." />
+            <TreeItem
+              nodeId={1}
+              label={<Skeleton variant="rounded" height={40} />}
+            />
           )}
     </TreeItem>
   );
@@ -156,13 +159,6 @@ export default function ShelfTreeView({ shelfData, warehouseId }) {
         setAllData((prevRootShelves) => {
           return updateShelvesRecursively(prevRootShelves, nodeId, data.data);
         });
-        // setAllData((prevRootShelves) => {
-        //   return prevRootShelves.map((shelf) =>
-        //     shelf._id === nodeId
-        //       ? { ...shelf, childrenShelvesData: data.data }
-        //       : shelf
-        //   );
-        // });
       }
     }
   };
@@ -175,7 +171,10 @@ export default function ShelfTreeView({ shelfData, warehouseId }) {
         onNodeToggle={handleNodeToggle}
       >
         {allData === "loading" ? (
-          "Loading..."
+          <Stack spacing={1}>
+            <Skeleton variant="rounded" height={40} />
+            <Skeleton variant="rounded" height={40} />
+          </Stack>
         ) : allData && allData.length === 0 ? (
           <Alert severity="info">
             It seems like no shelves have been added to this warehouse. Add

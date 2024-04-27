@@ -7,6 +7,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Skeleton } from "@mui/material";
 
 const defaultTheme = createTheme();
 
@@ -26,29 +27,37 @@ const ProductsDetail = ({ productIdsData, outOfStockData }) => {
           <Box component="form" sx={{ width: "100%", mt: 1 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={4}>
-                <TextField
-                  name="products"
-                  fullWidth
-                  value={productIdsData && productIdsData.length}
-                  label="Total products"
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  variant="filled"
-                />
+                {productIdsData ? (
+                  <TextField
+                    name="products"
+                    fullWidth
+                    value={productIdsData && productIdsData.length}
+                    label="Total products"
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    variant="filled"
+                  />
+                ) : (
+                  <Skeleton variant="rounded" height={60} />
+                )}
               </Grid>
               <Grid item xs={12} sm={4}>
-                <TextField
-                  name="products"
-                  fullWidth
-                  // defaultValue={outOfStockData ? outOfStockData.count : 0}
-                  value={outOfStockData ? outOfStockData.count : 0}
-                  label="Out Of Stock Products"
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  variant="filled"
-                />
+                {outOfStockData ? (
+                  <TextField
+                    name="products"
+                    fullWidth
+                    // defaultValue={outOfStockData ? outOfStockData.count : 0}
+                    value={outOfStockData ? outOfStockData.count : 0}
+                    label="Out Of Stock Products"
+                    InputProps={{
+                      readOnly: true,
+                    }}
+                    variant="filled"
+                  />
+                ) : (
+                  <Skeleton variant="rounded" height={60} />
+                )}
               </Grid>
             </Grid>
           </Box>

@@ -14,6 +14,7 @@ import {
   Typography,
   Unstable_Grid2 as Grid,
   Button,
+  Skeleton,
 } from "@mui/material";
 import WarehouseDetails from "@/src/components/admin/warehouseDetails/warehouseDetails";
 import ShelfTreeMain from "@/src/components/admin/shelf/shelfTree/shelfTreeMain";
@@ -63,9 +64,13 @@ const Page = ({ params }) => {
       <Container maxWidth="xl">
         <Stack spacing={3}>
           <div>
-            <Typography variant="h4">
-              {warehouse ? warehouse.warehouseName : "Warehouse Name"}
-            </Typography>
+            {!warehouse ? (
+              <Skeleton variant="rounded" width={300} height={60} />
+            ) : (
+              <Typography variant="h4">
+                {warehouse ? warehouse.warehouseName : "Warehouse Name"}
+              </Typography>
+            )}
           </div>
 
           {/* warehouse details */}
@@ -99,9 +104,9 @@ const Page = ({ params }) => {
                       </Link>
                     }
                   />
-                  {warehouse && (
-                    <WarehouseDetails warehouseDetails={warehouse} />
-                  )}
+                  {/* {warehouse && ( */}
+                  <WarehouseDetails warehouseDetails={warehouse} />
+                  {/* )} */}
                 </Card>
               </Grid>
             </Box>

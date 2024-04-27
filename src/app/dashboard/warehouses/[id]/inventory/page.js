@@ -10,6 +10,7 @@ import {
   CardHeader,
   Container,
   Grid,
+  Skeleton,
   Stack,
   Typography,
 } from "@mui/material";
@@ -22,7 +23,7 @@ import UserAccessLayout from "@/src/components/layout/userAccessLayout";
 const Page = ({ params }) => {
   const { messageApi, productIds, setProductIds, privileges, isAdmin } =
     useContext(MyContext);
-  const [productIdsData, setProductIdData] = useState([]);
+  const [productIdsData, setProductIdData] = useState(null);
   const [outOfStockData, setOutOfStockData] = useState(null);
   // console.log(privileges);
 
@@ -148,8 +149,9 @@ const Page = ({ params }) => {
                           //   }
                         />
                         {!outOfStockData ? (
-                          "Loading..."
+                          <Skeleton variant="rounded" height={60} />
                         ) : outOfStockData.count === 0 &&
+                          productIdsData &&
                           productIdsData.length !== 0 ? (
                           <Alert severity="success">
                             All products are currently in stock.

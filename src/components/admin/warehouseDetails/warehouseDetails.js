@@ -7,6 +7,7 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Skeleton, Stack } from "@mui/material";
 
 const defaultTheme = createTheme();
 
@@ -23,63 +24,80 @@ const WarehouseDetails = ({ warehouseDetails: data }) => {
               alignItems: "center",
             }}
           >
-            <Box component="form" sx={{ mt: 1 }}>
+            {!data ? (
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={5}>
-                  <TextField
-                    name="warehouseName"
-                    fullWidth
-                    defaultValue={data.warehouseName}
-                    label="Warehouse Name"
-                    size="small"
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    variant="filled"
-                  />
+                  <Skeleton variant="rounded" height={60} />
                 </Grid>
-
                 <Grid item xs={12} sm={5}>
-                  <TextField
-                    fullWidth
-                    name="WarehouseId"
-                    label="Warehouse Id"
-                    size="small"
-                    defaultValue={data._id}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    variant="filled"
-                  />
+                  <Skeleton variant="rounded" height={60} />
                 </Grid>
                 <Grid item xs={12} sm={2}>
-                  <TextField
-                    fullWidth
-                    name="Employees"
-                    label="No. of Employees"
-                    size="small"
-                    defaultValue={data.users ? data.users.length : 0}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    variant="filled"
-                  />
+                  <Skeleton variant="rounded" height={60} />
                 </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    fullWidth
-                    name="address"
-                    label="Address"
-                    size="small"
-                    defaultValue={data.address}
-                    InputProps={{
-                      readOnly: true,
-                    }}
-                    variant="filled"
-                  />
+                <Grid item xs={12} sm={12}>
+                  <Skeleton variant="rounded" height={60} />
                 </Grid>
               </Grid>
-            </Box>
+            ) : (
+              <Box component="form" sx={{ mt: 1 }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12} sm={5}>
+                    <TextField
+                      name="warehouseName"
+                      fullWidth
+                      defaultValue={data.warehouseName}
+                      label="Warehouse Name"
+                      size="small"
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      variant="filled"
+                    />
+                  </Grid>
+
+                  <Grid item xs={12} sm={5}>
+                    <TextField
+                      fullWidth
+                      name="WarehouseId"
+                      label="Warehouse Id"
+                      size="small"
+                      defaultValue={data._id}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      variant="filled"
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={2}>
+                    <TextField
+                      fullWidth
+                      name="Employees"
+                      label="No. of Employees"
+                      size="small"
+                      defaultValue={data.users ? data.users.length : 0}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      variant="filled"
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      name="address"
+                      label="Address"
+                      size="small"
+                      defaultValue={data.address}
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      variant="filled"
+                    />
+                  </Grid>
+                </Grid>
+              </Box>
+            )}
           </Box>
         </Container>
       </ThemeProvider>
