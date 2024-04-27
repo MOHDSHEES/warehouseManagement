@@ -24,17 +24,11 @@ export default function Payment({
   const { user, messageApi, setBackDropOpen } = useContext(MyContext);
   function inputHandler(e) {
     const { name, value } = e.target;
-    if (name === "payingAmount") {
-      setPayment({
-        ...payment,
-        [name]: parseFloat(value),
-      });
-    } else {
-      setPayment({
-        ...payment,
-        [name]: value,
-      });
-    }
+
+    setPayment({
+      ...payment,
+      [name]: value,
+    });
   }
 
   const orderSubmitHandler = async (e) => {
@@ -42,7 +36,11 @@ export default function Payment({
     setBackDropOpen(true);
     const { data } = await axios.post("/api/order/create", {
       data: {
-        payment: { ...payment, totalPrice: parseFloat(total) },
+        payment: {
+          ...payment,
+          payingAmount: parseFloat(payment.payingAmount),
+          totalPrice: parseFloat(total),
+        },
         party: party._id,
         order: order,
         placedBy: user._id,
