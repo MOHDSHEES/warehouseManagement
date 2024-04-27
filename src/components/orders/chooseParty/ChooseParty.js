@@ -168,6 +168,9 @@ function CustomerDetail({ data }) {
             autoFocus
             required
             margin="dense"
+            InputProps={{
+              readOnly: true,
+            }}
             id="name"
             name="name"
             label="Customer Name"
@@ -181,6 +184,9 @@ function CustomerDetail({ data }) {
             required
             margin="dense"
             id="customerType"
+            InputProps={{
+              readOnly: true,
+            }}
             name="customerType"
             label="Customer Type"
             value={data.customerType}
@@ -193,6 +199,9 @@ function CustomerDetail({ data }) {
             required
             margin="dense"
             id="email"
+            InputProps={{
+              readOnly: true,
+            }}
             name="email"
             label="Email"
             value={data.email}
@@ -205,6 +214,9 @@ function CustomerDetail({ data }) {
             required
             margin="dense"
             id="mobileNo"
+            InputProps={{
+              readOnly: true,
+            }}
             name="mobileNo"
             label="Mobile No"
             value={data.mobileNo}
@@ -219,6 +231,9 @@ function CustomerDetail({ data }) {
             id="address"
             name="address"
             label="Address"
+            InputProps={{
+              readOnly: true,
+            }}
             value={data.address}
             fullWidth
           />

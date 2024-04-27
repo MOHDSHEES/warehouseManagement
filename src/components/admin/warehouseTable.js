@@ -160,7 +160,7 @@ export default function WareHouseTable() {
         ) : (
           <>
             <TableContainer sx={{ maxHeight: 440 }}>
-              <Table stickyHeader size="small" aria-label="sticky table">
+              <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <TableRow>
                     {columns.map((column) => {
