@@ -1,0 +1,7 @@
+shelf name conflict
+method of deletions
+privileges
+employee admin (userVerifiedIcon)
+
+privileges: inventry
+            

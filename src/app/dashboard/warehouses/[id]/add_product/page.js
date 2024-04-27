@@ -1,0 +1,143 @@
+"use client";
+import { useContext, useEffect, useState } from "react";
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import {
+  Box,
+  Container,
+  FormControl,
+  Grid,
+  InputAdornment,
+  InputLabel,
+  OutlinedInput,
+  Stack,
+  Typography,
+} from "@mui/material";
+import axios from "axios";
+import { closeMessage, openMessage } from "@/src/components/functions/message";
+import { MyContext } from "@/src/components/context";
+// import ColorQuantityInput from "@/src/components/product/colorAdd";
+// import SizeQuantityInput from "@/src/components/product/sizeAdd";
+import UserAccessLayout from "@/src/components/layout/userAccessLayout";
+import AddProductForm from "@/src/components/product/addProductForm";
+
+export default function ProductAdd({ params }) {
+  // const { messageApi } = useContext(MyContext);
+  const [disable, setdisable] = useState(false);
+  const { user, setProductIds, productIds, messageApi } = useContext(MyContext);
+  const [quantity, setQuantity] = useState("");
+  const [productId, setProductId] = useState("");
+  const [productName, setProductName] = useState("");
+  const [colorQuantities, setColorQuantities] = useState([
+    { color: "", quantity: 0, size: "" },
+  ]);
+  // const [sizeQuantities, setSizeQuantities] = useState([
+  //   { size: "", quantity: 0 },
+  // ]);
+  // const [color, setColor] = useState("");
+  // const [size, setSize] = useState("");
+  const [state, setstate] = useState({
+    wholesalePrice: "",
+    retailPrice: "",
+  });
+  const Inputchange = (event) => {
+    const { name, value } = event.target;
+    setstate({
+      ...state,
+      [name]: value.trim(),
+    });
+  };
+  function clear() {
+    setstate({
+      wholesalePrice: "",
+      retailPrice: "",
+    });
+    setQuantity("");
+    setProductId("");
+    setProductName("");
+    // setColor("");
+    setColorQuantities([{ color: "", quantity: 0, size: "" }]);
+    // setSizeQuantities([{ size: "", quantity: 0 }]);
+  }
+
+  const handleClose = () => {
+    clear();
+  };
+
+  async function submitHandler(e) {
+    e.preventDefault();
+    setdisable(true);
+    // checking if color is provided else retrning empty array
+    const validColorQuantities = colorQuantities.filter(
+      (entry) => entry.color && entry.color.trim() !== ""
+    );
+    // const validSizeQuantities = sizeQuantities.filter(
+    //   (entry) => entry.size && entry.size.trim() !== ""
+    // );
+    openMessage(messageApi, "Adding product...");
+    if (user && user._id) {
+      const { data } = await axios.post("/api/product/add", {
+        detail: {
+          ...state,
+          productId: productId,
+          productName: productName.trim(),
+          quantity: quantity,
+          color: validColorQuantities,
+          // size: validSizeQuantities,
+          warehouse: params.id,
+          company: user.company._id,
+        },
+      });
+      if (data && data.status === 200) {
+        const dataToPush = [
+          {
+            _id: data.data._id,
+            productName: data.data.productName,
+            productId: data.data.productId,
+          },
+        ];
+        const updatedData = productIds.map((entry) =>
+          entry.warehouseId === params.id
+            ? { ...entry, productIds: [...entry.productIds, ...dataToPush] }
+            : entry
+        );
+        setProductIds(updatedData);
+        closeMessage(messageApi, "Product Sucessfully added", "success");
+        clear();
+        handleClose();
+      } else if (data.status === 500)
+        closeMessage(messageApi, data.msg, "error");
+    } else signOut();
+    setdisable(false);
+  }
+  return (
+    <UserAccessLayout>
+      <Container requiredprivilege="Register_Product" maxWidth="xl">
+        <Stack spacing={3}>
+          <div>
+            <Typography variant="h4">Add Product</Typography>
+            {/* <button onClick={test} className="btn btn-primary">
+      test
+    </button> */}
+          </div>
+          <AddProductForm
+            productName={productName}
+            setProductName={setProductName}
+            productId={productId}
+            setProductId={setProductId}
+            quantity={quantity}
+            setQuantity={setQuantity}
+            state={state}
+            Inputchange={Inputchange}
+            colorQuantities={colorQuantities}
+            setColorQuantities={setColorQuantities}
+            // sizeQuantities={sizeQuantities}
+            // setSizeQuantities={setSizeQuantities}
+            submitHandler={submitHandler}
+            disable={disable}
+          />
+        </Stack>
+      </Container>
+    </UserAccessLayout>
+  );
+}
