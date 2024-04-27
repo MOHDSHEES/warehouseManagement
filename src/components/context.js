@@ -68,13 +68,15 @@ const MyProvider = ({ children }) => {
       email: data.user.email,
     });
     // console.log(da);
-    if (da) {
-      if (da.data._id === da.data.company._id) setIsAdmin(true);
+    if (da && da.status === 200) {
+      if (da.data && da.data._id === da.data.company._id) setIsAdmin(true);
       else setPrivileges(da.data.privilegesTemplate.roles);
       setUser(da.data);
       // filterPrivileges(da.data);
 
       // update(da.data);
+    } else {
+      signOut();
     }
     setLoading(false);
   }

@@ -3,9 +3,9 @@ import Box from "@mui/material/Box";
 import { debounce } from "@mui/material/utils";
 import { MyContext } from "../../context";
 import axios from "axios";
-import { Button } from "@mui/material";
 import ProductTable from "./productsTable";
 import ChooseProductsForm from "./chooseProductsForm";
+import { Button, Unstable_Grid2 as Grid } from "@mui/material";
 
 // function remove() {
 //   const mergedData = removeDuplicate(value);
@@ -244,15 +244,24 @@ const ChooseProducts = ({ value, setValue, total, setTotal }) => {
           setNewName={setNewName}
           inputPriceChangeHandler={inputPriceChangeHandler}
         />
-
-        <Button
-          type="submit"
-          style={{ float: "right" }}
-          sx={{ mb: 4 }}
-          variant="outlined"
+        <Grid
+          container
+          spacing={2}
+          sx={{ justifyContent: "center" }}
+          className="mt-1 mb-3"
         >
-          Add Product
-        </Button>
+          <Grid xs={12} sm={6}>
+            <Button
+              type="submit"
+              // style={{ margin: "auto" }}
+              // style={{ float: "right" }}
+              sx={{ width: "100%" }}
+              variant="outlined"
+            >
+              Add Product
+            </Button>
+          </Grid>
+        </Grid>
       </form>
 
       {value && value.length > 0 && (

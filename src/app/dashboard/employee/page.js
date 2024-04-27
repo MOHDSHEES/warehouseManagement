@@ -157,6 +157,8 @@ const Page = () => {
                       </MenuItem>
                     );
                   })
+                ) : templates && templates.length === 0 ? (
+                  <MenuItem>No templates Found</MenuItem>
                 ) : (
                   <MenuItem>Loading...</MenuItem>
                 )}

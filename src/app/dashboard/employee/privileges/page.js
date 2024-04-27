@@ -30,11 +30,11 @@ const Page = () => {
       company: user.company._id,
     });
     if (data.status === 200) setPrivilegesTemplates(data.data);
-    else
+    else if (data.status === 500)
       closeMessage(
         messageApi,
-        `Data is not updated. Please try later. error: ${error}`,
-        error
+        `Data is not updated. Please try later. error: ${data.msg}`,
+        "error"
       );
     setLoading(false);
   }

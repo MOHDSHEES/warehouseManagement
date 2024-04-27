@@ -59,14 +59,16 @@ export const AddEmployee = () => {
 
   async function submitHandler(event) {
     event.preventDefault();
-
     const form = event.currentTarget;
     if (form.checkValidity() === false) {
+      if (warehouses && warehouses.length === 0) setError(true);
       event.preventDefault();
       event.stopPropagation();
       setValidated(true);
     } else {
-      if (user) {
+      if (warehouses && warehouses.length === 0) {
+        setError(true);
+      } else if (user) {
         setDisabled(true);
         openMessage(messageApi, "Sending...");
         const filteredWarehouseIds = warehouses
@@ -124,7 +126,7 @@ export const AddEmployee = () => {
     if (user && user.company.warehouses && !warehouses && warehouseFlag) {
       if (user.company.warehouses.length > 0) getWarehouses();
       else {
-        setError(true);
+        // setError(true);
         setWarehousesSelected(["No warehouses found."]);
         setWarehouses([]);
       }

@@ -130,7 +130,7 @@ export default function ChooseParty({
             }}
           />
         </Grid>
-        <Grid xs={6} sm={6}>
+        <Grid xs={12} sm={6}>
           <FormControl fullWidth>
             <InputLabel id="payment-method">Type of Order</InputLabel>
             <Select

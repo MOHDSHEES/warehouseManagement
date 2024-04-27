@@ -25,7 +25,7 @@ export async function POST(req) {
         });
 
       return NextResponse.json({
-        status: 500,
+        status: 202,
         msg: "No template Found.",
         data: [],
       });
