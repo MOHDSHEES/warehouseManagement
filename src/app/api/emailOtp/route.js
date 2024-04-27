@@ -6,6 +6,7 @@ import companyModel from "@/models/companyModel";
 export async function POST(req, res) {
   try {
     const data = await req.json();
+    console.log("in", data);
     const OTP = data.otp;
     const email = data.email;
     const user = await companyModel.findOne(
