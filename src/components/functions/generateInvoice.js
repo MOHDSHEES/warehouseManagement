@@ -35,17 +35,29 @@ export default function generateInvoiceDocument(data, company) {
   );
   doc.text(`Payment Method: ${payment.paymentMethod}`, 140, 78);
   if (payment.paymentMethod === "Online" && payment.paymentId)
-    doc.text(`Payment Id: ${payment.paymentId}`, 140, 78);
+    doc.text(`Payment Id: ${payment.paymentId}`, 140, 84);
 
-  const tableRows = order.map((row, idx) => [
-    idx + 1,
-    row.productName,
-    row.productId,
-    row.orderData.qty,
-    row.orderData.price,
-    row.orderData.discount,
-    calculateTotalPrice(row.orderData.qty, row.orderData.price),
-  ]);
+  const tableRows = [];
+  order.forEach((row, idx) => {
+    tableRows.push([
+      idx + 1,
+      row.productName,
+      row.productId,
+      row.orderData.qty,
+      row.orderData.price,
+      row.orderData.discount,
+      calculateTotalPrice(row.orderData.qty, row.orderData.price),
+    ]);
+    if (row.orderData.comment) {
+      tableRows.push([
+        {
+          content: `Comment: ${row.orderData.comment}`,
+          colSpan: 7,
+          styles: { fontSize: 9 },
+        },
+      ]);
+    }
+  });
   autoTable(doc, {
     head: [
       ["#", "Product Name", "Id", "Qty", "Price", "Discount", "Total Price"],
@@ -61,9 +73,13 @@ export default function generateInvoiceDocument(data, company) {
       6: { cellWidth: 25 },
     },
   });
+  // [{ content: "Grand Total", styles: { fontStyle: 'bold' } }, calculateGrandTotal()],
   autoTable(doc, {
     body: [
-      ["Grand Total", calculateGrandTotal()],
+      [
+        "Grand Total",
+        { content: calculateGrandTotal(), styles: { fontStyle: "bold" } },
+      ],
       //   ["VAT", 2],
     ],
     tableWidth: 100,

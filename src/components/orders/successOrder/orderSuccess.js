@@ -1,4 +1,4 @@
-import { Alert, Box, Button, CardContent } from "@mui/material";
+import { Alert, Box, Button, CardContent, Stack } from "@mui/material";
 import React, { useContext, useRef } from "react";
 import { Card } from "react-bootstrap";
 import generateInvoice, {
@@ -43,27 +43,28 @@ const OrderSuccess = ({ invoiceData, handleReset }) => {
             Hooray! Order has been successfully placed. Order ID:
             <b>{invoiceData.orderId}</b>
           </Alert>
-
-          <Button
-            sx={{ mt: 3 }}
-            onClick={
-              handleDownload
-              //   generateInvoice(invoiceData, user.company.companyName, iframeRef)
-            }
-            variant="outlined"
-          >
-            download Invoice
-          </Button>
-          <Button
-            sx={{ mt: 3 }}
-            onClick={
-              handlePreview
-              //   generateInvoice(invoiceData, user.company.companyName, iframeRef)
-            }
-            variant="outlined"
-          >
-            Preview
-          </Button>
+          <Stack sx={{ mt: 3 }} direction="row" spacing={2}>
+            <Button
+              //   sx={{ mt: 3 }}
+              onClick={
+                handleDownload
+                //   generateInvoice(invoiceData, user.company.companyName, iframeRef)
+              }
+              variant="outlined"
+            >
+              download Invoice
+            </Button>
+            <Button
+              //   sx={{ mt: 3 }}
+              onClick={
+                handlePreview
+                //   generateInvoice(invoiceData, user.company.companyName, iframeRef)
+              }
+              variant="outlined"
+            >
+              Preview
+            </Button>
+          </Stack>
         </CardContent>
       </Card>
       <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
