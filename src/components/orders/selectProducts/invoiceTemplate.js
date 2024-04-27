@@ -153,8 +153,10 @@ const InvoiceTemplate = ({ invoiceData }) => {
                           {item.orderData.discount}%
                         </TableCell>
                         <TableCell align="right">
-                          {parseInt(item.orderData.qty) *
-                            parseFloat(item.orderData.price).toFixed(2)}
+                          {(
+                            parseInt(item.orderData.qty) *
+                            parseFloat(item.orderData.price).toFixed(2)
+                          ).toFixed(2)}
                         </TableCell>
                       </TableRow>
                     );
