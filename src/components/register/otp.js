@@ -50,7 +50,6 @@ const Otp = ({ disable, state, setstate, isVerified, setisVerified }) => {
           email: state.email,
           otp: OTP,
         });
-        console.log(response);
         // const response = { data: { success: true } };
         setloading(false);
         setResponse(response);

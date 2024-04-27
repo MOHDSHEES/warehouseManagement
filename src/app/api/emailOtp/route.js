@@ -2,11 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import sgMail from "@sendgrid/mail";
 import sendotp from "../emailOtp/emailTemplates/otp";
 import companyModel from "@/models/companyModel";
+import dbConnect from "@/lib/mongoose";
 
 export async function POST(req, res) {
   try {
+    await dbConnect();
     const data = await req.json();
-    console.log("in", data);
     const OTP = data.otp;
     const email = data.email;
     const user = await companyModel.findOne(
@@ -33,7 +34,6 @@ export async function POST(req, res) {
       message: "OTP has been sent to the Email",
     });
   } catch (error) {
-    console.log(error);
     return NextResponse.json({ success: false, msg: error.message });
   }
 }
