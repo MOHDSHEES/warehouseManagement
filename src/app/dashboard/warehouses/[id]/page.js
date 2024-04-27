@@ -21,7 +21,7 @@ import Link from "next/link";
 
 const Page = ({ params }) => {
   // console.log(params.id);
-  const { warehouses, messageApi, privileges } = useContext(MyContext);
+  const { warehouses, messageApi, privileges, isAdmin } = useContext(MyContext);
   const [warehouse, setWarehouse] = useState(null);
   // console.log(warehouse);
   const router = useRouter();
@@ -155,8 +155,7 @@ const Page = ({ params }) => {
                       <small style={{ fontSize: "18px" }}>Shelf Details:</small>
                     }
                     action={
-                      privileges &&
-                      privileges.Add_Shelf && (
+                      ((privileges && privileges.Add_Shelf) || isAdmin) && (
                         <Link
                           href={`/dashboard/warehouses/${params.id}/add_shelf`}
                         >
