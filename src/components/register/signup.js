@@ -39,10 +39,16 @@ export default function SignUp() {
 
   const Inputchange = (event) => {
     const { name, value } = event.target;
-    setstate({
-      ...state,
-      [name]: value.trim(),
-    });
+    if (name === "address" || name === "companyName")
+      setstate({
+        ...state,
+        [name]: value,
+      });
+    else
+      setstate({
+        ...state,
+        [name]: value.trim(),
+      });
   };
   async function submitHandler(e) {
     e.preventDefault();
@@ -50,7 +56,13 @@ export default function SignUp() {
       if (isVerified) {
         setdisable(true);
         openMessage(messageApi, "Registering, Please wait...");
-        const { data } = await axios.post("/api/user/save/", { detail: state });
+        const { data } = await axios.post("/api/user/save/", {
+          detail: {
+            ...state,
+            companyName: state.companyName.trim(),
+            address: state.address.trim(),
+          },
+        });
         if (data && data.user && data.user._id) {
           closeMessage(messageApi, "Sucessfully Registered", "success");
           //   navigate("/edit", { replace: true });
