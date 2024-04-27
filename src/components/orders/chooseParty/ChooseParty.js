@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useState } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -28,6 +28,7 @@ export default function ChooseParty({
   orderType,
 }) {
   const { user } = useContext(MyContext);
+
   //   const [value, setValue] = useState(null);
   const [loading, setLoading] = useState(false);
   //   const [inputValue, setInputValue] = useState("");

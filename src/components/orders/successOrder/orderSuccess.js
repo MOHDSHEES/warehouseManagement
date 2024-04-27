@@ -1,6 +1,11 @@
 import { Alert, Box, Button, CardContent } from "@mui/material";
-import React from "react";
+import React, { useContext, useRef } from "react";
 import { Card } from "react-bootstrap";
+import generateInvoice, {
+  downloadInvoice,
+  previewInvoice,
+} from "../../functions/generateInvoice";
+import { MyContext } from "../../context";
 // import generatePDF from "../../functions/generatePdf";
 // import InvoiceTemplate from "../selectProducts/invoiceTemplate";
 
@@ -16,7 +21,20 @@ import { Card } from "react-bootstrap";
 // };
 
 const OrderSuccess = ({ invoiceData, handleReset }) => {
+  //   const iframeRef = useRef(null);
+  const { user } = useContext(MyContext);
   // console.log(invoiceData);
+
+  const handleDownload = () => {
+    const doc = generateInvoice(invoiceData, user.company.companyName);
+    downloadInvoice(doc, "invoice.pdf");
+  };
+
+  const handlePreview = () => {
+    const doc = generateInvoice(invoiceData, user.company.companyName);
+    previewInvoice(doc);
+  };
+
   return (
     <div>
       <Card sx={{ p: 2, mb: 3 }} className="mt-3">
@@ -26,15 +44,38 @@ const OrderSuccess = ({ invoiceData, handleReset }) => {
             <b>{invoiceData.orderId}</b>
           </Alert>
 
-          {/* <Button sx={{ mt: 3 }} onClick={handleDownload} variant="outlined">
+          <Button
+            sx={{ mt: 3 }}
+            onClick={
+              handleDownload
+              //   generateInvoice(invoiceData, user.company.companyName, iframeRef)
+            }
+            variant="outlined"
+          >
             download Invoice
-          </Button> */}
+          </Button>
+          <Button
+            sx={{ mt: 3 }}
+            onClick={
+              handlePreview
+              //   generateInvoice(invoiceData, user.company.companyName, iframeRef)
+            }
+            variant="outlined"
+          >
+            Preview
+          </Button>
         </CardContent>
       </Card>
       <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
         <Box sx={{ flex: "1 1 auto" }} />
         <Button onClick={handleReset}>Create More</Button>
       </Box>
+
+      {/* <iframe
+        ref={iframeRef}
+        title="Invoice Preview"
+        style={{ width: "100%", height: "500px", border: "1px solid #ccc" }}
+      ></iframe> */}
       {/* {invoiceData && (
         <Card sx={{ p: 2, mb: 3 }} className="mt-3">
           <InvoiceTemplate invoiceData={invoiceData} />
