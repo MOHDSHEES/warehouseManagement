@@ -32,7 +32,7 @@ export async function POST(req, res) {
       message: "OTP has been sent to the Email",
     });
   } catch (error) {
-    // console.log(error);
+    console.log(error);
     return NextResponse.json({ success: false, msg: error.message });
   }
 }
