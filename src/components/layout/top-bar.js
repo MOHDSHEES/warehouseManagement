@@ -6,6 +6,8 @@ import { useTheme } from "@mui/material/styles";
 import SearchProduct from "../search/searchProduct";
 import { useParams, usePathname } from "next/navigation";
 import SearchOrder from "../search/searchOrder";
+import { MyContext } from "../context";
+import { useContext } from "react";
 
 const SIDE_NAV_WIDTH = 280;
 const TOP_NAV_HEIGHT = 64;
@@ -13,6 +15,7 @@ const TOP_NAV_HEIGHT = 64;
 export const TopNav = (props) => {
   const params = useParams();
   const pathname = usePathname();
+  const { privileges, isAdmin } = useContext(MyContext);
   // const router = useRouter();
   const { onNavOpen } = props;
   const theme = useTheme();
@@ -65,16 +68,17 @@ export const TopNav = (props) => {
               <SearchProduct warehouse={params.id} />
             </Stack>
           )}
-          {pathname === "/dashboard/order" && (
-            <Stack
-              alignItems="center"
-              direction="row"
-              spacing={2}
-              style={{ marginLeft: "5px" }}
-            >
-              <SearchOrder warehouse={params.id} />
-            </Stack>
-          )}
+          {(isAdmin || privileges.View_Orders) &&
+            pathname === "/dashboard/order" && (
+              <Stack
+                alignItems="center"
+                direction="row"
+                spacing={2}
+                style={{ marginLeft: "5px" }}
+              >
+                <SearchOrder warehouse={params.id} />
+              </Stack>
+            )}
         </Stack>
       </Box>
     </>
