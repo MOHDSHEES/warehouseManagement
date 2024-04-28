@@ -15,6 +15,7 @@ import { closeMessage } from "@/src/components/functions/message";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import FilterModel from "@/src/components/orders/ordersList/filterModel";
 import FilterChip from "@/src/components/orders/ordersList/filterChip";
+import FilterDrawer from "@/src/components/orders/ordersList/filterDrawer";
 
 const OrdersList = () => {
   const { user, messageApi } = useContext(MyContext);
@@ -119,7 +120,7 @@ const OrdersList = () => {
           <OrdersTable orders={orders} loading={loading} />
         </Stack>
       </Container>
-      <FilterModel
+      <FilterDrawer
         requiredprivilege="View_Orders"
         open={open}
         setOpen={setOpen}
@@ -128,6 +129,15 @@ const OrdersList = () => {
         onChangeFilter={onChangeFilter}
         getFilteredOrders={getFilteredOrders}
       />
+      {/* <FilterModel
+        requiredprivilege="View_Orders"
+        open={open}
+        setOpen={setOpen}
+        filter={filter}
+        setFilter={setFilter}
+        onChangeFilter={onChangeFilter}
+        getFilteredOrders={getFilteredOrders}
+      /> */}
     </UserAccessLayout>
   );
 };

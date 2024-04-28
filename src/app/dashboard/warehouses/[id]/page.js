@@ -15,18 +15,34 @@ import {
   Unstable_Grid2 as Grid,
   Button,
   Skeleton,
+  Tooltip,
+  IconButton,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import WarehouseDetails from "@/src/components/admin/warehouseDetails/warehouseDetails";
 import ShelfTreeMain from "@/src/components/admin/shelf/shelfTree/shelfTreeMain";
 import Link from "next/link";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import ShelfSearchModel from "@/src/components/admin/shelf/sheflSearchModel";
 
 const Page = ({ params }) => {
   // console.log(params.id);
   const { warehouses, messageApi, privileges, isAdmin } = useContext(MyContext);
   const [warehouse, setWarehouse] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const [shelfSearchModel, setShelfSearchModel] = useState(false);
   // console.log(warehouse);
   const router = useRouter();
   // console.log(data);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   // Check if session exists and user has access to this warehouse
 
   async function getWarehouse(id) {
@@ -112,38 +128,6 @@ const Page = ({ params }) => {
             </Box>
           </Container>
 
-          {/* Product Details */}
-          {/* <Container maxWidth="xl" sx={{ mt: 1, mb: 4, padding: 0 }}>
-            <Box
-              component="main"
-              sx={{
-                flexGrow: 1,
-                py: 3,
-              }}
-            >
-              <Grid xs={12} md={6} lg={6}>
-                <Card sx={{ p: 2 }}>
-                  <CardHeader
-                    title={
-                      <small style={{ fontSize: "18px" }}>
-                        Product Details:
-                      </small>
-                    }
-                    action={
-                      <Button
-                        variant="contained"
-                        href={`/dashboard/warehouses/${params.id}/add_product`}
-                      >
-                        List Product
-                      </Button>
-                    }
-                  />
-                  <ProductDetails />
-                </Card>
-              </Grid>
-            </Box>
-          </Container> */}
-
           {/* shelf table */}
           <Container maxWidth="xl" sx={{ mt: 1, mb: 4, padding: 0 }}>
             <Box
@@ -161,16 +145,77 @@ const Page = ({ params }) => {
                     }
                     action={
                       ((privileges && privileges.Add_Shelf) || isAdmin) && (
-                        <Link
-                          href={`/dashboard/warehouses/${params.id}/add_shelf`}
-                        >
-                          <Button
-                            variant="contained"
-                            // href={`/dashboard/warehouses/${params.id}/add_shelf`}
+                        <>
+                          <Tooltip title="Filter">
+                            <IconButton
+                              id="basic-button"
+                              sx={{ float: "right", marginBottom: "10px" }}
+                              aria-controls={open ? "basic-menu" : undefined}
+                              aria-haspopup="true"
+                              aria-expanded={open ? "true" : undefined}
+                              onClick={handleClick}
+                              aria-label="Filter"
+                              size="large"
+                            >
+                              <MoreVertIcon />
+                            </IconButton>
+                          </Tooltip>
+                          <Menu
+                            id="basic-menu"
+                            anchorEl={anchorEl}
+                            open={open}
+                            onClose={handleClose}
+                            PaperProps={{
+                              style: {
+                                maxHeight: 50 * 4.5,
+                                width: "20ch",
+                              },
+                            }}
+                            MenuListProps={{
+                              "aria-labelledby": "basic-button",
+                            }}
                           >
-                            Add Shelf
-                          </Button>
-                        </Link>
+                            <MenuItem
+                              onClick={() => {
+                                handleClose(), setShelfSearchModel(true);
+                              }}
+                            >
+                              Search Shelf
+                            </MenuItem>
+                            <MenuItem
+                              onClick={() =>
+                                router.push(
+                                  `/dashboard/warehouses/${params.id}/add_shelf`
+                                )
+                              }
+                            >
+                              Add Shelf
+                            </MenuItem>
+
+                            {/* <MenuItem onClick={() => filterFunction("Active")}>
+                          Active
+                        </MenuItem>
+                        <MenuItem onClick={() => filterFunction("Rejected")}>
+                          Rejected
+                        </MenuItem>
+                        <MenuItem onClick={() => filterFunction("Inactive")}>
+                          Inactive
+                        </MenuItem>
+                        <MenuItem onClick={() => filterFunction("all")}>
+                          All Blogs
+                        </MenuItem> */}
+                          </Menu>
+                        </>
+                        // <Link
+                        //   href={`/dashboard/warehouses/${params.id}/add_shelf`}
+                        // >
+                        //   <Button
+                        //     variant="contained"
+                        //     // href={`/dashboard/warehouses/${params.id}/add_shelf`}
+                        //   >
+                        //     Add Shelf
+                        //   </Button>
+                        // </Link>
                       )
                     }
                   />
@@ -183,6 +228,11 @@ const Page = ({ params }) => {
           </Container>
         </Stack>
       </Container>
+      <ShelfSearchModel
+        open={shelfSearchModel}
+        setOpen={setShelfSearchModel}
+        warehouse={params.id}
+      />
     </div>
   );
 };
