@@ -56,6 +56,7 @@ export async function POST(req) {
     const filter = constructQuery(data.filter, parties);
     if (req.method === "POST") {
       const query = { company: data.company, ...filter };
+      //   console.log(query);
       const orders = await orderModel
         // .find({ company: data.company })
         .find(query)
@@ -71,7 +72,6 @@ export async function POST(req) {
           select: { name: 1 },
           model: userModel,
         });
-      //   console.log(orders);
       return NextResponse.json({
         status: 200,
         data: orders,

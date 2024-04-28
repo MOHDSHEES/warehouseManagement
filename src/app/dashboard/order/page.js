@@ -5,11 +5,8 @@ import axios from "axios";
 import { MyContext } from "@/src/components/context";
 import UserAccessLayout from "@/src/components/layout/userAccessLayout";
 import {
-  Chip,
   Container,
   IconButton,
-  Menu,
-  MenuItem,
   Stack,
   Tooltip,
   Typography,
@@ -20,7 +17,7 @@ import FilterModel from "@/src/components/orders/ordersList/filterModel";
 import FilterChip from "@/src/components/orders/ordersList/filterChip";
 
 const OrdersList = () => {
-  const { user, messageApi, privileges, isAdmin } = useContext(MyContext);
+  const { user, messageApi } = useContext(MyContext);
   //   console.log(user);
   const [page, setPage] = useState(1);
   const [open, setOpen] = useState(false);
@@ -45,9 +42,9 @@ const OrdersList = () => {
     });
   }
 
-  function getFilteredOrders() {
+  function getFilteredOrders(filter) {
     setOrders(null);
-    getOrders(1);
+    getOrders(1, filter);
     setOpen(false);
   }
 
@@ -55,16 +52,16 @@ const OrdersList = () => {
 
   useEffect(() => {
     if (user && !orders) getOrders(1);
-  }, [filter]);
+  }, []);
 
-  async function getOrders(cPage) {
+  async function getOrders(cPage, cFilter) {
     setLoading(true);
     // console.log(cPage);
     const { data } = await axios.post(
       `/api/order/getList?page=${cPage ? cPage - 1 : page - 1}&perPage=${10}`,
       {
         company: user.company._id,
-        filter: filter,
+        filter: cFilter ? cFilter : filter,
       }
     );
     if (data.status === 200) {
@@ -83,11 +80,14 @@ const OrdersList = () => {
     // if (key === "party") setFilter({ ...filter, [key]: "" });
     if (key === "totalPrice") {
       setFilter({ ...filter, ...{ totalPrice: "", comparison: "" } });
-    } else if (key === "bothDate")
+      getOrders(1, { ...filter, ...{ totalPrice: "", comparison: "" } });
+    } else if (key === "bothDate") {
       setFilter({ ...filter, ...{ startDate: "", endDate: "" } });
-    else setFilter({ ...filter, [key]: "" });
-
-    // getOrders(1);
+      getOrders(1, { ...filter, ...{ startDate: "", endDate: "" } });
+    } else {
+      setFilter({ ...filter, [key]: "" });
+      getOrders(1, { ...filter, [key]: "" });
+    }
   }
   return (
     <UserAccessLayout>
@@ -113,29 +113,6 @@ const OrdersList = () => {
             </Typography>
             <Stack direction="row" spacing={1} sx={{ margin: "10px" }}>
               <FilterChip filter={filter} filterFunction={filterFunction} />
-              {/* {Object.entries(filter).map(([key, value]) => {
-
-                if (key === "party" && (value === "All" || value === ""))
-                  return null;
-                else if (key === "totalPrice" && value)
-                  return (
-                    <Chip
-                      key={key}
-                      label={`${filter["comparison"]} ${value}`}
-                      variant="outlined"
-                      onDelete={() => filterFunction(key)}
-                    />
-                  );
-                else if (value && key !== "comparison")
-                  return (
-                    <Chip
-                      key={key}
-                      label={value}
-                      variant="outlined"
-                      onDelete={() => filterFunction(key)}
-                    />
-                  );
-              })} */}
             </Stack>
           </div>
 

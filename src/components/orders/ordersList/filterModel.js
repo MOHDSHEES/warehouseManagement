@@ -64,7 +64,7 @@ export default function FilterModel({
           onSubmit: (event) => {
             event.preventDefault();
             setFilter(filterState);
-            getFilteredOrders();
+            getFilteredOrders(filterState);
             // handleClose();
           },
         }}
