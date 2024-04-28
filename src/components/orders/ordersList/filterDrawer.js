@@ -49,24 +49,25 @@ export default function FilterDrawer({
     setFilterState(filter);
   }, [filter]);
 
-  const toggleDrawer = (newOpen) => () => {
-    if (!newOpen) {
-      setFilterState(filter);
-    }
-    setOpen(newOpen);
-  };
-
   function submitHandler(e) {
     e.preventDefault();
     setFilter(filterState);
     getFilteredOrders(filterState);
   }
 
+  const handleDrawerOpen = () => {
+    setOpen(true);
+  };
+
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+
   const DrawerList = (
     <form onSubmit={submitHandler}>
       <DialogContent>
         <IconButton
-          onClick={toggleDrawer(false)}
+          onClick={handleDrawerClose}
           style={{ float: "right" }}
           aria-label="close"
         >
@@ -204,7 +205,7 @@ export default function FilterDrawer({
           <Button variant="contained" type="submit">
             Apply
           </Button>
-          <Button onClick={toggleDrawer(false)} variant="outlined">
+          <Button onClick={handleDrawerClose} variant="outlined">
             Cancel
           </Button>
         </Stack>
@@ -214,12 +215,11 @@ export default function FilterDrawer({
 
   return (
     <div>
-      {/* <Button onClick={toggleDrawer(true)}>Open drawer</Button> */}
       <SwipeableDrawer
         anchor="right"
         open={open}
-        onClose={toggleDrawer(false)}
-        disableSwipeToOpen
+        onClose={handleDrawerClose}
+        onOpen={handleDrawerOpen}
       >
         {DrawerList}
       </SwipeableDrawer>
