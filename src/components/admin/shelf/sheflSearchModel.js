@@ -65,7 +65,7 @@ export default function ShelfSearchModel({ open, setOpen, warehouse }) {
   return (
     <React.Fragment>
       <Modal open={open} onClose={() => setOpen(false)}>
-        <ModalDialog style={{ minWidth: "400px" }} size="lg">
+        <ModalDialog style={{ minWidth: "300px" }} size="lg">
           <DialogTitle>Search Shelf</DialogTitle>
           <DialogContent>
             <Typography variant="body2">

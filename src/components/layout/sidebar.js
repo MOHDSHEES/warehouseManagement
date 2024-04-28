@@ -26,13 +26,6 @@ import { useContext, useEffect, useState } from "react";
 import { MyContext } from "../context.js";
 // import { MyContext } from "../context.js";
 
-// import handleGeneratePdf from "../functions/certificate.js";
-// import dynamic from "next/dynamic";
-// const GenerateCertificate = dynamic(
-//   () => import("../functions/certificate.js"),
-//   { ssr: false }
-// );
-
 export default function SideBar(props) {
   const { open, onClose } = props;
   const dashBoardRegex = /^\/dashboard\/warehouses(?:\/.*)?$/;
@@ -57,6 +50,11 @@ export default function SideBar(props) {
     signOut();
     // setOpenBackdrop(false);
   }
+  function closeOnClick() {
+    if (!lgUp) {
+      onClose();
+    }
+  }
 
   const content = (
     <Box
@@ -79,27 +77,6 @@ export default function SideBar(props) {
         >
           OFFTHEWEB
         </Box>
-        {/* <Box
-          sx={{
-            alignItems: "center",
-            backgroundColor: "rgba(255, 255, 255, 0.04)",
-            borderRadius: 1,
-            cursor: "pointer",
-            display: "flex",
-            justifyContent: "space-between",
-            mt: 2,
-            p: "12px",
-          }}
-        >
-          <div>
-            <Typography color="inherit" variant="subtitle1">
-              Devias
-            </Typography>
-            <Typography color="neutral.400" variant="body2">
-              Production
-            </Typography>
-          </div>
-        </Box> */}
       </Box>
       <Divider sx={{ borderColor: "neutral.700" }} />
       <Box
@@ -135,6 +112,7 @@ export default function SideBar(props) {
             else active = item.path ? pathname === item.path : false;
             return (
               <SideNavItem
+                close={closeOnClick}
                 active={active}
                 disabled={item.disabled}
                 external={item.external}
@@ -193,6 +171,7 @@ export default function SideBar(props) {
             else active = item.path ? pathname === item.path : false;
             return (
               <SideNavItem
+                close={closeOnClick}
                 active={active}
                 disabled={item.disabled}
                 external={item.external}
@@ -251,6 +230,7 @@ export default function SideBar(props) {
             active = item.path ? pathname === item.path : false;
             return (
               <SideNavItem
+                close={closeOnClick}
                 active={active}
                 disabled={item.disabled}
                 external={item.external}
@@ -314,6 +294,7 @@ export default function SideBar(props) {
             active = item.path ? pathname === item.path : false;
             return (
               <SideNavItem
+                close={closeOnClick}
                 active={active}
                 disabled={item.disabled}
                 external={item.external}
@@ -376,7 +357,8 @@ export default function SideBar(props) {
             active = item.path ? pathname === item.path : false;
             return (
               <SideNavItem
-                active={active}
+                close={closeOnClick}
+                lg={lgUp}
                 disabled={item.disabled}
                 external={item.external}
                 icon={item.icon}

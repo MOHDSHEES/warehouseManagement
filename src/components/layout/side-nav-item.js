@@ -15,6 +15,7 @@ const SideNavItem = (props) => {
     onClick,
     access,
     dropdownItems,
+    close,
   } = props;
   // console.log(dropdownItems);
   const linkProps = path
@@ -41,10 +42,7 @@ const SideNavItem = (props) => {
     <>
       {access && (
         <>
-          <li
-            onClick={onClick}
-            className={`${active && "sidebar-item-active"}`}
-          >
+          <li onClick={close} className={`${active && "sidebar-item-active"}`}>
             <ButtonBase
               sx={{
                 alignItems: "center",
