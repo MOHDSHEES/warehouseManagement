@@ -29,7 +29,7 @@ export default function EditProductModel({
   const [productId, setProductId] = useState(searchedData.productId);
   const [productName, setProductName] = useState("");
   const [colorQuantities, setColorQuantities] = useState([
-    { color: "", quantity: 0 },
+    { color: "", quantity: "0" },
   ]);
   // const [sizeQuantities, setSizeQuantities] = useState([
   //   { size: "", quantity: 0 },

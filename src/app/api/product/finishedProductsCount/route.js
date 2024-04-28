@@ -12,12 +12,12 @@ export async function POST(req) {
     // console.log(data);
     if (req.method === "POST") {
       const zeroQuantityProductCount = await Product.countDocuments({
-        $or: [{ quantity: 0 }, { "color.quantity": "0" }],
+        $or: [{ quantity: "0" }, { "color.quantity": "0" }],
         warehouse: data.warehouse,
       });
       // Get details of 5 products with quantity 0
       const zeroQuantityProducts = await Product.find({
-        $or: [{ quantity: 0 }, { "color.quantity": "0" }],
+        $or: [{ quantity: "0" }, { "color.quantity": "0" }],
         warehouse: data.warehouse,
       }).limit(5);
       return NextResponse.json({
