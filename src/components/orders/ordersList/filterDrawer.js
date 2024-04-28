@@ -215,7 +215,12 @@ export default function FilterDrawer({
   return (
     <div>
       {/* <Button onClick={toggleDrawer(true)}>Open drawer</Button> */}
-      <SwipeableDrawer anchor="right" open={open} onClose={toggleDrawer(false)}>
+      <SwipeableDrawer
+        anchor="right"
+        open={open}
+        onClose={toggleDrawer(false)}
+        disableSwipeToOpen
+      >
         {DrawerList}
       </SwipeableDrawer>
     </div>

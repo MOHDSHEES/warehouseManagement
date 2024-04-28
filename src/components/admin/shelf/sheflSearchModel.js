@@ -90,7 +90,7 @@ export default function ShelfSearchModel({ open, setOpen, warehouse }) {
               state={state}
               setState={setState}
             />
-            <Button type="submit">Search</Button>
+            <Button type="search">Search</Button>
           </Stack>
           {/* </form> */}
         </ModalDialog>
