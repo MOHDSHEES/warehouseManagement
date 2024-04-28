@@ -29,6 +29,20 @@ const ChooseProductsForm = ({
   setNewName = "",
   retailPrice = "0",
 }) => {
+  const highlightMatch = (text, query) => {
+    const index = text.toLowerCase().indexOf(query.toLowerCase());
+    if (index === -1) return text;
+    return (
+      <>
+        {text.substring(0, index)}
+        <span style={{ fontWeight: "bold", color: "red" }}>
+          {text.substring(index, index + query.length)}
+        </span>
+        {text.substring(index + query.length)}
+      </>
+    );
+  };
+
   return (
     <Grid
       container
@@ -41,7 +55,6 @@ const ChooseProductsForm = ({
           id="product"
           sx={{ width: "100%" }}
           getOptionLabel={(option) =>
-            //  console.log(option)
             typeof option === "string"
               ? option
               : option.productId === "NA"
@@ -99,7 +112,7 @@ const ChooseProductsForm = ({
                           ? option.productId
                           : option.productId + ":- "}
                       </b>
-                      {option.productName}
+                      {highlightMatch(option.productName, inputValue)}
                     </Typography>
                   </Grid>
                 </Grid>
