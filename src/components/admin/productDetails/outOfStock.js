@@ -38,9 +38,12 @@ const columns = [
             (color.size ? color.size : "-")
         );
       return colorsWithZeroQuantity.length > 0
-        ? colorsWithZeroQuantity.join(", ")
+        ? colorsWithZeroQuantity.join("\n ")
         : "-";
     },
+    renderCell: (params) => (
+      <div style={{ whiteSpace: "pre-line" }}>{params.value}</div>
+    ),
   },
   // {
   //   field: "size",
