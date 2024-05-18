@@ -8,6 +8,7 @@ import Stack from "@mui/joy/Stack";
 import ShelfSearch from "../../search/shelfSearch";
 import axios from "axios";
 import { Typography, debounce } from "@mui/material";
+import EditModel from "./editModel";
 
 export default function ShelfSearchModel({ open, setOpen, warehouse }) {
   const [options, setOptions] = useState([]);
@@ -15,6 +16,8 @@ export default function ShelfSearchModel({ open, setOpen, warehouse }) {
   const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [state, setState] = useState({});
+  const [openEdit, setOpenEdit] = useState(false);
+  // console.log(selectedValue);
 
   const fetch = useMemo(
     () =>
@@ -23,7 +26,7 @@ export default function ShelfSearchModel({ open, setOpen, warehouse }) {
           data: request.input,
           warehouse: warehouse,
         });
-        console.log(data);
+        // console.log(data);
         if (data.status === 200) {
           callback(data.data);
         }
@@ -62,6 +65,11 @@ export default function ShelfSearchModel({ open, setOpen, warehouse }) {
     };
   }, [inputValue]);
 
+  function search() {
+    // setOpen(false);
+    // setOpenEdit(true);
+  }
+
   return (
     <React.Fragment>
       <Modal open={open} onClose={() => setOpen(false)}>
@@ -90,11 +98,21 @@ export default function ShelfSearchModel({ open, setOpen, warehouse }) {
               state={state}
               setState={setState}
             />
-            <Button type="search">Search</Button>
+            <Button type="search" onClick={search}>
+              Search
+            </Button>
           </Stack>
           {/* </form> */}
         </ModalDialog>
       </Modal>
+      {/* <EditModel
+        editModelOpen={openEdit}
+        setEditModelOpen={setOpenEdit}
+        warehouseId={warehouse}
+        shelves={""}
+        setShelves={""}
+        shelfClicked={selectedValue}
+      /> */}
     </React.Fragment>
   );
 }

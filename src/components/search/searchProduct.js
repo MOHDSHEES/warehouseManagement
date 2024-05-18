@@ -161,6 +161,7 @@ export default function SearchProduct({ warehouse }) {
           setOpenProductDetails={setOpenProductDetails}
           searchedData={searchedData}
           setSearchedData={setSearchedData}
+          warehouse={warehouse}
         />
       </Stack>
     </>

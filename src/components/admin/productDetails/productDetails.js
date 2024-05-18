@@ -5,23 +5,43 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Alert, Typography } from "@mui/material";
+import {
+  Alert,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import TableTop from "./productDetailsTable/tableTop";
 import ProductShelfTable from "./productDetailsTable/productShelfTable";
 import EditIcon from "@mui/icons-material/Edit";
 import EditProductModel from "../../update/editProductModel";
 import { MyContext } from "../../context";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useRouter } from "next/navigation";
 
 export default function ProductDetails({
   openProductDetails,
   setOpenProductDetails,
   searchedData,
   setSearchedData,
+  warehouse,
 }) {
   const [openEditModel, setOpenEditModel] = React.useState(false);
   const { shelves = null } = searchedData || {};
   const { privileges, isAdmin } = React.useContext(MyContext);
   const [disable, setDisable] = React.useState(true);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const history = useRouter();
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseOptions = () => {
+    setAnchorEl(null);
+  };
+
   //   const handleClickOpen = () => {
   //     setOpenProductDetails(true);
   //   };
@@ -34,6 +54,13 @@ export default function ProductDetails({
     setOpenProductDetails(false);
   };
 
+  function analytics() {
+    history.push(
+      `/dashboard/warehouses/${warehouse}/${searchedData.productId}`
+    );
+    handleCloseOptions();
+    handleClose();
+  }
   //   console.log(searchedData);
   return (
     <React.Fragment>
@@ -59,7 +86,44 @@ export default function ProductDetails({
           Product Details
           {((privileges && privileges.Update_Product) || isAdmin) && (
             <span style={{ float: "right", marginRight: "10px" }}>
-              <Button
+              <>
+                <Tooltip title="Filter">
+                  <IconButton
+                    id="productDetails-button"
+                    disabled={disable}
+                    sx={{ float: "right", marginBottom: "10px" }}
+                    aria-controls={open ? "productDetails-menu" : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? "true" : undefined}
+                    onClick={handleClick}
+                    aria-label="Filter"
+                    size="large"
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  id="productDetails-menu"
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleCloseOptions}
+                  PaperProps={{
+                    style: {
+                      maxHeight: 50 * 4.5,
+                      width: "20ch",
+                    },
+                  }}
+                  MenuListProps={{
+                    "aria-labelledby": "productDetails-button",
+                  }}
+                >
+                  <MenuItem onClick={analytics}>Analytics</MenuItem>
+                  <MenuItem onClick={() => setOpenEditModel(true)}>
+                    Edit
+                  </MenuItem>
+                </Menu>
+              </>
+              {/* <Button
                 variant="contained"
                 onClick={() => setOpenEditModel(true)}
                 size="small"
@@ -67,7 +131,7 @@ export default function ProductDetails({
                 startIcon={<EditIcon fontSize={"small"} />}
               >
                 Edit
-              </Button>
+              </Button> */}
             </span>
           )}
         </DialogTitle>

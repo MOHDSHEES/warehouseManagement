@@ -6,6 +6,9 @@ import {
   SvgIcon,
   Typography,
 } from "@mui/material";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import TrendingUpIcon from "@mui/icons-material/TrendingUp";
 
 export const ProductStatsCard = (props) => {
   const {
@@ -15,6 +18,9 @@ export const ProductStatsCard = (props) => {
     icon = true,
     variant = "h6",
     iconData,
+    difference = null,
+    positive = true,
+    number = false,
     sx,
   } = props;
 
@@ -45,6 +51,25 @@ export const ProductStatsCard = (props) => {
             </Avatar>
           )}
         </Stack>
+        {difference !== null && (
+          <Stack alignItems="center" direction="row" spacing={2} sx={{ mt: 2 }}>
+            <Stack alignItems="center" direction="row" spacing={0.5}>
+              <SvgIcon color={positive ? "success" : "error"} fontSize="small">
+                {positive ? <ArrowUpwardIcon /> : <ArrowDownwardIcon />}
+              </SvgIcon>
+              <Typography
+                color={positive ? "success.main" : "error.main"}
+                variant="body2"
+              >
+                {number ? difference : `${difference}%`}
+                {/* {`${(difference * 100).toFixed(1)}%`} */}
+              </Typography>
+            </Stack>
+            <Typography color="text.secondary" variant="caption">
+              Since last month
+            </Typography>
+          </Stack>
+        )}
       </CardContent>
     </Card>
   );

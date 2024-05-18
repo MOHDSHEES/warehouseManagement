@@ -133,6 +133,7 @@ export default function ShelfTreeView({ shelfData, warehouseId }) {
   const [allData, setAllData] = useState("loading");
   // const [open, setOpen] = React.useState(false);
   // const [productOpen, setProductOpen] = useState(false);
+  // console.log(allData);
   const [editModelOpen, setEditModelOpen] = useState(false);
 
   // console.log(editModelOpen);

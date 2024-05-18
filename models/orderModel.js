@@ -34,13 +34,10 @@ orderSchema.pre("save", function (next) {
 
   // Get current date, month, and year
   const today = new Date();
-  const date = today.getDate().toString().padStart(2, "0");
   const month = (today.getMonth() + 1).toString().padStart(2, "0"); // Month is zero-based, so add 1
-  const year = (today.getFullYear() % 100).toString();
 
   // Combine all components to form orderId
-  this.orderId =
-    randomLetters + randomNumbers + date + month + year + randomNumbers2;
+  this.orderId = randomLetters + randomNumbers + month + randomNumbers2;
 
   next(); // Call next to proceed with saving
 });
