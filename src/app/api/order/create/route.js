@@ -21,7 +21,8 @@
 // }
 
 import dbConnect from "@/lib/mongoose";
-import orderQueue, { addJobs } from "@/lib/orderQueue";
+// import orderQueue, { addJobs } from "@/lib/orderQueue";
+import ProductAnalytics from "@/models/analyticsModels/productAnalytics";
 // import ProductAnalytics from "@/models/analyticsModels/productAnalytics";
 import orderModel from "@/models/orderModel";
 import { NextRequest, NextResponse } from "next/server";
