@@ -24,17 +24,33 @@ export default function RootLayout({ children }) {
 
   const [backDropOpen, setBackDropOpen] = useState(true);
   const [isMobile, setIsMobile] = useState("loading");
-  useEffect(() => {
-    // Check if the user agent indicates a mobile device
+  const checkIfMobile = () => {
+    const userAgent =
+      typeof window !== "undefined" ? navigator.userAgent.toLowerCase() : "";
+    const screenWidth = typeof window !== "undefined" ? window.innerWidth : 0;
 
-    if (isMobile === "loading") {
-      setBackDropOpen(true);
-      const userAgent = navigator.userAgent.toLowerCase();
-      const isMobile = userAgent.match(/android|iphone|ipad|ipod/i);
-      isMobile ? setIsMobile(true) : setIsMobile(false);
-      setBackDropOpen(false);
-    }
-  }, [isMobile]);
+    // Check user agent and screen width
+    const mobileUserAgent = userAgent.match(/android|iphone|ipad|ipod/i);
+    const mobileScreenWidth = screenWidth < 768; // Adjust as necessary
+
+    return mobileUserAgent || mobileScreenWidth;
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = checkIfMobile();
+      setIsMobile(mobile);
+    };
+
+    setBackDropOpen(true);
+    handleResize();
+    setBackDropOpen(false);
+
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   return (
     <html lang="en">
       <body>
