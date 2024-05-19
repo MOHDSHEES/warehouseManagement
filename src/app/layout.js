@@ -3,9 +3,12 @@
 // import { Inter } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.css";
 import "../../styles/style.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { SessionProvider } from "next-auth/react";
 import { MyProvider } from "../components/context";
+
+import { Alert, Box, Container, Typography } from "@mui/material";
+import BackdropComponent from "../components/UI-component/backdrop";
 
 // const inter = Inter({ subsets: ['latin'] })
 
@@ -18,12 +21,50 @@ export default function RootLayout({ children }) {
   useEffect(() => {
     require("bootstrap/dist/js/bootstrap.bundle.min.js");
   }, []);
+
+  const [backDropOpen, setBackDropOpen] = useState(true);
+  const [isMobile, setIsMobile] = useState("loading");
+  useEffect(() => {
+    // Check if the user agent indicates a mobile device
+
+    if (isMobile === "loading") {
+      setBackDropOpen(true);
+      const userAgent = navigator.userAgent.toLowerCase();
+      const isMobile = userAgent.match(/android|iphone|ipad|ipod/i);
+      isMobile ? setIsMobile(true) : setIsMobile(false);
+      setBackDropOpen(false);
+    }
+  }, [isMobile]);
   return (
     <html lang="en">
       <body>
-        <SessionProvider>
-          <MyProvider>{children}</MyProvider>
-        </SessionProvider>
+        {isMobile === "loading" ? (
+          <BackdropComponent open={backDropOpen} setOpen={setBackDropOpen} />
+        ) : isMobile ? (
+          <Container>
+            <Box
+              display="flex"
+              flexDirection="column"
+              alignItems="center"
+              justifyContent="center"
+              height="100vh"
+              textAlign="center"
+            >
+              <Typography variant="h4" gutterBottom>
+                Mobile Access Not Supported
+              </Typography>
+              <Typography variant="body1">
+                We apologize, but our application is currently not supported on
+                mobile devices. For the best experience, please access our
+                website using a desktop or laptop computer.
+              </Typography>
+            </Box>
+          </Container>
+        ) : (
+          <SessionProvider>
+            <MyProvider>{children}</MyProvider>
+          </SessionProvider>
+        )}
       </body>
     </html>
   );
