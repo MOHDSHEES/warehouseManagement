@@ -13,84 +13,88 @@ import {
   Typography,
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import OverallAnalytics from "@/src/components/analytics/productAnalytics/overallAnalytics";
-import CurrentMonthAnalytics from "@/src/components/analytics/productAnalytics/currentMonthAnalytics";
-import RecentVpreComparison from "@/src/components/analytics/productAnalytics/recentVpreComparison";
-import ProductDetails from "@/src/components/analytics/productAnalytics/productDetails";
-import { graphSalesData } from "@/src/components/analytics/productAnalytics/graphSalesData";
+
+import OverallCustomerAnalytics from "@/src/components/analytics/customerAnalytics/overallAnalytics";
+import CustomerCurrentMonthAnalytics from "@/src/components/analytics/customerAnalytics/customerCurrentMonthAnalytics";
+import CustomerRecentVpreComparison from "@/src/components/analytics/customerAnalytics/recentVpreComparison";
+import { CustomergraphSalesData } from "@/src/components/analytics/customerAnalytics/customerGraphSalesData";
 import LineChartGraph from "@/src/components/analytics/customerAnalytics/LineChartGraph";
 import UserAccessLayout from "@/src/components/layout/userAccessLayout";
 
 const defaultTheme = createTheme();
 
-const ProductAnalytics = ({ params }) => {
-  const { user, messageApi } = useContext(MyContext);
-  const [data, setData] = useState(null);
+const CustomerAnalytics = ({ params }) => {
+  const { messageApi } = useContext(MyContext);
+  // const [data, setData] = useState(null);
   const [analytics, setAnalytics] = useState("loading");
   const [comparisonSales, setComparisonSales] = useState(null);
   const [graphData, setGraphData] = useState(null);
   //   console.log(comparisonSales);
+  // console.log(comparisonSales);
+  // console.log(graphData);
 
   //   console.log(data);
   const [loading, setLoading] = useState(false);
   async function getAnalytics() {
     setLoading(true);
-    const { data } = await axios.post("/api/analytics/product", {
-      productId: params.productId,
-      warehouse: params.id,
-      company: user.company,
+    const { data } = await axios.post("/api/analytics/customer", {
+      customerId: params.customerId,
+      // company: user.company,
     });
     if (data.status === 200) {
-      setData(data.data);
-      setAnalytics(data.data.analytics);
-      data.data.analytics && previousMonthComparison(data.data.analytics);
+      setAnalytics(data.data);
+      data.data && previousMonthComparison(data.data);
     } else closeMessage(messageApi, data.msg, "error");
     setLoading(false);
   }
 
+  // console.log(graphData);
   useEffect(() => {
-    if (!loading && !data) getAnalytics();
-  }, [params.productId, loading, data]);
+    if (!loading && analytics === "loading") getAnalytics();
+  }, [params.customerId, loading]);
 
   function previousMonthComparison(analytics) {
     const data = analytics;
+    // console.log(data);
     // Sort sales history in descending order based on year and month
-    // data.salesHistory.sort((a, b) => {
+    // const sortedHistory = [...data.purchaseHistory].sort((a, b) => {
     //   if (a.year !== b.year) {
     //     return b.year - a.year; // Descending order by year
     //   }
     //   return b.month - a.month; // Descending order by month
     // });
-    setGraphData(graphSalesData(data.salesHistory));
-    const twoMonthSaleHistory = data.salesHistory.slice(0, 2);
-    const [currentMonth, previousMonth] = twoMonthSaleHistory;
+    setGraphData(CustomergraphSalesData(data.purchaseHistory));
+    const twoMonthPurchaseHistory = data.purchaseHistory.slice(0, 2);
+    const [currentMonth, previousMonth] = twoMonthPurchaseHistory;
 
     // Calculate comparisons for sales and purchases
-    const salesPercentageChange = previousMonth
-      ? ((currentMonth.sales - previousMonth.sales) / previousMonth.sales) * 100
-      : currentMonth.sales;
-    const purchasesPercentageChange = previousMonth
-      ? ((currentMonth.purchases - previousMonth.purchases) /
-          previousMonth.purchases) *
+    const spentPercentageChange = previousMonth
+      ? ((currentMonth.totalSpent - previousMonth.totalSpent) /
+          previousMonth.totalSpent) *
         100
-      : currentMonth.purchases;
+      : currentMonth.totalSpent;
+    const purchasesPercentageChange = previousMonth
+      ? ((currentMonth.totalPurchases - previousMonth.totalPurchases) /
+          previousMonth.totalPurchases) *
+        100
+      : currentMonth.totalPurchases;
 
     // Determine comparison status (positive/negative)
-    const salesComparisonPositive = salesPercentageChange > 0 ? true : false;
+    const spentComparisonPositive = spentPercentageChange > 0 ? true : false;
     const purchasesComparisonPositive =
       purchasesPercentageChange > 0 ? true : false;
 
     // Result object with sales, purchases, and comparison statuses
     const comparison = {
-      sales: currentMonth.sales,
-      purchases: currentMonth.purchases,
-      salesPercentageChange,
+      spent: currentMonth.totalSpent,
+      purchases: currentMonth.totalPurchases,
+      spentPercentageChange,
       purchasesPercentageChange,
-      salesComparisonPositive,
+      spentComparisonPositive,
       purchasesComparisonPositive,
       number: previousMonth ? false : true,
       recentMonthData: currentMonth,
-      sortedSalesHistory: data.salesHistory,
+      // sortedSalesHistory: data.purchaseHistory,
     };
     setComparisonSales(comparison);
   }
@@ -98,12 +102,12 @@ const ProductAnalytics = ({ params }) => {
   // console.log(data);
   return (
     <UserAccessLayout>
-      <ThemeProvider requiredprivilege="Product_Analytics" theme={defaultTheme}>
+      <ThemeProvider requiredprivilege="View_Customer" theme={defaultTheme}>
         <Container component="main" maxWidth="xl">
           {/* <CssBaseline /> */}
           <Stack spacing={3}>
             <div>
-              <Typography variant="h4">Product Analytics</Typography>
+              <Typography variant="h4">Customer Analytics</Typography>
               {/* <button onClick={test} className="btn btn-primary">
           test
         </button> */}
@@ -116,55 +120,38 @@ const ProductAnalytics = ({ params }) => {
                 py: 3,
               }}
             >
-              <Grid container spacing={3}>
-                <Grid xs={12} md={12} lg={12}>
-                  {data && <ProductDetails data={data.product} />}
-                </Grid>
+              {/* <Grid container spacing={3}>
+              <Grid xs={12} md={12} lg={12}>
+                {data && <ProductDetails data={data.product} />}
               </Grid>
+            </Grid> */}
               {analytics === "loading" ? (
                 "Loading..."
               ) : !analytics ? (
                 <Alert severity="info">
-                  No analytics available for this product.
+                  No analytics available for this customer.
                 </Alert>
               ) : (
                 <>
                   <Grid container spacing={3}>
-                    <Grid xs={12} md={6} lg={6}>
-                      <OverallAnalytics analytics={analytics} />
+                    <Grid xs={12} md={12} lg={12}>
+                      <OverallCustomerAnalytics analytics={analytics} />
                     </Grid>
+                  </Grid>
+                  <Grid container spacing={3}>
                     <Grid xs={12} md={6} lg={6}>
-                      <CurrentMonthAnalytics
+                      <CustomerCurrentMonthAnalytics
                         comparisonSales={comparisonSales}
                       />
                     </Grid>
-                  </Grid>
-                  <Grid container spacing={3}>
                     <Grid xs={12} md={6} lg={6}>
-                      <RecentVpreComparison comparisonSales={comparisonSales} />
+                      <CustomerRecentVpreComparison
+                        comparisonSales={comparisonSales}
+                      />
+                      {/* <RecentVpreComparison comparisonSales={comparisonSales} /> */}
                     </Grid>
-                    {/* {graphData && (
-                <Grid xs={12} md={6} lg={6}>
-                  <YearlyAnalytics
-                    graphData={graphData}
-                    setGraphData={setGraphData}
-                  />
-                </Grid>
-              )} */}
                   </Grid>
                   <Grid container spacing={3}>
-                    {graphData && graphData.salesData && (
-                      <Grid xs={12} md={6} lg={6}>
-                        <LineChartGraph
-                          graphData={graphData.salesData}
-                          vAxis="Sales"
-                          subTitle="Graph depicting monthly Sales"
-                          title="Yearly Sales"
-                          color="#850F8D"
-                          // setGraphData={setGraphData}
-                        />
-                      </Grid>
-                    )}
                     {graphData && graphData.purchasesData && (
                       <Grid xs={12} md={6} lg={6}>
                         <LineChartGraph
@@ -172,8 +159,18 @@ const ProductAnalytics = ({ params }) => {
                           vAxis="Purchases"
                           subTitle="Graph depicting monthly Purchases"
                           title="Yearly Purchases"
-
-                          // setGraphData={setGraphData}
+                          color="#028391"
+                        />
+                      </Grid>
+                    )}
+                    {graphData && graphData.spentData && (
+                      <Grid xs={12} md={6} lg={6}>
+                        <LineChartGraph
+                          graphData={graphData.spentData}
+                          vAxis="Spent"
+                          title="Yearly Spent"
+                          subTitle="Graph depicting monthly spent"
+                          color="#850F8D"
                         />
                       </Grid>
                     )}
@@ -188,4 +185,4 @@ const ProductAnalytics = ({ params }) => {
   );
 };
 
-export default ProductAnalytics;
+export default CustomerAnalytics;

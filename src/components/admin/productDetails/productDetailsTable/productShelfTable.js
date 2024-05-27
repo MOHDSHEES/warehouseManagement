@@ -13,7 +13,6 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 // }
 
 export default function ProductShelfTable({ searchedData }) {
-  console.log(searchedData);
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} aria-label="simple table">
@@ -37,12 +36,12 @@ export default function ProductShelfTable({ searchedData }) {
                 <TableCell>
                   {shelf.shelf.shelfPath && shelf.shelf.shelfPath.length > 0
                     ? shelf.shelf.shelfPath.map((sh, idx) => (
-                        <>
+                        <React.Fragment key={idx}>
                           {sh}
                           {idx < shelf.shelf.shelfPath.length - 1 && (
                             <ArrowRightIcon />
                           )}
-                        </>
+                        </React.Fragment>
                       ))
                     : "Loading..."}
 

@@ -3,7 +3,8 @@ import { ProductStatsCard } from "../../admin/productDetails/productStatsCard";
 import { Card, CardHeader, Unstable_Grid2 as Grid } from "@mui/material";
 import formatMoney from "../../functions/formatMoney";
 
-const CurrentMonthAnalytics = ({ comparisonSales }) => {
+const CustomerCurrentMonthAnalytics = ({ comparisonSales }) => {
+  // console.log(comparisonSales);
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
   const currentMonth = currentDate.getMonth() + 1;
@@ -22,7 +23,7 @@ const CurrentMonthAnalytics = ({ comparisonSales }) => {
               data={
                 comparisonSales.recentMonthData.month === currentMonth &&
                 comparisonSales.recentMonthData.year === currentYear
-                  ? comparisonSales.recentMonthData.purchases
+                  ? comparisonSales.recentMonthData.totalPurchases
                   : 0
               }
               color="success.main"
@@ -32,13 +33,13 @@ const CurrentMonthAnalytics = ({ comparisonSales }) => {
           )}
         </Grid>
         <Grid xs={12} md={6} lg={6}>
-          {comparisonSales && comparisonSales.sales && (
+          {comparisonSales && comparisonSales.purchases && (
             <ProductStatsCard
-              title="Total Sales"
+              title="Total Spent"
               data={
                 comparisonSales.recentMonthData.month === currentMonth &&
                 comparisonSales.recentMonthData.year === currentYear
-                  ? formatMoney(comparisonSales.recentMonthData.sales)
+                  ? formatMoney(comparisonSales.recentMonthData.totalSpent)
                   : 0
               }
               color="success.main"
@@ -52,4 +53,4 @@ const CurrentMonthAnalytics = ({ comparisonSales }) => {
   );
 };
 
-export default CurrentMonthAnalytics;
+export default CustomerCurrentMonthAnalytics;

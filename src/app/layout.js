@@ -22,39 +22,39 @@ export default function RootLayout({ children }) {
     require("bootstrap/dist/js/bootstrap.bundle.min.js");
   }, []);
 
-  const [backDropOpen, setBackDropOpen] = useState(true);
-  const [isMobile, setIsMobile] = useState("loading");
-  const checkIfMobile = () => {
-    const userAgent =
-      typeof window !== "undefined" ? navigator.userAgent.toLowerCase() : "";
-    const screenWidth = typeof window !== "undefined" ? window.innerWidth : 0;
+  // const [backDropOpen, setBackDropOpen] = useState(true);
+  // const [isMobile, setIsMobile] = useState("loading");
+  // const checkIfMobile = () => {
+  //   const userAgent =
+  //     typeof window !== "undefined" ? navigator.userAgent.toLowerCase() : "";
+  //   const screenWidth = typeof window !== "undefined" ? window.innerWidth : 0;
 
-    // Check user agent and screen width
-    const mobileUserAgent = userAgent.match(/android|iphone|ipad|ipod/i);
-    const mobileScreenWidth = screenWidth < 768; // Adjust as necessary
+  //   // Check user agent and screen width
+  //   const mobileUserAgent = userAgent.match(/android|iphone|ipad|ipod/i);
+  //   const mobileScreenWidth = screenWidth < 768; // Adjust as necessary
 
-    return mobileUserAgent || mobileScreenWidth;
-  };
+  //   return mobileUserAgent || mobileScreenWidth;
+  // };
 
-  useEffect(() => {
-    const handleResize = () => {
-      const mobile = checkIfMobile();
-      setIsMobile(mobile);
-    };
+  // useEffect(() => {
+  //   const handleResize = () => {
+  //     const mobile = checkIfMobile();
+  //     setIsMobile(mobile);
+  //   };
 
-    setBackDropOpen(true);
-    handleResize();
-    setBackDropOpen(false);
+  //   setBackDropOpen(true);
+  //   handleResize();
+  //   setBackDropOpen(false);
 
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+  //   window.addEventListener("resize", handleResize);
+  //   return () => {
+  //     window.removeEventListener("resize", handleResize);
+  //   };
+  // }, []);
   return (
     <html lang="en">
       <body>
-        {isMobile === "loading" ? (
+        {/* {isMobile === "loading" ? (
           <BackdropComponent open={backDropOpen} setOpen={setBackDropOpen} />
         ) : isMobile ? (
           <Container>
@@ -76,11 +76,12 @@ export default function RootLayout({ children }) {
               </Typography>
             </Box>
           </Container>
-        ) : (
-          <SessionProvider>
-            <MyProvider>{children}</MyProvider>
-          </SessionProvider>
-        )}
+        ) : */}
+
+        <SessionProvider>
+          <MyProvider>{children}</MyProvider>
+        </SessionProvider>
+        {/* } */}
       </body>
     </html>
   );

@@ -10,13 +10,20 @@ export async function POST(req) {
     await dbConnect();
     const data = await req.json();
     const regex = new RegExp(data.data, "i");
-    // console.log(data);
+    const onlyRoot = data.onlyRoot ? data.onlyRoot : false;
     if (req.method === "POST") {
-      const resu = await Shelf.find({
+      // Create the query object
+      let query = {
         warehouse: data.warehouse,
-        shelfName: { $regex: regex }, // Match productName partially
-      });
-      //   console.log(resu);
+        shelfName: { $regex: regex },
+      };
+
+      // Add condition for onlyRoot if it's true
+      if (onlyRoot) {
+        query.childrenShelves = { $exists: true, $size: 0 };
+      }
+
+      const resu = await Shelf.find(query);
       return NextResponse.json({ status: 200, data: resu });
     }
   } catch (error) {

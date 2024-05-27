@@ -40,7 +40,6 @@ export default function EditModel({
   const [editShelf, setEditShelf] = React.useState(false);
   const [openProductDetailsOnShelf, setopenProductDetailsOnShelf] =
     React.useState(false);
-
   React.useEffect(() => {
     setShelfClicked(shelfClickedData);
   }, [shelfClickedData]);
@@ -64,7 +63,7 @@ export default function EditModel({
 
   async function productOnShelf() {
     setShelfProductsUpdate(true);
-    setopenProductDetailsOnShelf(!openProductDetailsOnShelf);
+    setopenProductDetailsOnShelf(true);
     const { data } = await axios.post("/api/product/getProductsOnShelf", {
       warehouse: warehouseId,
       shelfId: shelfClicked._id,
@@ -184,6 +183,8 @@ export default function EditModel({
         warehouseId={warehouseId}
         shelfProducts={shelfProducts}
         shelfProductsUpdate={shelfProductsUpdate}
+        setShelfProducts={setShelfProducts}
+        updateProducts={productOnShelf}
       />
       <DeleteShelfModel
         openDelete={openDelete}

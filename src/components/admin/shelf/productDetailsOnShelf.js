@@ -5,16 +5,17 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Alert, Typography } from "@mui/material";
-
 import ProductList from "../productDetails/productsList";
 
 export default function ProductDetailsOnShelf({
   openProductDetailsOnShelf,
   setOpenProductDetailsOnShelf,
   shelfProducts,
-  //   warehouseId,
+  warehouseId,
   shelfClicked,
   shelfProductsUpdate,
+  setShelfProducts,
+  updateProducts,
 }) {
   const handleClose = () => {
     setOpenProductDetailsOnShelf(false);
@@ -39,7 +40,12 @@ export default function ProductDetailsOnShelf({
               <b>Products: </b>
             </Typography>
             {shelfProducts && shelfProducts.length > 0 ? (
-              <ProductList data={shelfProducts} />
+              <ProductList
+                data={shelfProducts}
+                warehouseId={warehouseId}
+                setShelfProducts={setShelfProducts}
+                updateProducts={updateProducts}
+              />
             ) : shelfProducts && shelfProducts.length === 0 ? (
               <Alert icon={false} severity="info">
                 No Product Found on the Shelf.

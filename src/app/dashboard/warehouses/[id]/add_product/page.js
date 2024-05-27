@@ -28,6 +28,7 @@ export default function ProductAdd({ params }) {
   const [quantity, setQuantity] = useState("");
   const [productId, setProductId] = useState("");
   const [productName, setProductName] = useState("");
+  const [description, setDescription] = useState("");
   const [colorQuantities, setColorQuantities] = useState([
     { color: "", quantity: 0, size: "" },
   ]);
@@ -55,6 +56,7 @@ export default function ProductAdd({ params }) {
     setQuantity("");
     setProductId("");
     setProductName("");
+    setDescription("");
     // setColor("");
     setColorQuantities([{ color: "", quantity: 0, size: "" }]);
     // setSizeQuantities([{ size: "", quantity: 0 }]);
@@ -82,6 +84,7 @@ export default function ProductAdd({ params }) {
           productId: productId,
           productName: productName.trim(),
           quantity: quantity,
+          description: description,
           color: validColorQuantities,
           // size: validSizeQuantities,
           warehouse: params.id,
@@ -123,6 +126,8 @@ export default function ProductAdd({ params }) {
           <AddProductForm
             productName={productName}
             setProductName={setProductName}
+            description={description}
+            setDescription={setDescription}
             productId={productId}
             setProductId={setProductId}
             quantity={quantity}

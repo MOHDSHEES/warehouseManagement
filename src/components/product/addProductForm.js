@@ -24,6 +24,8 @@ const AddProductForm = ({
   setQuantity,
   state,
   Inputchange,
+  description,
+  setDescription,
   colorQuantities,
   setColorQuantities,
   submitHandler,
@@ -157,7 +159,21 @@ const AddProductForm = ({
                   />
                 </FormControl>
               </Grid>
-
+              <Grid item xs={12} sm={12}>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="productDescription"
+                  name="description"
+                  label="Product Description"
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  // onChange={Inputchange}
+                  fullWidth
+                  // variant="standard"
+                />
+              </Grid>
               <Grid item xs={12} sm={12}>
                 <ColorQuantityInput
                   colorQuantities={colorQuantities ? colorQuantities : []}

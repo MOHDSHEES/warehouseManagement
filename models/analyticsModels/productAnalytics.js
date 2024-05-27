@@ -18,8 +18,12 @@ const productAnalyticsSchema = new mongoose.Schema({
   },
   purchases: { type: Number, default: 0 },
   totalSales: { type: Number, default: 0 },
+  return: { type: Number, default: 0 },
   salesHistory: [salesHistorySchema],
 });
+
+// Adding an index on productId
+productAnalyticsSchema.index({ productId: 1 });
 
 const ProductAnalytics =
   mongoose.models.ProductAnalytics ||

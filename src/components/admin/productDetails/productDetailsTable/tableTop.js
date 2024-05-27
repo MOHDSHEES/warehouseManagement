@@ -23,7 +23,7 @@ const TableTop = ({ searchedData }) => {
     wholesalePrice = loading,
     retailPrice = loading,
     color = "",
-    size = "",
+    description = loading,
   } = searchedData || {};
 
   return (
@@ -104,6 +104,21 @@ const TableTop = ({ searchedData }) => {
                 label="Retail Price"
               />
             </FormControl>
+          </Grid>
+          <Grid item xs={12} sm={12}>
+            <TextField
+              // autoFocus
+              // required
+              //   margin="dense"
+              id="productDescription"
+              name="description"
+              label="Product description"
+              value={description}
+              variant="filled"
+              size="small"
+              // onChange={Inputchange}
+              fullWidth
+            />
           </Grid>
         </Grid>
       </fieldset>

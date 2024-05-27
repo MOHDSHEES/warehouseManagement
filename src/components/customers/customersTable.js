@@ -17,6 +17,7 @@ import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
 import { AlertTitle, Button, LinearProgress } from "@mui/material";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -65,10 +66,12 @@ const columns = [
 export default function CustomersTable() {
   const { user, messageApi, privileges, isAdmin } = React.useContext(MyContext);
   //   console.log(user);
+  const router = useRouter();
   const [page, setPage] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [customers, setCustomers] = React.useState(null);
+  console.log(customers);
   //   const router = useRouter();
   //   const [warehouseClicked, setWarehouseClicked] = React.useState("");
 
@@ -144,6 +147,9 @@ export default function CustomersTable() {
                       return (
                         <TableRow
                           className="pointer"
+                          onClick={() =>
+                            router.push(`/dashboard/customer/${row._id}`)
+                          }
                           hover
                           role="checkbox"
                           tabIndex={-1}

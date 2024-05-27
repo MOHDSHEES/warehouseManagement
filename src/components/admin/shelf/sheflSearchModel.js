@@ -8,7 +8,7 @@ import Stack from "@mui/joy/Stack";
 import ShelfSearch from "../../search/shelfSearch";
 import axios from "axios";
 import { Typography, debounce } from "@mui/material";
-import EditModel from "./editModel";
+import SearchedShelfModel from "./searchedShelfModel";
 
 export default function ShelfSearchModel({ open, setOpen, warehouse }) {
   const [options, setOptions] = useState([]);
@@ -16,7 +16,8 @@ export default function ShelfSearchModel({ open, setOpen, warehouse }) {
   const [loading, setLoading] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [state, setState] = useState({});
-  const [openEdit, setOpenEdit] = useState(false);
+  // const [openEdit, setOpenEdit] = useState(false);
+  const [searchedShelfModel, setSearchedShelfModel] = useState(false);
   // console.log(selectedValue);
 
   const fetch = useMemo(
@@ -65,7 +66,13 @@ export default function ShelfSearchModel({ open, setOpen, warehouse }) {
     };
   }, [inputValue]);
 
-  function search() {
+  function search(e) {
+    e.preventDefault();
+    if (selectedValue && selectedValue._id) {
+      setOpen(false);
+      setSearchedShelfModel(true);
+    }
+
     // setOpen(false);
     // setOpenEdit(true);
   }
@@ -86,25 +93,31 @@ export default function ShelfSearchModel({ open, setOpen, warehouse }) {
               setOpen(false);
             }}
           > */}
-          <Stack spacing={2} sx={{ mt: 2 }}>
-            <ShelfSearch
-              options={options}
-              selectedValue={selectedValue}
-              loading={loading}
-              inputValue={inputValue}
-              setSelectedValue={setSelectedValue}
-              setInputValue={setInputValue}
-              //  Inputchange={Inputchange}
-              state={state}
-              setState={setState}
-            />
-            <Button type="search" onClick={search}>
-              Search
-            </Button>
-          </Stack>
+          <form onSubmit={search}>
+            <Stack spacing={2} sx={{ mt: 2 }}>
+              <ShelfSearch
+                options={options}
+                selectedValue={selectedValue}
+                loading={loading}
+                inputValue={inputValue}
+                setSelectedValue={setSelectedValue}
+                setInputValue={setInputValue}
+                //  Inputchange={Inputchange}
+                state={state}
+                setState={setState}
+              />
+              <Button type="submit">Search</Button>
+            </Stack>
+          </form>
           {/* </form> */}
         </ModalDialog>
       </Modal>
+      <SearchedShelfModel
+        setOpen={setSearchedShelfModel}
+        open={searchedShelfModel}
+        shelf={selectedValue}
+        warehouse={warehouse}
+      />
       {/* <EditModel
         editModelOpen={openEdit}
         setEditModelOpen={setOpenEdit}

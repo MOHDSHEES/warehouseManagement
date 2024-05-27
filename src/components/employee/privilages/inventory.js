@@ -5,7 +5,6 @@ import {
   Switch,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2/Grid2";
-import { useState } from "react";
 
 export const InventoryPrivilages = ({ state, handleChange }) => {
   return (
@@ -36,6 +35,15 @@ export const InventoryPrivilages = ({ state, handleChange }) => {
               label="Update Product"
               name="Update_Product"
               checked={state.Update_Product}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid>
+            <FormControlLabel
+              control={<Switch size="small" sx={{ marginRight: "5px" }} />}
+              label="Product Analytics"
+              name="Product_Analytics"
+              checked={state.Product_Analytics}
               onChange={handleChange}
             />
           </Grid>

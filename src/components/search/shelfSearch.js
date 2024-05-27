@@ -1,24 +1,15 @@
-import react, { useContext, useEffect, useState } from "react";
 import TextField from "@mui/material/TextField";
 import Stack from "@mui/material/Stack";
 import Autocomplete from "@mui/material/Autocomplete";
-import SearchIcon from "@mui/icons-material/Search";
-import axios from "axios";
-import { IconButton, InputBase, Paper, Typography } from "@mui/material";
-import ProductDetails from "../admin/productDetails/productDetails";
-import { MyContext } from "../context";
-import { closeMessage } from "../functions/message";
+import { Typography } from "@mui/material";
 import { Unstable_Grid2 as Grid, InputAdornment } from "@mui/material";
 
 export default function ShelfSearch({
-  warehouse,
   options,
   selectedValue,
   loading,
   inputValue,
   setSelectedValue,
-  setState,
-  state,
   setInputValue,
 }) {
   return (

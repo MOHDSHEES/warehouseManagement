@@ -38,6 +38,7 @@ const MyProvider = ({ children }) => {
     Edit_Employee: false,
     Create_Order: false,
     View_Orders: false,
+    Product_Analytics: false,
   };
   // const [isAuth, setIsAuth] = useState(false);
   // console.log(privileges);

@@ -58,6 +58,7 @@ export default function ProductDetails({
     history.push(
       `/dashboard/warehouses/${warehouse}/${searchedData.productId}`
     );
+
     handleCloseOptions();
     handleClose();
   }
@@ -84,46 +85,58 @@ export default function ProductDetails({
       >
         <DialogTitle>
           Product Details
-          {((privileges && privileges.Update_Product) || isAdmin) && (
-            <span style={{ float: "right", marginRight: "10px" }}>
-              <>
-                <Tooltip title="Filter">
-                  <IconButton
-                    id="productDetails-button"
-                    disabled={disable}
-                    sx={{ float: "right", marginBottom: "10px" }}
-                    aria-controls={open ? "productDetails-menu" : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={open ? "true" : undefined}
-                    onClick={handleClick}
-                    aria-label="Filter"
-                    size="large"
+          {/* {((privileges && privileges.Update_Product) || isAdmin) && ( */}
+          <span style={{ float: "right", marginRight: "10px" }}>
+            <>
+              {((privileges &&
+                (privileges.Product_Analytics || privileges.Update_Product)) ||
+                isAdmin) && (
+                <>
+                  <Tooltip title="Filter">
+                    <IconButton
+                      id="productDetails-button"
+                      disabled={disable}
+                      sx={{ float: "right", marginBottom: "10px" }}
+                      aria-controls={open ? "productDetails-menu" : undefined}
+                      aria-haspopup="true"
+                      aria-expanded={open ? "true" : undefined}
+                      onClick={handleClick}
+                      aria-label="Filter"
+                      size="large"
+                    >
+                      <MoreVertIcon />
+                    </IconButton>
+                  </Tooltip>
+
+                  <Menu
+                    id="productDetails-menu"
+                    anchorEl={anchorEl}
+                    open={open}
+                    onClose={handleCloseOptions}
+                    PaperProps={{
+                      style: {
+                        maxHeight: 50 * 4.5,
+                        width: "20ch",
+                      },
+                    }}
+                    MenuListProps={{
+                      "aria-labelledby": "productDetails-button",
+                    }}
                   >
-                    <MoreVertIcon />
-                  </IconButton>
-                </Tooltip>
-                <Menu
-                  id="productDetails-menu"
-                  anchorEl={anchorEl}
-                  open={open}
-                  onClose={handleCloseOptions}
-                  PaperProps={{
-                    style: {
-                      maxHeight: 50 * 4.5,
-                      width: "20ch",
-                    },
-                  }}
-                  MenuListProps={{
-                    "aria-labelledby": "productDetails-button",
-                  }}
-                >
-                  <MenuItem onClick={analytics}>Analytics</MenuItem>
-                  <MenuItem onClick={() => setOpenEditModel(true)}>
-                    Edit
-                  </MenuItem>
-                </Menu>
-              </>
-              {/* <Button
+                    {((privileges && privileges.Product_Analytics) ||
+                      isAdmin) && (
+                      <MenuItem onClick={analytics}>Analytics</MenuItem>
+                    )}
+                    {((privileges && privileges.Update_Product) || isAdmin) && (
+                      <MenuItem onClick={() => setOpenEditModel(true)}>
+                        Edit
+                      </MenuItem>
+                    )}
+                  </Menu>
+                </>
+              )}
+            </>
+            {/* <Button
                 variant="contained"
                 onClick={() => setOpenEditModel(true)}
                 size="small"
@@ -132,8 +145,8 @@ export default function ProductDetails({
               >
                 Edit
               </Button> */}
-            </span>
-          )}
+          </span>
+          {/* )} */}
         </DialogTitle>
         <DialogContent>
           {/* <DialogContentText>

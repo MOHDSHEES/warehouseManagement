@@ -144,44 +144,46 @@ const Page = ({ params }) => {
                       <small style={{ fontSize: "18px" }}>Shelf Details:</small>
                     }
                     action={
-                      ((privileges && privileges.Add_Shelf) || isAdmin) && (
-                        <>
-                          <Tooltip title="Filter">
-                            <IconButton
-                              id="basic-button"
-                              sx={{ float: "right", marginBottom: "10px" }}
-                              aria-controls={open ? "basic-menu" : undefined}
-                              aria-haspopup="true"
-                              aria-expanded={open ? "true" : undefined}
-                              onClick={handleClick}
-                              aria-label="Filter"
-                              size="large"
-                            >
-                              <MoreVertIcon />
-                            </IconButton>
-                          </Tooltip>
-                          <Menu
-                            id="basic-menu"
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
-                            PaperProps={{
-                              style: {
-                                maxHeight: 50 * 4.5,
-                                width: "20ch",
-                              },
-                            }}
-                            MenuListProps={{
-                              "aria-labelledby": "basic-button",
+                      // ((privileges && privileges.Add_Shelf) || isAdmin) && (
+                      <>
+                        <Tooltip title="Filter">
+                          <IconButton
+                            id="basic-button"
+                            sx={{ float: "right", marginBottom: "10px" }}
+                            aria-controls={open ? "basic-menu" : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? "true" : undefined}
+                            onClick={handleClick}
+                            aria-label="Filter"
+                            size="large"
+                          >
+                            <MoreVertIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Menu
+                          id="basic-menu"
+                          anchorEl={anchorEl}
+                          open={open}
+                          onClose={handleClose}
+                          PaperProps={{
+                            style: {
+                              maxHeight: 50 * 4.5,
+                              width: "20ch",
+                            },
+                          }}
+                          MenuListProps={{
+                            "aria-labelledby": "basic-button",
+                          }}
+                        >
+                          <MenuItem
+                            onClick={() => {
+                              handleClose(), setShelfSearchModel(true);
                             }}
                           >
-                            <MenuItem
-                              onClick={() => {
-                                handleClose(), setShelfSearchModel(true);
-                              }}
-                            >
-                              Search Shelf
-                            </MenuItem>
+                            Search Shelf
+                          </MenuItem>
+                          {((privileges && privileges.Add_Shelf) ||
+                            isAdmin) && (
                             <MenuItem
                               onClick={() =>
                                 router.push(
@@ -191,32 +193,11 @@ const Page = ({ params }) => {
                             >
                               Add Shelf
                             </MenuItem>
+                          )}
+                        </Menu>
+                      </>
 
-                            {/* <MenuItem onClick={() => filterFunction("Active")}>
-                          Active
-                        </MenuItem>
-                        <MenuItem onClick={() => filterFunction("Rejected")}>
-                          Rejected
-                        </MenuItem>
-                        <MenuItem onClick={() => filterFunction("Inactive")}>
-                          Inactive
-                        </MenuItem>
-                        <MenuItem onClick={() => filterFunction("all")}>
-                          All Blogs
-                        </MenuItem> */}
-                          </Menu>
-                        </>
-                        // <Link
-                        //   href={`/dashboard/warehouses/${params.id}/add_shelf`}
-                        // >
-                        //   <Button
-                        //     variant="contained"
-                        //     // href={`/dashboard/warehouses/${params.id}/add_shelf`}
-                        //   >
-                        //     Add Shelf
-                        //   </Button>
-                        // </Link>
-                      )
+                      // )
                     }
                   />
                   <ShelfTreeMain warehouseId={params.id} />

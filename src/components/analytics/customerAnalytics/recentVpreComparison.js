@@ -1,9 +1,10 @@
 import React from "react";
 import { ProductStatsCard } from "../../admin/productDetails/productStatsCard";
 import { Card, CardHeader, Unstable_Grid2 as Grid } from "@mui/material";
+import AnalyticsIcon from "@mui/icons-material/Analytics";
 import formatMoney from "../../functions/formatMoney";
 
-const RecentVpreComparison = ({ comparisonSales }) => {
+const CustomerRecentVpreComparison = ({ comparisonSales }) => {
   return (
     <Card sx={{ p: 2 }}>
       <CardHeader
@@ -31,17 +32,17 @@ const RecentVpreComparison = ({ comparisonSales }) => {
           )}
         </Grid>
         <Grid xs={12} md={6} lg={6}>
-          {comparisonSales && comparisonSales.sales && (
+          {comparisonSales && comparisonSales.spent && (
             <ProductStatsCard
-              title="Total Sales"
-              data={formatMoney(comparisonSales.sales)}
+              title="Total Spent"
+              data={formatMoney(comparisonSales.spent)}
               color="success.main"
               variant="h4"
-              icon={false}
+              iconData={<AnalyticsIcon />}
               difference={Math.abs(
-                comparisonSales.salesPercentageChange.toFixed(1)
+                comparisonSales.spentPercentageChange.toFixed(1)
               )}
-              positive={comparisonSales.salesComparisonPositive}
+              positive={comparisonSales.spentComparisonPositive}
               number={comparisonSales.number}
             />
           )}
@@ -51,4 +52,4 @@ const RecentVpreComparison = ({ comparisonSales }) => {
   );
 };
 
-export default RecentVpreComparison;
+export default CustomerRecentVpreComparison;

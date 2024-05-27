@@ -1,6 +1,7 @@
 import React from "react";
 import { ProductStatsCard } from "../../admin/productDetails/productStatsCard";
 import { Card, CardHeader, Unstable_Grid2 as Grid } from "@mui/material";
+import formatMoney from "../../functions/formatMoney";
 
 const OverallAnalytics = ({ analytics }) => {
   return (
@@ -24,7 +25,7 @@ const OverallAnalytics = ({ analytics }) => {
           {analytics && analytics.totalSales && (
             <ProductStatsCard
               title="Total Sales"
-              data={analytics.totalSales}
+              data={formatMoney(analytics.totalSales)}
               color="success.main"
               variant="h4"
               icon={false}
