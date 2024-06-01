@@ -27,9 +27,9 @@ export default function ProductAddModel({
   const { user } = useContext(MyContext);
   const [quantity, setQuantity] = useState("");
   const [color, setColor] = useState("");
-  const [size, setSize] = useState("");
+  // const [size, setSize] = useState("");
   const [productIdsData, setProductIdData] = useState(null);
-  const [productNameData, setProductNameData] = useState(null);
+  // const [productNameData, setProductNameData] = useState(null);
   const [productId, setProductId] = useState("");
   const [productName, setProductName] = useState("");
   const [selectedProductDetails, setSelectedProductDetails] = useState("");
@@ -69,7 +69,7 @@ export default function ProductAddModel({
     setProductName("");
     setProductId("");
     setColor("");
-    setSize("");
+    // setSize("");
     setSelectedProductDetails("");
     // setstate({
     //   productName: "",
@@ -158,7 +158,7 @@ export default function ProductAddModel({
             shelf: shelfData._id,
             quantity: quantity,
             color: color,
-            size: size,
+            // size: size,
           },
         },
         productId: productId,

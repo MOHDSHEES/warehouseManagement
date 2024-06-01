@@ -16,7 +16,7 @@ const OverallCustomerAnalytics = ({ analytics }) => {
           {analytics && analytics.totalPurchases && (
             <ProductStatsCard
               title="Total Purchases"
-              data={analytics.totalPurchases}
+              data={formatMoney(analytics.totalPurchases)}
               color="rgba(109, 81, 146, 1.00)"
               variant="h4"
               iconData={<Inventory2Icon />}

@@ -13,7 +13,8 @@ import {
 } from "@mui/material";
 
 import ColorQuantityInput from "@/src/components/product/colorAdd";
-import SizeQuantityInput from "@/src/components/product/sizeAdd";
+import { handleKeyDownInt } from "../functions/InputValidation";
+// import SizeQuantityInput from "@/src/components/product/sizeAdd";
 
 const AddProductForm = ({
   productName,
@@ -33,23 +34,23 @@ const AddProductForm = ({
   component,
 }) => {
   //   console.log(productName);
-  const handleKeyDown = (event) => {
-    // Check if the pressed key is a dot (.)
-    if (
-      isNaN(Number(event.key)) &&
-      event.key !== "Backspace" &&
-      event.key !== "Tab"
-    ) {
-      event.preventDefault();
-    }
-    // if (
-    //   event.key === "." ||
-    //   event.key === "-" ||
-    //   event.key.toLowerCase() === "e"
-    // ) {
-    //   event.preventDefault();
-    // }
-  };
+  // const handleKeyDown = (event) => {
+  //   // Check if the pressed key is a dot (.)
+  //   if (
+  //     isNaN(Number(event.key)) &&
+  //     event.key !== "Backspace" &&
+  //     event.key !== "Tab"
+  //   ) {
+  //     event.preventDefault();
+  //   }
+  //   // if (
+  //   //   event.key === "." ||
+  //   //   event.key === "-" ||
+  //   //   event.key.toLowerCase() === "e"
+  //   // ) {
+  //   //   event.preventDefault();
+  //   // }
+  // };
   return (
     <>
       <Container
@@ -117,7 +118,7 @@ const AddProductForm = ({
                     setQuantity(e.target.value.replace(/\s/g, ""))
                   }
                   // newValue.replace(/\s/g, '')
-                  onKeyDown={handleKeyDown}
+                  onKeyDown={handleKeyDownInt}
                   fullWidth
                   // variant="standard"
                 />
@@ -178,6 +179,25 @@ const AddProductForm = ({
                 <ColorQuantityInput
                   colorQuantities={colorQuantities ? colorQuantities : []}
                   setColorQuantities={setColorQuantities}
+                />
+              </Grid>
+
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  autoFocus
+                  required
+                  margin="dense"
+                  id="outofstockReminder"
+                  name="outOfStockReminder"
+                  label="Out Of Stock Reminder"
+                  value={state.outOfStockReminder}
+                  onChange={Inputchange}
+                  // newValue.replace(/\s/g, '')
+                  onKeyDown={handleKeyDownInt}
+                  helperText="Specify the minimum stock quantity to trigger an out-of-stock alert."
+                  // onChange={Inputchange}
+                  fullWidth
+                  // variant="standard"
                 />
               </Grid>
               {/* <Grid item xs={12}>

@@ -14,7 +14,7 @@ const OverallAnalytics = ({ analytics }) => {
           {analytics && analytics.purchases && (
             <ProductStatsCard
               title="Total Purchases"
-              data={analytics.purchases}
+              data={formatMoney(analytics.purchases)}
               color="success.main"
               variant="h4"
               icon={false}

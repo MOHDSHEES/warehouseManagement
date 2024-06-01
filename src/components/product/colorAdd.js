@@ -3,6 +3,7 @@ import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { MyContext } from "../context";
 import { closeMessage } from "../functions/message";
+import { handleKeyDownInt } from "../functions/InputValidation";
 
 const ColorQuantityInput = ({ colorQuantities, setColorQuantities }) => {
   const { messageApi } = useContext(MyContext);
@@ -15,7 +16,8 @@ const ColorQuantityInput = ({ colorQuantities, setColorQuantities }) => {
 
   const handleQuantityChange = (index, value) => {
     const updatedColorQuantities = [...colorQuantities];
-    updatedColorQuantities[index].quantity = value;
+    updatedColorQuantities[index].quantity =
+      value === "" ? "" : parseInt(value, 10);
     setColorQuantities(updatedColorQuantities);
   };
   const handleSizeChange = (index, value) => {
@@ -73,6 +75,7 @@ const ColorQuantityInput = ({ colorQuantities, setColorQuantities }) => {
             label={`Quantity of color ${index + 1}`}
             value={entry.quantity}
             onChange={(e) => handleQuantityChange(index, e.target.value)}
+            onKeyDown={handleKeyDownInt}
           />
           <TextField
             margin="dense"

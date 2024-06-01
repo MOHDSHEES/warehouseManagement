@@ -11,6 +11,7 @@ import { MyContext } from "../context";
 import axios from "axios";
 import { closeMessage, openMessage } from "../functions/message";
 import { signOut } from "next-auth/react";
+import { Typography } from "@mui/material";
 
 export default function EditProductModel({
   open,
@@ -30,7 +31,7 @@ export default function EditProductModel({
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState(searchedData.description);
   const [colorQuantities, setColorQuantities] = useState([
-    { color: "", quantity: "0" },
+    { color: "", quantity: "0", size: "" },
   ]);
   // const [sizeQuantities, setSizeQuantities] = useState([
   //   { size: "", quantity: 0 },
@@ -40,13 +41,20 @@ export default function EditProductModel({
   const [state, setstate] = useState({
     wholesalePrice: "",
     retailPrice: "",
+    outOfStockReminder: 0,
   });
   const Inputchange = (event) => {
     const { name, value } = event.target;
-    setstate({
-      ...state,
-      [name]: value.trim(),
-    });
+    if (name === "outOfStockReminder") {
+      setstate({
+        ...state,
+        [name]: value === "" ? "" : parseInt(value.trim()),
+      });
+    } else
+      setstate({
+        ...state,
+        [name]: value.trim(),
+      });
   };
 
   useEffect(() => {
@@ -63,11 +71,12 @@ export default function EditProductModel({
       setColorQuantities(
         searchedData.color.length > 0
           ? searchedData.color
-          : [{ color: "", quantity: 0 }]
+          : [{ color: "", quantity: 0, size: "" }]
       );
       setstate({
         wholesalePrice: searchedData.wholesalePrice,
         retailPrice: searchedData.retailPrice,
+        outOfStockReminder: searchedData.outOfStockReminder,
       });
     }
   }, [searchedData, open]);
@@ -76,12 +85,13 @@ export default function EditProductModel({
     setstate({
       wholesalePrice: "",
       retailPrice: "",
+      outOfStockReminder: 0,
     });
     setQuantity("");
     setProductId("");
     setProductName("");
     // setColor("");
-    setColorQuantities([{ color: "", quantity: 0 }]);
+    setColorQuantities([{ color: "", quantity: 0, size: "" }]);
     // setSizeQuantities([{ size: "", quantity: 0 }]);
   }
 
@@ -102,7 +112,7 @@ export default function EditProductModel({
         _id: searchedData._id,
         productId: productId,
         productName: productName.trim(),
-        quantity: quantity,
+        quantity: parseInt(quantity),
         description: description,
         color: validColorQuantities,
         // size: validSizeQuantities,
@@ -147,10 +157,22 @@ export default function EditProductModel({
       >
         <DialogTitle>Edit:</DialogTitle>
         <DialogContent>
-          {/* <DialogContentText>
-            To subscribe to this website, please enter your email address here.
-            We will send updates occasionally.
-          </DialogContentText> */}
+          {/* <DialogContentText> */}
+
+          <Typography
+            variant="caption"
+            display="block"
+            sx={{ color: "red", mb: 1 }}
+          >
+            <span style={{ color: "black" }}>
+              <b>Note: </b>
+            </span>
+            When modifying the color and size of an existing variant stored on
+            the shelf, remember that the shelf variant will not automatically
+            update. To reflect the changes accurately, remove the old variant
+            from the shelf first, and then proceed with the update.
+          </Typography>
+          {/* </DialogContentText> */}
           <AddProductForm
             productName={productName}
             setProductName={setProductName}

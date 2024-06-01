@@ -8,6 +8,7 @@ const productSchema = new mongoose.Schema({
   description: { type: String },
   imgUrl: { type: String },
   retailPrice: { type: String },
+  outOfStockReminder: { type: Number },
   shelves: [
     {
       _id: false,

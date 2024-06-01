@@ -22,7 +22,7 @@ const CurrentMonthAnalytics = ({ comparisonSales }) => {
               data={
                 comparisonSales.recentMonthData.month === currentMonth &&
                 comparisonSales.recentMonthData.year === currentYear
-                  ? comparisonSales.recentMonthData.purchases
+                  ? formatMoney(comparisonSales.recentMonthData.purchases)
                   : 0
               }
               color="success.main"

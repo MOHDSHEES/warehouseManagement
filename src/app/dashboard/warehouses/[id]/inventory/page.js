@@ -19,6 +19,7 @@ import axios from "axios";
 import OutOfStock from "@/src/components/admin/productDetails/outOfStock";
 import Link from "next/link";
 import UserAccessLayout from "@/src/components/layout/userAccessLayout";
+import { closeMessage } from "@/src/components/functions/message";
 
 const Page = ({ params }) => {
   const { messageApi, productIds, setProductIds, privileges, isAdmin } =

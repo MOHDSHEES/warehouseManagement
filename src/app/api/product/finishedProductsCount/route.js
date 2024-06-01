@@ -12,12 +12,51 @@ export async function POST(req) {
     // console.log(data);
     if (req.method === "POST") {
       const zeroQuantityProductCount = await Product.countDocuments({
-        $or: [{ quantity: "0" }, { "color.quantity": "0" }],
+        $or: [
+          { quantity: { $lte: 0 } },
+          { "color.quantity": { $lte: 0 } },
+          { $expr: { $lte: ["$quantity", "$outOfStockReminder"] } },
+          { $expr: { $lte: ["$color.quantity", "$outOfStockReminder"] } },
+        ],
         warehouse: data.warehouse,
       });
+
+      // const zeroQuantityProductCount = await Product.countDocuments({
+      //   $or: [{ quantity: "0" }, { "color.quantity": "0" }],
+      //   warehouse: data.warehouse,
+      // });
       // Get details of 5 products with quantity 0
       const zeroQuantityProducts = await Product.find({
-        $or: [{ quantity: "0" }, { "color.quantity": "0" }],
+        $or: [
+          {
+            $or: [
+              { quantity: 0 },
+              { $expr: { $lte: ["$quantity", "$outOfStockReminder"] } },
+            ],
+          },
+          {
+            $or: [
+              { "color.quantity": 0 }, // Check if any color quantity is 0
+              {
+                $expr: {
+                  $anyElementTrue: {
+                    $map: {
+                      input: "$color",
+                      as: "c",
+                      in: { $lte: ["$$c.quantity", "$outOfStockReminder"] },
+                    },
+                  },
+                },
+              },
+            ],
+          },
+          // {
+          //   $or: [
+          //     { "color.quantity": 0 },
+          //     { $expr: { $lte: ["$color.quantity", "$outOfStockReminder"] } },
+          //   ],
+          // },
+        ],
         warehouse: data.warehouse,
       }).limit(5);
       return NextResponse.json({

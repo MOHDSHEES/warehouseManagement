@@ -23,7 +23,7 @@ const CustomerCurrentMonthAnalytics = ({ comparisonSales }) => {
               data={
                 comparisonSales.recentMonthData.month === currentMonth &&
                 comparisonSales.recentMonthData.year === currentYear
-                  ? comparisonSales.recentMonthData.totalPurchases
+                  ? formatMoney(comparisonSales.recentMonthData.totalPurchases)
                   : 0
               }
               color="success.main"

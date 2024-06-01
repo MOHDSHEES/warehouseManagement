@@ -51,25 +51,90 @@ async function updateProductAnalytics(orderItems, orderType) {
       const quantity = parseInt(item.orderData.qty);
       const price = quantity * parseFloat(item.orderData.price);
 
-      productBulkOps.push({
+      const baseUpdate = {
         updateOne: {
           filter: { _id: _id },
           update: {
             $inc: {
               quantity: -quantity,
-              "shelves.$[elem].quantity": -quantity,
+              "color.$[colorElem].quantity": -quantity,
             },
           },
           arrayFilters: [
             {
-              "elem.shelf": new mongoose.Types.ObjectId(
-                item.orderData.shelf.shelf._id
-              ),
-              "elem.color": item.orderData.shelf.color,
+              $or: [
+                { "colorElem.color": item.orderData.shelf.color },
+                { "colorElem.size": item.orderData.shelf.size },
+                {
+                  $and: [
+                    { "colorElem.color": item.orderData.shelf.color },
+                    { "colorElem.size": item.orderData.shelf.size },
+                  ],
+                },
+              ],
             },
           ],
         },
-      });
+      };
+
+      productBulkOps.push(baseUpdate);
+
+      // Conditionally add the shelves update if orderData.shelf is present
+      if (item.orderData && item.orderData.shelf) {
+        const shelfUpdate = {
+          updateOne: {
+            filter: { _id: _id },
+            update: {
+              $inc: {
+                "shelves.$[elem].quantity": -quantity,
+              },
+            },
+            arrayFilters: [
+              {
+                "elem.shelf": new mongoose.Types.ObjectId(
+                  item.orderData.shelf.shelf._id
+                ),
+                "elem.color": item.orderData.shelf.color,
+              },
+            ],
+          },
+        };
+
+        productBulkOps.push(shelfUpdate);
+      }
+
+      // productBulkOps.push({
+      //   updateOne: {
+      //     filter: { _id: _id },
+      //     update: {
+      //       $inc: {
+      //         quantity: -quantity,
+      //         "shelves.$[elem].quantity": -quantity,
+      //         "color.$[colorElem].quantity": -quantity,
+      //       },
+      //     },
+      //     arrayFilters: [
+      //       {
+      //         "elem.shelf": new mongoose.Types.ObjectId(
+      //           item.orderData.shelf.shelf._id
+      //         ),
+      //         "elem.color": item.orderData.shelf.color,
+      //       },
+      //       {
+      //         $or: [
+      //           { "colorElem.color": item.orderData.shelf.color },
+      //           { "colorElem.size": item.orderData.shelf.size },
+      //           {
+      //             $and: [
+      //               { "colorElem.color": item.orderData.shelf.color },
+      //               { "colorElem.size": item.orderData.shelf.size },
+      //             ],
+      //           },
+      //         ],
+      //       },
+      //     ],
+      //   },
+      // });
 
       const analytics = await ProductAnalytics.findOne({
         productId: _id,

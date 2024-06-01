@@ -19,12 +19,12 @@ const CustomerRecentVpreComparison = ({ comparisonSales }) => {
           {comparisonSales && comparisonSales.purchases && (
             <ProductStatsCard
               title="Total Purchases"
-              data={comparisonSales.purchases}
+              data={formatMoney(comparisonSales.purchases)}
               color="success.main"
               variant="h4"
               icon={false}
-              difference={Math.abs(
-                comparisonSales.purchasesPercentageChange.toFixed(1)
+              difference={formatMoney(
+                Math.abs(comparisonSales.purchasesPercentageChange.toFixed(1))
               )}
               positive={comparisonSales.purchasesComparisonPositive}
               number={comparisonSales.number}
@@ -39,8 +39,8 @@ const CustomerRecentVpreComparison = ({ comparisonSales }) => {
               color="success.main"
               variant="h4"
               iconData={<AnalyticsIcon />}
-              difference={Math.abs(
-                comparisonSales.spentPercentageChange.toFixed(1)
+              difference={formatMoney(
+                Math.abs(comparisonSales.spentPercentageChange.toFixed(1))
               )}
               positive={comparisonSales.spentComparisonPositive}
               number={comparisonSales.number}

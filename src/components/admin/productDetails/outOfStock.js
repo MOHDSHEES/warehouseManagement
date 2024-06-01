@@ -27,15 +27,20 @@ const columns = [
     sortable: false,
     minWidth: 250,
     valueGetter: (params) => {
-      // console.log(params);
       const colorsWithZeroQuantity = params.row.color
-        .filter((color) => color.quantity === "0")
+        .filter(
+          (color) =>
+            color.quantity === 0 ||
+            color.quantity <= params.row.outOfStockReminder
+        )
         .map(
           (color) =>
             "color: " +
             (color.color ? color.color : "-") +
             ", Size: " +
-            (color.size ? color.size : "-")
+            (color.size ? color.size : "-") +
+            ", Qty: " +
+            (color.quantity ? color.quantity : 0)
         );
       return colorsWithZeroQuantity.length > 0
         ? colorsWithZeroQuantity.join("\n ")

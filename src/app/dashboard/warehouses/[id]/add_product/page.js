@@ -40,18 +40,26 @@ export default function ProductAdd({ params }) {
   const [state, setstate] = useState({
     wholesalePrice: "",
     retailPrice: "",
+    outOfStockReminder: 0,
   });
   const Inputchange = (event) => {
     const { name, value } = event.target;
-    setstate({
-      ...state,
-      [name]: value.trim(),
-    });
+    if (name === "outOfStockReminder") {
+      setstate({
+        ...state,
+        [name]: value === "" ? "" : parseInt(value.trim()),
+      });
+    } else
+      setstate({
+        ...state,
+        [name]: value.trim(),
+      });
   };
   function clear() {
     setstate({
       wholesalePrice: "",
       retailPrice: "",
+      outOfStockReminder: 0,
     });
     setQuantity("");
     setProductId("");
@@ -83,7 +91,7 @@ export default function ProductAdd({ params }) {
           ...state,
           productId: productId,
           productName: productName.trim(),
-          quantity: quantity,
+          quantity: parseInt(quantity),
           description: description,
           color: validColorQuantities,
           // size: validSizeQuantities,
