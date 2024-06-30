@@ -1,18 +1,6 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
-import Button from "@mui/material/Button";
-import TextField from "@mui/material/TextField";
-import {
-  Box,
-  Container,
-  FormControl,
-  Grid,
-  InputAdornment,
-  InputLabel,
-  OutlinedInput,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Container, Stack, Typography } from "@mui/material";
 import axios from "axios";
 import { closeMessage, openMessage } from "@/src/components/functions/message";
 import { MyContext } from "@/src/components/context";
@@ -20,15 +8,25 @@ import { MyContext } from "@/src/components/context";
 // import SizeQuantityInput from "@/src/components/product/sizeAdd";
 import UserAccessLayout from "@/src/components/layout/userAccessLayout";
 import AddProductForm from "@/src/components/product/addProductForm";
+import AddCategory from "@/src/components/categories/add";
 
 export default function ProductAdd({ params }) {
   // const { messageApi } = useContext(MyContext);
   const [disable, setdisable] = useState(false);
   const { user, setProductIds, productIds, messageApi } = useContext(MyContext);
+  const [openCategories, setOpenCategories] = useState(false);
   const [quantity, setQuantity] = useState("");
   const [productId, setProductId] = useState("");
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
+  const categoryOptions = {
+    category: null,
+    subCategory: null,
+    subcategory2: null,
+    subcategory3: null,
+    subcategory4: null,
+  };
+  const [categories, setCategories] = useState(categoryOptions);
   const [colorQuantities, setColorQuantities] = useState([
     { color: "", quantity: 0, size: "" },
   ]);
@@ -121,15 +119,33 @@ export default function ProductAdd({ params }) {
     } else signOut();
     setdisable(false);
   }
+
+  async function getCategories(id) {
+    const { data } = await axios.post("/api/category/get", {
+      id: id,
+    });
+    if (data.status === 200)
+      setCategories({ ...categoryOptions, category: data.data });
+    else if (data.status === 201)
+      setCategories({ ...categoryOptions, category: data.data });
+  }
+
+  useEffect(() => {
+    if (!categories.category) getCategories(null);
+  }, [categories]);
+
   return (
     <UserAccessLayout>
       <Container requiredprivilege="Register_Product" maxWidth="xl">
         <Stack spacing={3}>
           <div>
             <Typography variant="h4">Add Product</Typography>
-            {/* <button onClick={test} className="btn btn-primary">
-      test
-    </button> */}
+            <button
+              onClick={() => setOpenCategories(true)}
+              className="btn btn-primary"
+            >
+              Add Category
+            </button>
           </div>
           <AddProductForm
             productName={productName}
@@ -151,6 +167,15 @@ export default function ProductAdd({ params }) {
           />
         </Stack>
       </Container>
+      <AddCategory
+        open={openCategories}
+        categories={categories}
+        setCategories={setCategories}
+        categoryOptions={categoryOptions}
+        // getCategories={getCategories}
+        setOpen={setOpenCategories}
+        requiredprivilege="Register_Product"
+      />
     </UserAccessLayout>
   );
 }

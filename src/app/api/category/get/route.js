@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/mongoose";
-import Party from "@/models/partyModel";
+import categoryModel from "@/models/categoryModel";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req) {
@@ -7,14 +7,18 @@ export async function POST(req) {
     await dbConnect();
     const data = await req.json();
     if (req.method === "POST") {
-      const party = await new Party(data.data).save();
-      if (party._id) {
+      const categories = await categoryModel.find({ parent: data.id });
+      if (categories.length) {
         return NextResponse.json({
           status: 200,
-          data: party,
+          data: categories,
         });
       } else
-        return NextResponse.json({ status: 500, msg: "Something went Wrong." });
+        return NextResponse.json({
+          status: 201,
+          data: [],
+          msg: "No categories Found",
+        });
     }
   } catch (error) {
     return NextResponse.json({ status: 500, msg: error.message });

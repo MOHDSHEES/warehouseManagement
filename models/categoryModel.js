@@ -10,16 +10,12 @@ const categorySchema = new mongoose.Schema({
     ref: "Category",
     default: null,
   },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
-  },
 });
 
+categorySchema.index(
+  { name: 1, parent: 1 },
+  { unique: true, collation: { locale: "en", strength: 2 } }
+);
 // productsSchema.index({ name: "text", category: "text" });
 const categoryModel =
   mongoose.models.Category || mongoose.model("Category", categorySchema);

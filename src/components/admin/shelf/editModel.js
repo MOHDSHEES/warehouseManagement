@@ -7,7 +7,6 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Dialog from "@mui/material/Dialog";
-import PersonIcon from "@mui/icons-material/Person";
 import { blue } from "@mui/material/colors";
 import ProductAddModel from "../../product/productAddModel";
 import AddSubShelf from "./addsubShelfModel";
@@ -21,6 +20,8 @@ import ListIcon from "@mui/icons-material/List";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import EditShelf from "../../update/editShelfModel";
+import generateAndDownloadBarcode from "../../functions/barcode";
+import QrCodeIcon from "@mui/icons-material/QrCode";
 
 export default function EditModel({
   editModelOpen,
@@ -157,6 +158,24 @@ export default function EditModel({
               </ListItemButton>
             </ListItem>
           )}
+
+          <ListItem disableGutters>
+            <ListItemButton
+              onClick={() =>
+                generateAndDownloadBarcode(
+                  shelfClicked && shelfClicked._id,
+                  shelfClicked && shelfClicked.shelfName
+                )
+              }
+            >
+              <ListItemAvatar>
+                <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
+                  <QrCodeIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary="Download QR code" />
+            </ListItemButton>
+          </ListItem>
         </List>
       </Dialog>
 

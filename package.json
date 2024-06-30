@@ -29,6 +29,7 @@
     "dotenv": "^16.4.5",
     "html2pdf.js": "^0.10.1",
     "ioredis": "^5.4.1",
+    "jsbarcode": "^3.11.6",
     "jsonwebtoken": "^9.0.2",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.8.2",
