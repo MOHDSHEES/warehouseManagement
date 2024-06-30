@@ -41,7 +41,6 @@ export default function EditProductInOrder({
     const { name, value } = event.target;
     if (name === "price") {
       const newPrice = parseFloat(value.trim());
-      console.log(clickedRow.data);
       const retailPrice = parseFloat(clickedRow.data.retailPrice);
       const newDiscount = ((retailPrice - newPrice) / retailPrice) * 100;
       setState({
@@ -76,10 +75,27 @@ export default function EditProductInOrder({
 
   const Inputchange = (event) => {
     const { name, value } = event.target;
-    setState({
-      ...state,
-      [name]: value,
-    });
+    // setState({
+    //   ...state,
+    //   [name]: value,
+    // });
+    if (value === "")
+      setState({
+        ...state,
+        [name]: 0,
+      });
+    else {
+      if (name === "qty")
+        setState({
+          ...state,
+          [name]: parseInt(value.trim()),
+        });
+      else
+        setState({
+          ...state,
+          [name]: parseFloat(value.trim()),
+        });
+    }
   };
 
   function updateData(e) {

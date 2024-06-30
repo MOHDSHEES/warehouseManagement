@@ -4,7 +4,6 @@
 //   const recentYearSalesHistory = salesHistory.filter(
 //     (entry) => entry.year === salesHistory[0].year
 //   );
-
 //   //   const data = [["Month", "Spent", "Purchases"]];
 //   const spentData = [["Month", "Spent"]];
 //   const purchasesData = [["Month", "Purchases"]];

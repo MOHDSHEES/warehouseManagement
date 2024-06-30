@@ -20,6 +20,7 @@ import CustomerRecentVpreComparison from "@/src/components/analytics/customerAna
 import { CustomergraphSalesData } from "@/src/components/analytics/customerAnalytics/customerGraphSalesData";
 import LineChartGraph from "@/src/components/analytics/customerAnalytics/LineChartGraph";
 import UserAccessLayout from "@/src/components/layout/userAccessLayout";
+import CustomerDetails from "@/src/components/analytics/customerAnalytics/customerDetails";
 
 const defaultTheme = createTheme();
 
@@ -99,7 +100,6 @@ const CustomerAnalytics = ({ params }) => {
     setComparisonSales(comparison);
   }
 
-  // console.log(data);
   return (
     <UserAccessLayout>
       <ThemeProvider requiredprivilege="View_Customer" theme={defaultTheme}>
@@ -133,6 +133,11 @@ const CustomerAnalytics = ({ params }) => {
                 </Alert>
               ) : (
                 <>
+                  <Grid container spacing={3}>
+                    <Grid xs={12} md={12} lg={6}>
+                      <CustomerDetails data={analytics.customerId} />
+                    </Grid>
+                  </Grid>
                   <Grid container spacing={3}>
                     <Grid xs={12} md={12} lg={12}>
                       <OverallCustomerAnalytics analytics={analytics} />

@@ -60,7 +60,7 @@ export default function ProductDetails({
     );
 
     handleCloseOptions();
-    handleClose();
+    // handleClose();
   }
   //   console.log(searchedData);
   return (

@@ -22,7 +22,6 @@ const partySchema = new mongoose.Schema(
     address: {
       type: String,
     },
-    totalAmount: { type: String },
     company: { type: mongoose.Schema.Types.ObjectId, ref: "Company" },
   }
   // { timestamps: true }

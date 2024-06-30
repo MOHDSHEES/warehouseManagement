@@ -18,6 +18,7 @@ import Payment from "./payment/payment";
 import { closeMessage } from "../functions/message";
 import { MyContext } from "../context";
 import OrderSuccess from "./successOrder/orderSuccess";
+import ChooseReturnProducts from "./selectProducts/return/chooseReturnProducts";
 
 const steps = ["Choose Party/Customer", "Select Products", "Payment"];
 
@@ -156,15 +157,31 @@ export default function OrderSteps({
                   setInputValue={setInputValue}
                   setOrderType={setOrderType}
                   orderType={orderType}
+                  clear={clear}
                 />
               ) : activeStep === 1 ? (
-                <ChooseProducts
-                  value={orders}
-                  setValue={setOrders}
-                  total={total}
-                  setTotal={setTotal}
-                />
+                orderType === "New Order" ? (
+                  <ChooseProducts
+                    value={orders}
+                    setValue={setOrders}
+                    total={total}
+                    setTotal={setTotal}
+                  />
+                ) : (
+                  <ChooseReturnProducts
+                    value={orders}
+                    setValue={setOrders}
+                    total={total}
+                    setTotal={setTotal}
+                  />
+                )
               ) : (
+                //   <ChooseProducts
+                //   value={orders}
+                //   setValue={setOrders}
+                //   total={total}
+                //   setTotal={setTotal}
+                // />
                 <Payment
                   payment={payment}
                   setPayment={setPayment}

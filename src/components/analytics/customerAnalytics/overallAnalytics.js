@@ -12,7 +12,7 @@ const OverallCustomerAnalytics = ({ analytics }) => {
         title={<small style={{ fontSize: "18px" }}>Overall Analytics</small>}
       />
       <Grid container spacing={3}>
-        <Grid xs={12} md={4} lg={4}>
+        <Grid xs={12} md={3} lg={3}>
           {analytics && analytics.totalPurchases && (
             <ProductStatsCard
               title="Total Purchases"
@@ -23,10 +23,10 @@ const OverallCustomerAnalytics = ({ analytics }) => {
             />
           )}
         </Grid>
-        <Grid xs={12} md={4} lg={4}>
+        <Grid xs={12} md={3} lg={3}>
           {analytics && analytics.totalSpent && (
             <ProductStatsCard
-              title="Total Spent"
+              title="Total Expense"
               data={formatMoney(analytics.totalSpent)}
               color="success.main"
               variant="h4"
@@ -34,7 +34,7 @@ const OverallCustomerAnalytics = ({ analytics }) => {
             />
           )}
         </Grid>
-        <Grid xs={12} md={4} lg={4}>
+        <Grid xs={12} md={3} lg={3}>
           {analytics && analytics.totalSpent && analytics.totalPurchases && (
             <ProductStatsCard
               title="Average Spent"
@@ -42,6 +42,17 @@ const OverallCustomerAnalytics = ({ analytics }) => {
                 (analytics.totalSpent / analytics.totalPurchases).toFixed(2)
               )}
               color="primary.main"
+              variant="h4"
+              iconData={<AttachMoneyIcon />}
+            />
+          )}
+        </Grid>
+        <Grid xs={12} md={3} lg={3}>
+          {analytics && analytics.totalSpent && analytics.totalPurchases && (
+            <ProductStatsCard
+              title="Outstanding Balance"
+              data={formatMoney(analytics.totalAmountToPaid)}
+              color="rgb(253, 126, 151)"
               variant="h4"
               iconData={<AttachMoneyIcon />}
             />

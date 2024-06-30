@@ -20,13 +20,13 @@ const LineChartGraph = ({
     },
     vAxis: {
       title: vAxis, // Set the title of the Y-axis
+      // format: "long",
     },
     hAxis: {
       title: hAxis, // Set the title of the Y-axis
     },
     colors: [color],
   };
-
   return (
     <Card sx={{ p: 2 }}>
       <CardHeader title={<small style={{ fontSize: "18px" }}>{title}</small>} />

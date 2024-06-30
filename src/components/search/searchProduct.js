@@ -10,7 +10,7 @@ import ProductDetails from "../admin/productDetails/productDetails";
 import { MyContext } from "../context";
 import { closeMessage } from "../functions/message";
 
-export default function SearchProduct({ warehouse }) {
+export default function SearchProduct({ warehouse, pathName }) {
   const [searchInput, setSearchInput] = useState("");
   const { productIds, setProductIds, messageApi } = useContext(MyContext);
   const [openProductDetails, setOpenProductDetails] = useState(false);
@@ -87,6 +87,15 @@ export default function SearchProduct({ warehouse }) {
       } else getSearchData();
     }
   }, [warehouse]);
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    search();
+  };
+
+  useEffect(() => {
+    // console.log(pathName);
+    setOpenProductDetails(false);
+  }, [pathName]);
   return (
     <>
       <Stack spacing={2} sx={{ width: "100%" }}>
@@ -130,6 +139,7 @@ export default function SearchProduct({ warehouse }) {
           renderInput={(params) => (
             <Paper
               ref={params.InputProps.ref}
+              onSubmit={handleFormSubmit}
               component="form"
               sx={{
                 p: "2px 4px",

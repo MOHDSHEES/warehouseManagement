@@ -6,6 +6,7 @@ import axios from "axios";
 import ProductTable from "./productsTable";
 import ChooseProductsForm from "./chooseProductsForm";
 import { Button, Unstable_Grid2 as Grid } from "@mui/material";
+import removeFields from "../../functions/removrFieldsFromObj";
 
 // function remove() {
 //   const mergedData = removeDuplicate(value);
@@ -78,12 +79,27 @@ const ChooseProducts = ({ value, setValue, total, setTotal }) => {
     // setValidated(false);
     const { name, value } = event.target;
     if (name === "shelf" || name === "comment")
-      setState({ ...state, [name]: value });
-    else
       setState({
         ...state,
-        [name]: value.trim(),
+        [name]: value,
       });
+    else if (value === "")
+      setState({
+        ...state,
+        [name]: 0,
+      });
+    else {
+      if (name === "qty")
+        setState({
+          ...state,
+          [name]: parseInt(value.trim()),
+        });
+      else
+        setState({
+          ...state,
+          [name]: parseFloat(value.trim()),
+        });
+    }
   };
   const inputPriceChangeHandler = (event) => {
     // setValidated(false);
@@ -167,16 +183,18 @@ const ChooseProducts = ({ value, setValue, total, setTotal }) => {
       const itemToUpdate = value.find(
         (item) =>
           item._id === selectedValue._id &&
-          state.shelf.color === item.orderData.shelf.color &&
-          state.shelf.size === item.orderData.shelf.size
+          state.shelf.color === item.orderData.shelf.color
+        // &&
+        // state.shelf.size === item.orderData.shelf.size
       );
 
       if (itemToUpdate) {
         const updatedValue = value.map((item) => {
           if (
             item._id === selectedValue._id &&
-            state.shelf.color === item.orderData.shelf.color &&
-            state.shelf.size === item.orderData.shelf.size
+            state.shelf.color === item.orderData.shelf.color
+            // &&
+            // state.shelf.size === item.orderData.shelf.size
           ) {
             return {
               ...item,
@@ -200,6 +218,7 @@ const ChooseProducts = ({ value, setValue, total, setTotal }) => {
         return null;
       }
     } else {
+      // console.log(selectedValue);
       const newValue = {
         ...selectedValue,
         productName: newName,
@@ -212,11 +231,34 @@ const ChooseProducts = ({ value, setValue, total, setTotal }) => {
       setState({ ...state, qty: 1, comment: "", shelf: "" });
       return null;
     }
+    const filteredValues = removeFields(selectedValue, [
+      "color",
+      "quantity",
+      "shelves",
+      "__v",
+      "wholesalePrice",
+      "company",
+    ]);
+
+    // console.log(state);
     const newValue = {
-      ...selectedValue,
+      // ...selectedValue,
+      ...filteredValues,
       // productName: newName,
       ...{
-        orderData: state,
+        // orderData: state,
+        orderData: {
+          ...state,
+          shelf: {
+            color: state.shelf.color,
+            shelf: {
+              _id:
+                state.shelf.shelf && state.shelf.shelf._id
+                  ? state.shelf.shelf._id
+                  : null,
+            },
+          },
+        },
       },
     };
     setValue([...value, newValue]);

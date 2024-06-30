@@ -26,6 +26,7 @@ export default function ChooseParty({
   setInputValue,
   setOrderType,
   orderType,
+  clear,
 }) {
   const { user } = useContext(MyContext);
 
@@ -73,6 +74,15 @@ export default function ChooseParty({
       active = false;
     };
   }, [inputValue]);
+
+  function orderTypeHandler(e) {
+    const valu = value;
+    const inputValu = inputValue;
+    setOrderType(e.target.value);
+    clear();
+    setValue(valu);
+    setInputValue(inputValu);
+  }
 
   return (
     <Box>
@@ -140,7 +150,7 @@ export default function ChooseParty({
               name="orderType"
               labelId="orderType"
               value={orderType}
-              onChange={(e) => setOrderType(e.target.value)}
+              onChange={orderTypeHandler}
               label="Type of Order"
             >
               <MenuItem value={"New Order"}>New Order</MenuItem>

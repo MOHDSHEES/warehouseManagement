@@ -1,4 +1,4 @@
-import { Card, CardHeader, Typography } from "@mui/material";
+import { Card, CardHeader, Stack, Typography } from "@mui/material";
 import React from "react";
 
 const ProductDetails = ({ data }) => {
@@ -7,12 +7,14 @@ const ProductDetails = ({ data }) => {
       {/* <CardHeader
         title={<small style={{ fontSize: "18px" }}>Product Details</small>}
       /> */}
-      <Typography variant="subtitle1">
-        <b>Name: </b> {data.productName}
-      </Typography>
-      <Typography variant="subtitle1">
-        <b>Id: </b> {data.productId}
-      </Typography>
+      <Stack spacing={1}>
+        <Typography variant="body2">
+          <b>Name: </b> {data.productName}
+        </Typography>
+        <Typography variant="body2">
+          <b>Id: </b> {data.productId}
+        </Typography>
+      </Stack>
     </Card>
   );
 };

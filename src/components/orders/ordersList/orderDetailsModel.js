@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -7,6 +7,12 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import InvoiceTemplate from "../selectProducts/invoiceTemplate";
+import DownloadIcon from "@mui/icons-material/Download";
+import { IconButton, Stack, Typography } from "@mui/material";
+import { MyContext } from "../../context";
+import generateInvoiceDocument, {
+  downloadInvoice,
+} from "../../functions/generateInvoice";
 
 export default function OrderDetailsModel({
   open,
@@ -23,6 +29,15 @@ export default function OrderDetailsModel({
   const handleClose = () => {
     setOpen(false);
     setSelectedOrder("");
+  };
+
+  const { user } = useContext(MyContext);
+  const handleDownload = () => {
+    const doc = generateInvoiceDocument(
+      selectedOrder,
+      user.company.companyName
+    );
+    downloadInvoice(doc, `Invoice(${selectedOrder.orderId}).pdf`);
   };
 
   return (
@@ -44,13 +59,29 @@ export default function OrderDetailsModel({
         //   },
         // }}
       >
-        <DialogTitle>Order: #{selectedOrder.orderId}</DialogTitle>
+        <DialogTitle>
+          <Stack direction="row" spacing={1}>
+            <Typography variant="body2">
+              Order Id: {selectedOrder.orderId}
+            </Typography>
+            <span style={{ marginLeft: "auto" }}>
+              <IconButton
+                onClick={handleDownload}
+                aria-label="Invoice Download"
+              >
+                <DownloadIcon />
+              </IconButton>
+            </span>
+          </Stack>
+        </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Created By:{" "}
-            {selectedOrder &&
-              selectedOrder.placedBy &&
-              selectedOrder.placedBy.name}
+            <Typography variant="body2">
+              Created By:{" "}
+              {selectedOrder &&
+                selectedOrder.placedBy &&
+                selectedOrder.placedBy.name}
+            </Typography>
           </DialogContentText>
           {selectedOrder && <InvoiceTemplate invoiceData={selectedOrder} />}
         </DialogContent>

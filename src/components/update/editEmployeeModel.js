@@ -116,6 +116,7 @@ export default function EditEmployeeModel({
   //     jobType: "",
   //   });
   // }
+  // console.log(state);
   const Inputchange = (event) => {
     setValidated(false);
     const { name, value } = event.target;
@@ -150,11 +151,9 @@ export default function EditEmployeeModel({
           _id: employeeData._id,
           company: user && user.company._id,
           details: {
-            state: {
-              joiningDate: state.joiningDate,
-              post: state.post,
-              jobType: state.jobType,
-            },
+            joiningDate: state.joiningDate,
+            post: state.post,
+            jobType: state.jobType,
             warehouse: filteredWarehouseIds,
             privilegesTemplate: newPrivileges[0]._id,
           },

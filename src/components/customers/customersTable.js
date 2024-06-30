@@ -71,7 +71,7 @@ export default function CustomersTable() {
   const [loading, setLoading] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [customers, setCustomers] = React.useState(null);
-  console.log(customers);
+  // console.log(customers);
   //   const router = useRouter();
   //   const [warehouseClicked, setWarehouseClicked] = React.useState("");
 

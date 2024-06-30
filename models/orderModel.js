@@ -15,6 +15,7 @@ const orderSchema = new mongoose.Schema(
     orderId: { type: String, unique: true, index: true },
     placedBy: { type: mongoose.Schema.Types.ObjectId, ref: "Users" },
     company: { type: mongoose.Schema.Types.ObjectId, ref: "Company" },
+    returns: [{}],
   },
   { timestamps: true }
 );

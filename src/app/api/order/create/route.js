@@ -19,7 +19,7 @@ export async function POST(req) {
         .findById(newOrder._id)
         .populate("party");
       // Update analytics for each product in the order
-      await updateProductAnalytics(data.data.order, data.data.orderType);
+      await updateProductAnalytics(data.data.order);
       await updateCustomerAnalytics(
         data.data.order,
         data.data.party,
@@ -35,7 +35,7 @@ export async function POST(req) {
 }
 
 // Function to update product analytics using bulk operations
-async function updateProductAnalytics(orderItems, orderType) {
+async function updateProductAnalytics(orderItems) {
   try {
     const currentDate = new Date();
     const currentYear = currentDate.getFullYear();
@@ -45,97 +45,76 @@ async function updateProductAnalytics(orderItems, orderType) {
     const bulkOpsUpdate = [];
     const bulkOpsInsert = [];
     const productBulkOps = [];
+    const mergedItems = mergeDuplicate(orderItems);
     // Prepare bulk operations
-    for (const item of orderItems) {
+    for (const item of mergedItems) {
       const { _id } = item;
       const quantity = parseInt(item.orderData.qty);
       const price = quantity * parseFloat(item.orderData.price);
+      const netPrice = item.orderData.netPrice ? item.orderData.netPrice : null;
 
+      // Base update object
       const baseUpdate = {
         updateOne: {
           filter: { _id: _id },
           update: {
             $inc: {
-              quantity: -quantity,
-              "color.$[colorElem].quantity": -quantity,
+              // quantity: -quantity,
             },
           },
-          arrayFilters: [
-            {
-              $or: [
-                { "colorElem.color": item.orderData.shelf.color },
-                { "colorElem.size": item.orderData.shelf.size },
-                {
-                  $and: [
-                    { "colorElem.color": item.orderData.shelf.color },
-                    { "colorElem.size": item.orderData.shelf.size },
-                  ],
-                },
-              ],
-            },
-          ],
         },
       };
 
-      productBulkOps.push(baseUpdate);
+      // Conditionally add color quantity update and arrayFilters if color is defined
+      item.mergedOrderData.forEach((itm) => {
+        // console.log(itm);
+        const quantity = parseInt(itm.qty);
+        // console.log(quantity);
+        if (itm.shelf.color !== undefined && itm.shelf.color !== "") {
+          const colorSize = parseColorSizeString(itm.shelf.color);
+          // console.log(colorSize);
+          baseUpdate.updateOne.update.$inc["quantity"] = -quantity;
+          baseUpdate.updateOne.update.$inc["color.$[colorElem].quantity"] =
+            -quantity;
 
-      // Conditionally add the shelves update if orderData.shelf is present
-      if (item.orderData && item.orderData.shelf) {
-        const shelfUpdate = {
-          updateOne: {
-            filter: { _id: _id },
-            update: {
-              $inc: {
-                "shelves.$[elem].quantity": -quantity,
-              },
+          const arrayFilters = [
+            {
+              "colorElem.color": colorSize.color,
             },
-            arrayFilters: [
-              {
-                "elem.shelf": new mongoose.Types.ObjectId(
-                  item.orderData.shelf.shelf._id
-                ),
-                "elem.color": item.orderData.shelf.color,
+          ];
+
+          if (colorSize.size !== "-") {
+            arrayFilters[0]["colorElem.size"] = colorSize.size;
+          }
+          // console.log(JSON.stringify(arrayFilters));
+          baseUpdate.updateOne.arrayFilters = arrayFilters;
+        }
+        // console.log(JSON.stringify(baseUpdate));
+        productBulkOps.push(JSON.parse(JSON.stringify(baseUpdate)));
+        // Conditionally add the shelves update if orderData.shelf is present
+        if (itm && itm.shelf) {
+          const shelfUpdate = {
+            updateOne: {
+              filter: { _id: _id },
+              update: {
+                $inc: {
+                  "shelves.$[elem].quantity": -quantity,
+                },
               },
-            ],
-          },
-        };
+              arrayFilters: [
+                {
+                  "elem.shelf": new mongoose.Types.ObjectId(
+                    itm.shelf.shelf._id
+                  ),
+                  "elem.color": itm.shelf.color,
+                },
+              ],
+            },
+          };
 
-        productBulkOps.push(shelfUpdate);
-      }
-
-      // productBulkOps.push({
-      //   updateOne: {
-      //     filter: { _id: _id },
-      //     update: {
-      //       $inc: {
-      //         quantity: -quantity,
-      //         "shelves.$[elem].quantity": -quantity,
-      //         "color.$[colorElem].quantity": -quantity,
-      //       },
-      //     },
-      //     arrayFilters: [
-      //       {
-      //         "elem.shelf": new mongoose.Types.ObjectId(
-      //           item.orderData.shelf.shelf._id
-      //         ),
-      //         "elem.color": item.orderData.shelf.color,
-      //       },
-      //       {
-      //         $or: [
-      //           { "colorElem.color": item.orderData.shelf.color },
-      //           { "colorElem.size": item.orderData.shelf.size },
-      //           {
-      //             $and: [
-      //               { "colorElem.color": item.orderData.shelf.color },
-      //               { "colorElem.size": item.orderData.shelf.size },
-      //             ],
-      //           },
-      //         ],
-      //       },
-      //     ],
-      //   },
-      // });
-
+          productBulkOps.push(shelfUpdate);
+        }
+      });
       const analytics = await ProductAnalytics.findOne({
         productId: _id,
         salesHistory: {
@@ -174,7 +153,7 @@ async function updateProductAnalytics(orderItems, orderType) {
             update: {
               $inc: {
                 purchases: quantity,
-                totalSales: price.toFixed(2),
+                totalSales: netPrice ? netPrice.toFixed(2) : price.toFixed(2),
               },
               $set: { lastPurchased: currentDate },
               $push: {
@@ -183,7 +162,7 @@ async function updateProductAnalytics(orderItems, orderType) {
                     {
                       year: currentYear,
                       month: currentMonth,
-                      sales: price.toFixed(2),
+                      sales: netPrice ? netPrice.toFixed(2) : price.toFixed(2),
                       purchases: quantity,
                     },
                   ], // New element added at the front
@@ -203,11 +182,12 @@ async function updateProductAnalytics(orderItems, orderType) {
       }
     }
 
-    // console.log(bulkOpsUpdate);
+    // console.log(productBulkOps);
     // Execute bulk operations
     bulkOpsUpdate.length && (await ProductAnalytics.bulkWrite(bulkOpsUpdate));
 
     // Handle inserts where no sales history entry exists
+    // console.log(JSON.stringify(productBulkOps));
     bulkOpsInsert.length && (await ProductAnalytics.bulkWrite(bulkOpsInsert));
     if (productBulkOps.length) await Product.bulkWrite(productBulkOps);
   } catch (err) {
@@ -229,6 +209,9 @@ async function updateCustomerAnalytics(orderItems, customerId, payment) {
     // }, 0);
     // console.log(totalOrderValue);
     // Check if analytics for current month and year already exists
+    // if (payment.payingAmount) {
+    // }
+
     const analytics = await CustomerAnalytics.findOneAndUpdate(
       {
         customerId: customerId,
@@ -239,6 +222,13 @@ async function updateCustomerAnalytics(orderItems, customerId, payment) {
         $inc: {
           totalSpent: totalOrderValue,
           totalPurchases: 1,
+          totalAmountToPaid: payment.payingAmount
+            ? parseFloat(payment.totalPrice) -
+              parseFloat(payment.payingAmount).toFixed(2)
+            : parseFloat(payment.totalPrice),
+          // totalAmountToPaid: payment.payingAmount
+          //   ? parseFloat(payment.payingAmount).toFixed(2)
+          //   : 0,
           "purchaseHistory.$[elem].totalSpent": totalOrderValue,
           "purchaseHistory.$[elem].totalPurchases": 1,
         },
@@ -263,6 +253,10 @@ async function updateCustomerAnalytics(orderItems, customerId, payment) {
           $inc: {
             totalSpent: totalOrderValue,
             totalPurchases: 1,
+            totalAmountToPaid: payment.payingAmount
+              ? parseFloat(payment.totalPrice) -
+                parseFloat(payment.payingAmount).toFixed(2)
+              : parseFloat(payment.totalPrice),
           },
           $set: {
             lastPurchaseDate: currentDate,
@@ -292,3 +286,115 @@ async function updateCustomerAnalytics(orderItems, customerId, payment) {
     console.error("Error updating customer analytics:", err);
   }
 }
+
+function parseColorSizeString(input) {
+  // console.log(input);
+  // Regular expression to match the color and size, allowing for a hyphen as a valid size
+  const colorSizeRegex = /color:\s*([\w\s-]+),\s*Size:\s*([\w-]+)/;
+
+  // Execute the regular expression on the input string
+  const match = input.match(colorSizeRegex);
+
+  if (match) {
+    // Return an object with the color and size
+    return {
+      color: match[1].trim(),
+      size: match[2].trim(),
+    };
+  } else {
+    // Return null if the input string does not match the expected format
+    return null;
+  }
+}
+
+function mergeDuplicate(data) {
+  const mergedItems = {};
+  const array = data;
+
+  // Iterate over the array of items
+  array.forEach((item) => {
+    const ite = item;
+    // Generate a unique key for each item based on productId, productName, discount, and price
+    const key = `${ite.productId}-${ite.productName}`;
+    // Convert orderData.qty to an integer
+    const quantity = parseInt(ite.orderData.qty, 10);
+    // Check if the key already exists in the mergedItems
+    if (mergedItems[key]) {
+      if (!mergedItems[key].mergedOrderData) {
+        mergedItems[key].mergedOrderData = [];
+      }
+      // Push the original item.orderData to mergedOrderData without modifications
+      mergedItems[key].mergedOrderData.push(
+        JSON.parse(JSON.stringify(item.orderData))
+      );
+      // If the key exists, add the quantity of the existing item
+      mergedItems[key].orderData.qty += quantity;
+      mergedItems[key].orderData.netPrice += parseFloat(
+        quantity * ite.orderData.price
+      );
+      // Initialize mergedOrderData as an array if it doesn't exist
+    } else {
+      // If the key doesn't exist, add the item to the mergedOrderData
+      mergedItems[key] = { ...item };
+      mergedItems[key].mergedOrderData = [
+        JSON.parse(JSON.stringify(item.orderData)),
+      ];
+      // Set orderData.qty to the integer value
+      // mergedItems[key].orderData.qty = quantity;
+      mergedItems[key].orderData.netPrice = parseFloat(
+        quantity * ite.orderData.price
+      );
+    }
+  });
+
+  // Convert the mergedOrderData object back to an array of items
+  const mergedOrderDataArray = Object.values(mergedItems);
+  return mergedOrderDataArray;
+}
+
+// if (
+//   item.orderData.shelf.color !== undefined &&
+//   item.orderData.shelf.color !== ""
+// ) {
+//   const colorSize = parseColorSizeString(item.orderData.shelf.color);
+//   baseUpdate.updateOne.update.$inc["color.$[colorElem].quantity"] =
+//     -quantity;
+
+//   const arrayFilters = [
+//     {
+//       "colorElem.color": colorSize.color,
+//     },
+//   ];
+
+//   if (colorSize.size !== "-") {
+//     arrayFilters[0]["colorElem.size"] = colorSize.size;
+//   }
+
+//   baseUpdate.updateOne.arrayFilters = arrayFilters;
+// }
+
+// productBulkOps.push(baseUpdate);
+
+// // Conditionally add the shelves update if orderData.shelf is present
+// if (item.orderData && item.orderData.shelf) {
+//   const shelfUpdate = {
+//     updateOne: {
+//       filter: { _id: _id },
+//       update: {
+//         $inc: {
+//           "shelves.$[elem].quantity": -quantity,
+//         },
+//       },
+//       arrayFilters: [
+//         {
+//           "elem.shelf": new mongoose.Types.ObjectId(
+//             item.orderData.shelf.shelf._id
+//           ),
+//           "elem.color": item.orderData.shelf.color,
+//         },
+//       ],
+//     },
+//   };
+
+//   productBulkOps.push(shelfUpdate);
+// }

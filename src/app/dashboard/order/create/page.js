@@ -33,7 +33,7 @@ const OrderCreate = () => {
       <Container requiredprivilege="Create_Order" maxWidth="xl">
         <Stack spacing={3}>
           <div>
-            <Typography variant="h4">Create New Order</Typography>
+            <Typography variant="h4">Create {orderType}</Typography>
             {/* <button onClick={test} className="btn btn-primary">
           test
         </button> */}

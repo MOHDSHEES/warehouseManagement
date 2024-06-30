@@ -9,9 +9,11 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { styled } from "@mui/material/styles";
 import SettingsIcon from "@mui/icons-material/Settings";
-import EditMenu from "./EditMenu";
 import { IconButton } from "@mui/material";
-import EditProductInOrder from "../../update/editProductInOrder";
+import EditMenu from "../EditMenu";
+import ReturnQtyModel from "./returnQtyModel";
+import EditReturnProduct from "./editReturnProduct";
+// import EditProductInOrder from "../../update/editProductInOrder";
 
 // Styling the table cell for customization
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -25,10 +27,11 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 // ProductTable component
-export default function ProductTable({ data, setValue, total }) {
+export default function ReturnProductTable({ data, setValue, total }) {
   const [openMenu, setOpenMenu] = useState(null); // State for menu
   const [clickedRow, setClickedRow] = useState({ data: "", idx: "" }); // State for clicked row data
-  const [openEdit, setOpenEdit] = useState(false);
+  //   const [openEdit, setOpenEdit] = useState(false);
+  const [editReturnProductModel, setEditReturnProductModel] = useState(false);
   // Function to remove a row
   function handleRemove() {
     if (clickedRow && clickedRow.data) {
@@ -43,7 +46,7 @@ export default function ProductTable({ data, setValue, total }) {
   // Function to handle click event on row
   const handleClick = (event, row, idx) => {
     setOpenMenu(event.currentTarget); // Open the menu
-    setClickedRow({ data: row, idx: idx }); // Set the clicked row data
+    setClickedRow({ data: { ...row, item: row.item }, idx: idx }); // Set the clicked row data
   };
 
   return (
@@ -54,52 +57,52 @@ export default function ProductTable({ data, setValue, total }) {
             <TableRow>
               <StyledTableCell>Product Name</StyledTableCell>
               <StyledTableCell>Id</StyledTableCell>
-              <StyledTableCell>Qty</StyledTableCell>
-              <StyledTableCell>Retail Price</StyledTableCell>
-              <StyledTableCell>Discount</StyledTableCell>
-              <StyledTableCell>Price</StyledTableCell>
+              <StyledTableCell>Order Id</StyledTableCell>
+              <StyledTableCell>Return Qty</StyledTableCell>
+              <StyledTableCell>Sold Price</StyledTableCell>
               <StyledTableCell>Total Price</StyledTableCell>
+              {/* <StyledTableCell>Payment Status</StyledTableCell> */}
               <StyledTableCell>Variant</StyledTableCell>
               <StyledTableCell>Settings</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {data.map((row, idx) => {
-              const price =
-                parseFloat(row.orderData.qty) * parseFloat(row.orderData.price);
+              const totalPrice = parseFloat(
+                row.item.orderData.price * parseInt(row.returnQty)
+              );
               return (
                 <React.Fragment key={idx}>
                   <TableRow
                     sx={{
                       "&:last-child td, &:last-child th": { border: 0 },
-                      ...(row.orderData.comment && {
+                      ...(row.comment && {
                         th: { border: 0 },
                         td: { border: 0 },
                       }),
                     }}
                   >
                     <TableCell component="th" scope="row">
-                      {row.productName}
+                      {row.item.productName}
                     </TableCell>
-                    <TableCell>{row.productId}</TableCell>
-                    <TableCell>{row.orderData.qty}</TableCell>
+                    <TableCell>{row.item.productId}</TableCell>
+                    <TableCell>{row.orderId}</TableCell>
+                    <TableCell>{row.returnQty}</TableCell>
+                    <TableCell>{row.item.orderData.price}</TableCell>
+
+                    <TableCell>{totalPrice}</TableCell>
+                    {/* <TableCell>
+                      {(parseFloat(row.item.payment.totalPrice) -
+                      row.item.payment.payingAmount
+                        ? parseFloat(row.item.payment.payingAmount)
+                        : 0) >= totalPrice
+                        ? "Paid"
+                        : "Not Paid"}
+                    </TableCell> */}
                     <TableCell>
-                      {row.retailPrice ? row.retailPrice : "-"}
-                    </TableCell>
-                    <TableCell>{row.orderData.discount + "%"}</TableCell>
-                    <TableCell>{row.orderData.price}</TableCell>
-                    <TableCell>
-                      {parseFloat(
-                        row.orderData.qty * row.orderData.price
-                      ).toFixed(2)}
-                      {/* {(
-                        price -
-                        (price * parseFloat(row.orderData.discount)) / 100
-                      ).toFixed(2)} */}
-                    </TableCell>
-                    <TableCell>
-                      {row.orderData.shelf && row.orderData.shelf !== "Other"
-                        ? row.orderData.shelf.color
+                      {row.item.orderData.shelf &&
+                      row.item.orderData.shelf !== "Other"
+                        ? row.item.orderData.shelf.color
                         : "-"}
                     </TableCell>
 
@@ -121,19 +124,19 @@ export default function ProductTable({ data, setValue, total }) {
                         setOpenMenu={setOpenMenu}
                         setClickedRow={setClickedRow}
                         handleRemove={handleRemove}
-                        setOpenEdit={setOpenEdit}
+                        setOpenEdit={setEditReturnProductModel}
                       />
                     </TableCell>
                   </TableRow>
                   {/* Render comment row if comment exists */}
-                  {row.orderData.comment && (
+                  {row.comment && (
                     <TableRow>
                       <TableCell
                         colSpan={8}
                         sx={{ paddingTop: "0", paddingBottom: "5px" }}
                       >
                         <Typography variant="caption">
-                          <b>Comment:</b> {row.orderData.comment}
+                          <b>Comment:</b> {row.comment}
                         </Typography>
                       </TableCell>
                     </TableRow>
@@ -158,7 +161,21 @@ export default function ProductTable({ data, setValue, total }) {
           </TableBody>
         </Table>
       </TableContainer>
-      <EditProductInOrder
+
+      <EditReturnProduct
+        open={editReturnProductModel}
+        setOpen={setEditReturnProductModel}
+        itemSelectedFromOrder={clickedRow.data}
+        setItemSelectedFromOrder={setClickedRow}
+        rowIdx={clickedRow.idx}
+        value={data}
+        setValue={setValue}
+        setOpenMenu={setOpenMenu}
+
+        //   addReturnProduct={addReturnProduct}
+      />
+
+      {/* <EditProductInOrder
         open={openEdit}
         setOpen={setOpenEdit}
         clickedRow={clickedRow}
@@ -166,7 +183,7 @@ export default function ProductTable({ data, setValue, total }) {
         setClickedRow={setClickedRow}
         value={data}
         setValue={setValue}
-      />
+      /> */}
     </>
   );
 }

@@ -1,6 +1,7 @@
 import dbConnect from "@/lib/mongoose";
 import CustomerAnalytics from "@/models/analyticsModels/customerAnalytics";
 import ProductAnalytics from "@/models/analyticsModels/productAnalytics";
+import Party from "@/models/partyModel";
 import Product from "@/models/productModel";
 import Shelf from "@/models/shelfModel";
 import WarehouseModel from "@/models/wareHouseModels";
@@ -17,7 +18,7 @@ export async function POST(req) {
     if (req.method === "POST") {
       const analytics = await CustomerAnalytics.findOne({
         customerId: customerId,
-      });
+      }).populate({ path: "customerId", model: Party });
       //   const analytics = await ProductAnalytics.findOne({
       //     productId: product._id,
       //   });

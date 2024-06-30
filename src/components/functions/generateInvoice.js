@@ -72,6 +72,17 @@ export default function generateInvoiceDocument(data, company) {
       5: { cellWidth: 20 },
       6: { cellWidth: 25 },
     },
+    didDrawPage: function (data) {
+      // Footer
+      let pageCount = doc.internal.getNumberOfPages();
+      let pageCurrent = doc.internal.getCurrentPageInfo().pageNumber;
+      doc.setFontSize(8);
+      doc.text(
+        `Page ${pageCurrent} of ${pageCount}`,
+        doc.internal.pageSize.getWidth() - 20,
+        doc.internal.pageSize.getHeight() - 10
+      );
+    },
   });
   // [{ content: "Grand Total", styles: { fontStyle: 'bold' } }, calculateGrandTotal()],
   autoTable(doc, {

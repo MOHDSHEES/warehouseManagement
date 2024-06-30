@@ -24,40 +24,86 @@ export default function Payment({
   const { user, messageApi, setBackDropOpen } = useContext(MyContext);
   function inputHandler(e) {
     const { name, value } = e.target;
-
     setPayment({
       ...payment,
       [name]: value,
     });
   }
+  // console.log(order);
 
   const orderSubmitHandler = async (e) => {
     e.preventDefault();
     setBackDropOpen(true);
-    const { data } = await axios.post("/api/order/create", {
-      data: {
-        payment: {
-          ...payment,
-          payingAmount: parseFloat(payment.payingAmount),
-          totalPrice: parseFloat(total),
+    if (orderType === "New Order") {
+      const { data } = await axios.post("/api/order/create", {
+        data: {
+          payment: {
+            ...payment,
+            payingAmount: parseFloat(payment.payingAmount),
+            totalPrice: parseFloat(total),
+          },
+          party: party._id,
+          order: order,
+          placedBy: user._id,
+          orderType: orderType,
+          company: user.company && user.company._id,
         },
-        party: party._id,
-        order: order,
-        placedBy: user._id,
-        orderType: orderType,
-        company: user.company && user.company._id,
-      },
-    });
-    // console.log(data);
-    if (data.status === 200) {
-      setInvoiceData(data.data);
-      setActiveStep((prevActiveStep) => prevActiveStep + 1);
-      clear();
+      });
+      if (data.status === 200) {
+        setInvoiceData(data.data);
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        clear();
+      } else {
+        closeMessage(messageApi, data.msg, "error");
+      }
     } else {
-      closeMessage(messageApi, data.msg, "error");
+      const totalAmountToReturn = calculateTotalReturnAmount(order);
+      const { data } = await axios.post("/api/order/return", {
+        data: {
+          payment: {
+            ...payment,
+            payingAmount: parseFloat(payment.payingAmount),
+            totalPrice: parseFloat(total),
+          },
+          party: party._id,
+          order: order,
+          placedBy: user._id,
+          orderType: orderType,
+          company: user.company && user.company._id,
+        },
+        totalAmountToReturn: totalAmountToReturn,
+      });
+      if (data.status === 200) {
+        setInvoiceData(data.data);
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        clear();
+      } else {
+        closeMessage(messageApi, data.msg, "error");
+      }
     }
+    // console.log(data);
+
     setBackDropOpen(false);
   };
+  // console.log(order);
+
+  function calculateTotalReturnAmount(data) {
+    let totalReturnAmount = 0;
+
+    data.forEach((entry) => {
+      const { item, returnQty } = entry;
+      const { orderData, payment } = item;
+
+      const maxReturnAmount =
+        parseFloat(payment.totalPrice) -
+        (parseFloat(payment.payingAmount) || 0);
+      const returnAmount = parseInt(returnQty) * parseFloat(orderData.price);
+
+      totalReturnAmount += Math.min(returnAmount, maxReturnAmount);
+    });
+
+    return totalReturnAmount;
+  }
   return (
     <form onSubmit={orderSubmitHandler}>
       <Box>
@@ -127,7 +173,9 @@ export default function Payment({
               fullWidth
               autoComplete="off"
               size="medium"
-              label="Paying Amount"
+              label={`${
+                orderType === "New Order" ? "Paying Amount" : "Return Amount"
+              }`}
               variant="outlined"
             />
           </Grid>

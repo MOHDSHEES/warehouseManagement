@@ -20,7 +20,7 @@ export async function POST(req) {
         path: "privilegesTemplate",
         model: privilegesModel,
       });
-
+    // console.log(user);
     if (user && user._id)
       return NextResponse.json({
         status: 200,

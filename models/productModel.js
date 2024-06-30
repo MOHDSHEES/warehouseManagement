@@ -32,8 +32,8 @@ const productSchema = new mongoose.Schema({
   // size: [{}],
   // Add other product-related fields as needed
 });
-productSchema.index({ color: 1 });
-productSchema.index({ size: 1 });
+// productSchema.index({ color: 1 });
+// productSchema.index({ size: 1 });
 // Compound index on warehouse field for faster searching
 productSchema.index({ warehouse: 1, productId: 1 }, { unique: true });
 

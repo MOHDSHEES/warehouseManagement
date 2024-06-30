@@ -65,7 +65,7 @@ export const TopNav = (props) => {
               spacing={2}
               style={{ marginLeft: "5px" }}
             >
-              <SearchProduct warehouse={params.id} />
+              <SearchProduct warehouse={params.id} pathName={pathname} />
             </Stack>
           )}
           {(isAdmin || privileges.View_Orders) &&

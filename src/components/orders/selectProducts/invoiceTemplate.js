@@ -32,7 +32,7 @@ const InvoiceTemplate = ({ invoiceData }) => {
       <div className="container px-0">
         <div className="row mt-4">
           <div className="col-12 col-lg-12">
-            <div className="row">
+            {/* <div className="row">
               <div className="col-12">
                 <div className="text-center text-150">
                   <Typography
@@ -44,9 +44,9 @@ const InvoiceTemplate = ({ invoiceData }) => {
                   </Typography>
                 </div>
               </div>
-            </div>
+            </div> */}
             {/* .row */}
-            <Divider variant="middle" flexItem sx={{ mt: 3, mb: 7 }} />
+            {/* <Divider variant="middle" flexItem sx={{ mt: 3, mb: 7 }} /> */}
             <Grid container spacing={2} className="mt-1 mb-3">
               <Grid xs={12} sm={8}>
                 <Typography variant="subtitle2" gutterBottom>

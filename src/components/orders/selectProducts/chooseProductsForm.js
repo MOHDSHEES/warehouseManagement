@@ -11,6 +11,7 @@ import {
   Unstable_Grid2 as Grid,
   InputAdornment,
 } from "@mui/material";
+import Variant from "./variant";
 
 const ChooseProductsForm = ({
   options,
@@ -42,7 +43,7 @@ const ChooseProductsForm = ({
       </>
     );
   };
-
+  // console.log(selectedValue);
   return (
     <Grid
       container
@@ -178,6 +179,7 @@ const ChooseProductsForm = ({
             fullWidth
             multiline
             name="newProductName"
+            required
             maxRows={4}
             onChange={(e) => setNewName(e.target.value)}
             value={newName}
@@ -201,6 +203,19 @@ const ChooseProductsForm = ({
           />
         </Grid>
       )}
+      {selectedValue &&
+        selectedValue.productId !== "NA" &&
+        !!selectedValue.shelves &&
+        !selectedValue.shelves.length &&
+        selectedValue.color.length && (
+          <Grid xs={6} sm={3}>
+            <Variant
+              selectedProductDetails={selectedValue}
+              setState={setState}
+              state={state}
+            />
+          </Grid>
+        )}
       {selectedValue &&
         selectedValue.shelves &&
         selectedValue.shelves.length > 0 && (

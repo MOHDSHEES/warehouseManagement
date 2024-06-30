@@ -27,7 +27,7 @@ const OrderSuccess = ({ invoiceData, handleReset }) => {
 
   const handleDownload = () => {
     const doc = generateInvoice(invoiceData, user.company.companyName);
-    downloadInvoice(doc, "invoice.pdf");
+    downloadInvoice(doc, `Invoice(${selectedOrder.orderId}).pdf`);
   };
 
   const handlePreview = () => {
