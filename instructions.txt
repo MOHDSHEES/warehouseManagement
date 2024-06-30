@@ -5,3 +5,4 @@ employee admin (userVerifiedIcon)
 
 privileges: inventry
 product analytics (type of order i.e return )
+product restock on shelf

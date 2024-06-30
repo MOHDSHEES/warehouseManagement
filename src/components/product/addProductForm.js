@@ -162,7 +162,6 @@ const AddProductForm = ({
               </Grid>
               <Grid item xs={12} sm={12}>
                 <TextField
-                  autoFocus
                   required
                   margin="dense"
                   id="productDescription"
@@ -184,7 +183,6 @@ const AddProductForm = ({
 
               <Grid item xs={12} sm={6}>
                 <TextField
-                  autoFocus
                   required
                   margin="dense"
                   id="outofstockReminder"

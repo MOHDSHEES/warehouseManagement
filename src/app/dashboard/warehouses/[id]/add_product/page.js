@@ -140,12 +140,12 @@ export default function ProductAdd({ params }) {
         <Stack spacing={3}>
           <div>
             <Typography variant="h4">Add Product</Typography>
-            <button
+            {/* <button
               onClick={() => setOpenCategories(true)}
               className="btn btn-primary"
             >
               Add Category
-            </button>
+            </button> */}
           </div>
           <AddProductForm
             productName={productName}
