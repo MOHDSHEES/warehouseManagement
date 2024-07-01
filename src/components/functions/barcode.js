@@ -8,8 +8,8 @@ const generateAndDownloadBarcode = async (id) => {
 
     // Create a canvas element
     const canvas = document.createElement("canvas");
-    canvas.width = 800; // Adjust as needed
-    canvas.height = 600; // Adjust as needed
+    canvas.width = 400; // Adjust as needed
+    canvas.height = 200; // Adjust as needed
 
     // Generate barcode on canvas
     await JsBarcode(canvas, id, {
