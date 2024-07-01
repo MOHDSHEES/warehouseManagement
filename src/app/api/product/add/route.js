@@ -22,29 +22,6 @@ export async function POST(req) {
         });
       const newProduct = await new Product(data.detail).save();
       return NextResponse.json({ status: 200, data: newProduct });
-
-      // if (existingProduct) {
-      //   const shelfExists = existingProduct.shelves.some(
-      //     (shelfItem) =>
-      //       shelfItem.shelf.equals(data.detail.shelves.shelf) &&
-      //       shelfItem.color === data.detail.shelves.color
-      //   );
-      //   if (shelfExists)
-      //     return NextResponse.json({
-      //       status: 500,
-      //       msg: "The shelf already has this product in stock.",
-      //     });
-      //   else {
-      //     existingProduct.shelves.push(data.detail.shelves);
-      //     const updatedProduct = await existingProduct.save();
-      //     return NextResponse.json({ status: 200, data: updatedProduct });
-      //   }
-      // }
-      // else {
-      //   // Product with the given productId doesn't exist, create a new product
-      //   const newProduct = await new Product(data.detail).save();
-      //   return NextResponse.json({ status: 200, data: newProduct });
-      // }
     }
   } catch (error) {
     // console.log(error);

@@ -1,6 +1,12 @@
 "use client";
 import { useContext, useEffect, useState } from "react";
-import { Container, Stack, Typography } from "@mui/material";
+import {
+  Button,
+  Container,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import axios from "axios";
 import { closeMessage, openMessage } from "@/src/components/functions/message";
 import { MyContext } from "@/src/components/context";
@@ -9,6 +15,8 @@ import { MyContext } from "@/src/components/context";
 import UserAccessLayout from "@/src/components/layout/userAccessLayout";
 import AddProductForm from "@/src/components/product/addProductForm";
 import AddCategory from "@/src/components/categories/add";
+import UploadFromExcel from "@/src/components/product/uploadFromExcel";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 export default function ProductAdd({ params }) {
   // const { messageApi } = useContext(MyContext);
@@ -19,6 +27,7 @@ export default function ProductAdd({ params }) {
   const [productId, setProductId] = useState("");
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
+  const [OpenExcel, setOpenExcel] = useState(false);
   const categoryOptions = {
     category: null,
     subCategory: null,
@@ -36,27 +45,29 @@ export default function ProductAdd({ params }) {
   // const [color, setColor] = useState("");
   // const [size, setSize] = useState("");
   const [state, setstate] = useState({
-    wholesalePrice: "",
-    retailPrice: "",
+    wholesalePrice: 0,
+    retailPrice: 0,
     outOfStockReminder: 0,
   });
   const Inputchange = (event) => {
     const { name, value } = event.target;
+    // console.log(value);
     if (name === "outOfStockReminder") {
       setstate({
         ...state,
         [name]: value === "" ? "" : parseInt(value.trim()),
       });
-    } else
+    } else {
       setstate({
         ...state,
-        [name]: value.trim(),
+        [name]: value === "" ? "" : value.trim(),
       });
+    }
   };
   function clear() {
     setstate({
-      wholesalePrice: "",
-      retailPrice: "",
+      wholesalePrice: 0,
+      retailPrice: 0,
       outOfStockReminder: 0,
     });
     setQuantity("");
@@ -166,6 +177,19 @@ export default function ProductAdd({ params }) {
             disable={disable}
           />
         </Stack>
+        <Stack direction="row" alignItems="center" sx={{ mt: 2 }} spacing={1}>
+          <Typography variant="body2">
+            If you have an Excel sheet, you can upload it here!
+          </Typography>
+          <IconButton
+            // onClick={() => setOpenExcel(true)}
+            aria-label="Upload"
+            color="primary"
+            size="large"
+          >
+            <CloudUploadIcon />
+          </IconButton>
+        </Stack>
       </Container>
       <AddCategory
         open={openCategories}
@@ -175,6 +199,11 @@ export default function ProductAdd({ params }) {
         // getCategories={getCategories}
         setOpen={setOpenCategories}
         requiredprivilege="Register_Product"
+      />
+      <UploadFromExcel
+        open={OpenExcel}
+        setOpen={setOpenExcel}
+        warehouse={params.id}
       />
     </UserAccessLayout>
   );

@@ -13,7 +13,10 @@ import {
 } from "@mui/material";
 
 import ColorQuantityInput from "@/src/components/product/colorAdd";
-import { handleKeyDownInt } from "../functions/InputValidation";
+import {
+  handleKeyDownFloat,
+  handleKeyDownInt,
+} from "../functions/InputValidation";
 // import SizeQuantityInput from "@/src/components/product/sizeAdd";
 
 const AddProductForm = ({
@@ -134,6 +137,7 @@ const AddProductForm = ({
                     name="wholesalePrice"
                     value={state && state.wholesalePrice}
                     onChange={Inputchange}
+                    onKeyDown={handleKeyDownFloat}
                     startAdornment={
                       <InputAdornment position="start">£</InputAdornment>
                     }
@@ -153,6 +157,7 @@ const AddProductForm = ({
                     name="retailPrice"
                     value={state && state.retailPrice}
                     onChange={Inputchange}
+                    onKeyDown={handleKeyDownFloat}
                     startAdornment={
                       <InputAdornment position="start">£</InputAdornment>
                     }

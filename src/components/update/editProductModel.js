@@ -53,7 +53,7 @@ export default function EditProductModel({
     } else
       setstate({
         ...state,
-        [name]: value.trim(),
+        [name]: value === "" ? "" : value.trim(),
       });
   };
 

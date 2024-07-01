@@ -130,7 +130,7 @@ export default function AddCategory({
   //     }
   //     handleClose();
   //   };
-  console.log(categories);
+  //   console.log(categories);
   return (
     <Dialog fullWidth={true} maxWidth="lg" open={open} onClose={handleClose}>
       <DialogTitle>Add Categories</DialogTitle>
