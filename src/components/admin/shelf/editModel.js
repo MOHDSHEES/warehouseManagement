@@ -21,7 +21,9 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import EditShelf from "../../update/editShelfModel";
 import generateAndDownloadBarcode from "../../functions/barcode";
-import QrCodeIcon from "@mui/icons-material/QrCode";
+// import QrCodeIcon from "@mui/icons-material/QrCode";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBarcode } from "@fortawesome/free-solid-svg-icons";
 
 export default function EditModel({
   editModelOpen,
@@ -163,17 +165,18 @@ export default function EditModel({
             <ListItemButton
               onClick={() =>
                 generateAndDownloadBarcode(
-                  shelfClicked && shelfClicked._id,
+                  shelfClicked && shelfClicked.shelfId,
                   shelfClicked && shelfClicked.shelfName
                 )
               }
             >
               <ListItemAvatar>
                 <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
-                  <QrCodeIcon />
+                  <FontAwesomeIcon icon={faBarcode} />
+                  {/* <QrCodeIcon /> */}
                 </Avatar>
               </ListItemAvatar>
-              <ListItemText primary="Download QR code" />
+              <ListItemText primary="Download Bar Code" />
             </ListItemButton>
           </ListItem>
         </List>

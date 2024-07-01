@@ -1,35 +1,38 @@
 import JsBarcode from "jsbarcode";
 
-const generateAndDownloadBarcode = async (id) => {
-  try {
-    if (!id) {
-      throw new Error("Invalid ID for generating barcode.");
-    }
+export default function generateAndDownloadBarcode(barcodeValue) {
+  const canvas = document.createElement("canvas");
+  const context = canvas.getContext("2d");
 
-    // Create a canvas element
-    const canvas = document.createElement("canvas");
-    canvas.width = 400; // Adjust as needed
-    canvas.height = 200; // Adjust as needed
+  // Define canvas dimensions
+  const canvasWidth = 800; // Width of the canvas
+  const canvasHeight = 400; // Height of the canvas
 
-    // Generate barcode on canvas
-    await JsBarcode(canvas, id, {
-      format: "CODE128",
-      displayValue: true,
-    });
+  // Set canvas dimensions
+  canvas.width = canvasWidth;
+  canvas.height = canvasHeight;
 
-    // Convert canvas to data URL (PNG format)
-    const dataUrl = canvas.toDataURL("image/png");
+  // Set background to white
+  context.fillStyle = "white";
+  context.fillRect(0, 0, canvas.width, canvas.height);
 
-    // Create download link and trigger download
+  // Draw barcode
+  JsBarcode(canvas, barcodeValue, {
+    format: "CODE128",
+    width: 6, // Increase width for larger barcode
+    height: 200, // Increase height for larger barcode
+    margin: 30, // Adjust margin if needed
+  });
+
+  // Convert canvas to PNG and download
+  canvas.toBlob((blob) => {
+    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
-    link.href = dataUrl;
+    link.href = url;
     link.download = "barcode.png";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  } catch (error) {
-    console.error("Error generating and downloading barcode:", error);
-  }
-};
-
-export default generateAndDownloadBarcode;
+    URL.revokeObjectURL(url); // Clean up the URL object
+  }, "image/png");
+}

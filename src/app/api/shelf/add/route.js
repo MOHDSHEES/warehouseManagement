@@ -14,7 +14,6 @@ export async function POST(req) {
     if (req.method === "POST") {
       const shelf = await new Shelf(data.detail);
       const newShelf = await shelf.save();
-
       // console.log(newShelf);
       if (newShelf && newShelf._id) {
         // check if parent shelf exsists (i.e not a root shelf)
