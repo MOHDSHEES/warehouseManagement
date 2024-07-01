@@ -5,8 +5,8 @@ export default function generateAndDownloadBarcode(barcodeValue) {
   const context = canvas.getContext("2d");
 
   // Define canvas dimensions
-  const canvasWidth = 800; // Width of the canvas
-  const canvasHeight = 400; // Height of the canvas
+  const canvasWidth = 600; // Width of the canvas
+  const canvasHeight = 300; // Height of the canvas
 
   // Set canvas dimensions
   canvas.width = canvasWidth;
@@ -19,9 +19,9 @@ export default function generateAndDownloadBarcode(barcodeValue) {
   // Draw barcode
   JsBarcode(canvas, barcodeValue, {
     format: "CODE128",
-    width: 6, // Increase width for larger barcode
-    height: 200, // Increase height for larger barcode
-    margin: 30, // Adjust margin if needed
+    width: 4, // Increase width for larger barcode
+    height: 150, // Increase height for larger barcode
+    margin: 20, // Adjust margin if needed
   });
 
   // Convert canvas to PNG and download
