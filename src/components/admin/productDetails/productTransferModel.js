@@ -85,7 +85,7 @@ export default function ProductTransferModel({
       to: selectedValue._id,
       from: {
         shelfId: selectedRow.shelfId,
-        color: selectedRow.color,
+        color: selectedRow.color === "-" ? "" : selectedRow.color,
         productId: selectedRow.productId,
       },
       warehouse: warehouse,
