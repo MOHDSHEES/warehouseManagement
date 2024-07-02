@@ -8,7 +8,10 @@ export async function POST(req) {
   const da = await req.json();
 
   const { to, from, warehouse, qty } = da;
-
+  console.log(to);
+  console.log(from);
+  console.log(warehouse);
+  console.log(qty);
   try {
     // Find the product with the given warehouse and productId
     const product = await Product.findOne({
@@ -19,7 +22,7 @@ export async function POST(req) {
     if (!product) {
       return NextResponse.json({ status: 404, msg: "Product not found" });
     }
-    // console.log(product);
+    console.log(product);
     // console.log(from);
     // Find the source shelf
     const sourceShelfIndex = product.shelves.findIndex(
