@@ -143,7 +143,7 @@ const BarcodeScanner = ({ onDetected, open, onClose }) => {
   return (
     <>
       <div style={blackOverlayStyle} onClick={handleOverlayClick} />
-      <div style={{ color: "white", zIndex: "9999" }}>{message}</div>
+      {/* <div style={{ color: "white", zIndex: "9999" }}>{message}</div> */}
       <Box
         sx={{
           display: "flex",
