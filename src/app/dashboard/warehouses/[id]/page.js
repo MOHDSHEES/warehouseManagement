@@ -25,6 +25,7 @@ import ShelfTreeMain from "@/src/components/admin/shelf/shelfTree/shelfTreeMain"
 import Link from "next/link";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ShelfSearchModel from "@/src/components/admin/shelf/sheflSearchModel";
+import BarcodeScanner from "@/src/components/functions/barcodeScanner";
 
 const Page = ({ params }) => {
   // console.log(params.id);
@@ -75,6 +76,20 @@ const Page = ({ params }) => {
       if (token) getWarehouse(params.id);
     }
   }, [params, warehouses]);
+
+  const [scannedData, setScannedData] = useState("");
+  const [scannerOpen, setScannerOpen] = useState(false);
+
+  const handleDetected = (data) => {
+    setScannedData(data);
+    setScannerOpen(false); // Close scanner after detecting a barcode
+  };
+
+  const handleOpenScanner = () => {
+    setScannerOpen(true);
+  };
+
+  console.log(scannedData);
   return (
     <div>
       <Container maxWidth="xl">
@@ -127,7 +142,21 @@ const Page = ({ params }) => {
               </Grid>
             </Box>
           </Container>
-
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleOpenScanner}
+            sx={{ ml: 2 }}
+          >
+            Open Barcode Scanner
+          </Button>
+          {scannerOpen && (
+            <BarcodeScanner
+              open={scannerOpen}
+              onDetected={handleDetected}
+              onClose={() => setScannerOpen(false)}
+            />
+          )}
           {/* shelf table */}
           <Container maxWidth="xl" sx={{ mt: 1, mb: 4, padding: 0 }}>
             <Box
