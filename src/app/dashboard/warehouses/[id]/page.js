@@ -77,19 +77,19 @@ const Page = ({ params }) => {
     }
   }, [params, warehouses]);
 
-  const [scannedData, setScannedData] = useState("");
-  const [scannerOpen, setScannerOpen] = useState(false);
+  // const [scannedData, setScannedData] = useState("");
+  // const [scannerOpen, setScannerOpen] = useState(false);
 
-  const handleDetected = (data) => {
-    setScannedData(data);
-    setScannerOpen(false); // Close scanner after detecting a barcode
-  };
+  // const handleDetected = (data) => {
+  //   setScannedData(data);
+  //   setScannerOpen(false); // Close scanner after detecting a barcode
+  // };
 
-  const handleOpenScanner = () => {
-    setScannerOpen(true);
-  };
+  // const handleOpenScanner = () => {
+  //   setScannerOpen(true);
+  // };
 
-  console.log(scannedData);
+  // console.log(scannedData);
   return (
     <div>
       <Container maxWidth="xl">
@@ -142,7 +142,7 @@ const Page = ({ params }) => {
               </Grid>
             </Box>
           </Container>
-          <Button
+          {/* <Button
             variant="contained"
             color="primary"
             onClick={handleOpenScanner}
@@ -156,7 +156,7 @@ const Page = ({ params }) => {
               onDetected={handleDetected}
               onClose={() => setScannerOpen(false)}
             />
-          )}
+          )} */}
           {/* shelf table */}
           <Container maxWidth="xl" sx={{ mt: 1, mb: 4, padding: 0 }}>
             <Box
