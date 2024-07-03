@@ -8,6 +8,7 @@ const BarcodeScanner = ({ onDetected, open, onClose }) => {
   const { messageApi } = useContext(MyContext);
   const scannerRef = useRef(null);
   const [scannerActive, setScannerActive] = useState(false);
+  const [message, setmessage] = useState("");
 
   let f = 1;
   useEffect(() => {
@@ -40,8 +41,8 @@ const BarcodeScanner = ({ onDetected, open, onClose }) => {
         },
         (err) => {
           if (err) {
-            closeMessage(messageApi, err);
-            // console.error("Error initializing Quagga:", err);
+            // closeMessage(messageApi, err);
+            console.error("Error initializing Quagga:", err);
             return;
           }
           Quagga.start();
@@ -52,8 +53,7 @@ const BarcodeScanner = ({ onDetected, open, onClose }) => {
 
       Quagga.onDetected(handleDetected);
       Quagga.onProcessed((result) => {
-        // console.log("Processed:", result);
-        closeMessage(messageApi, result);
+        setmessage(result);
       });
 
       return () => {
@@ -82,7 +82,7 @@ const BarcodeScanner = ({ onDetected, open, onClose }) => {
 
   const handleDetected = (result) => {
     onDetected(result.codeResult.code);
-    closeMessage(messageApi, result.coderResult.code);
+    // closeMessage(messageApi, result.coderResult.code);
     console.log(result);
   };
 
@@ -143,6 +143,7 @@ const BarcodeScanner = ({ onDetected, open, onClose }) => {
   return (
     <>
       <div style={blackOverlayStyle} onClick={handleOverlayClick} />
+      <div style={{ color: "white", zIndex: "9999" }}>{message}</div>
       <Box
         sx={{
           display: "flex",
