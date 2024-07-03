@@ -25,20 +25,22 @@ const BarcodeScanner = ({ onDetected, open, onClose }) => {
               height: 300,
               facingMode: "environment", // or 'user' for front camera
             },
-            area: {
-              // defines rectangle of the detection/localization area
-              top: "0%", // top offset
-              right: "0%", // right offset
-              left: "0%", // left offset
-              bottom: "0%", // bottom offset
-            },
+            // area: {
+            //   // defines rectangle of the detection/localization area
+            //   top: "0%", // top offset
+            //   right: "0%", // right offset
+            //   left: "0%", // left offset
+            //   bottom: "0%", // bottom offset
+            // },
           },
           decoder: {
             readers: ["code_128_reader", "ean_reader", "ean_8_reader"],
           },
+          debug: true,
         },
         (err) => {
           if (err) {
+            closeMessage(messageApi, err);
             // console.error("Error initializing Quagga:", err);
             return;
           }
@@ -49,6 +51,10 @@ const BarcodeScanner = ({ onDetected, open, onClose }) => {
       );
 
       Quagga.onDetected(handleDetected);
+      Quagga.onProcessed((result) => {
+        // console.log("Processed:", result);
+        closeMessage(messageApi, result);
+      });
 
       return () => {
         if (scannerInitialized) {
