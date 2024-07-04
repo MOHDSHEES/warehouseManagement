@@ -78,7 +78,8 @@ const QRCodeScanner = ({ isOpen, onClose, onScan }) => {
               onError={handleError}
               onResult={(result, error) => {
                 if (!!result) {
-                  setData(result?.text);
+                  console.log(result);
+                  // setData(result?.text);
                 }
 
                 if (!!error) {
