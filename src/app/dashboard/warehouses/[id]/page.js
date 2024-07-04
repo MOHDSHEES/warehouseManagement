@@ -25,7 +25,8 @@ import ShelfTreeMain from "@/src/components/admin/shelf/shelfTree/shelfTreeMain"
 import Link from "next/link";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ShelfSearchModel from "@/src/components/admin/shelf/sheflSearchModel";
-import BarcodeScanner from "@/src/components/functions/barcodeScanner";
+import QRCodeScanner from "@/src/components/functions/qrCodeScanner";
+// import BarcodeScanner from "@/src/components/functions/barcodeScanner";
 
 const Page = ({ params }) => {
   // console.log(params.id);
@@ -90,6 +91,22 @@ const Page = ({ params }) => {
   // };
 
   // console.log(scannedData);
+  const [scannerOpen, setScannerOpen] = useState(false);
+  const [scannedData, setScannedData] = useState("");
+
+  const handleOpenScanner = () => {
+    setScannerOpen(true);
+  };
+
+  const handleCloseScanner = () => {
+    setScannerOpen(false);
+  };
+
+  const handleScan = (data) => {
+    setScannedData(data);
+    // Handle scanned data as needed
+    console.log("Scanned Data:", data);
+  };
   return (
     <div>
       <Container maxWidth="xl">
@@ -142,6 +159,14 @@ const Page = ({ params }) => {
               </Grid>
             </Box>
           </Container>
+
+          <button onClick={handleOpenScanner}>Open Scanner</button>
+          <QRCodeScanner
+            isOpen={scannerOpen}
+            onClose={handleCloseScanner}
+            onScan={handleScan}
+          />
+          <p>Scanned Data: {scannedData}</p>
           {/* <Button
             variant="contained"
             color="primary"
