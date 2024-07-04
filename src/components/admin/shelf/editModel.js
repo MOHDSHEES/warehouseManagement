@@ -20,10 +20,8 @@ import ListIcon from "@mui/icons-material/List";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import EditShelf from "../../update/editShelfModel";
-import generateAndDownloadBarcode from "../../functions/barcode";
-// import QrCodeIcon from "@mui/icons-material/QrCode";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBarcode } from "@fortawesome/free-solid-svg-icons";
+import QrCodeIcon from "@mui/icons-material/QrCode";
+import generateAndDownloadQRCode from "../../functions/generateQrCode";
 
 export default function EditModel({
   editModelOpen,
@@ -163,20 +161,25 @@ export default function EditModel({
 
           <ListItem disableGutters>
             <ListItemButton
-              onClick={() =>
-                generateAndDownloadBarcode(
-                  shelfClicked && shelfClicked.shelfId,
-                  shelfClicked && shelfClicked.shelfName
-                )
+              onClick={
+                () =>
+                  generateAndDownloadQRCode(
+                    shelfClicked && shelfClicked.shelfId,
+                    shelfClicked && shelfClicked.shelfName
+                  )
+                // generateAndDownloadBarcode(
+                //   shelfClicked && shelfClicked.shelfId,
+                //   shelfClicked && shelfClicked.shelfName
+                // )
               }
             >
               <ListItemAvatar>
                 <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
-                  <FontAwesomeIcon icon={faBarcode} />
-                  {/* <QrCodeIcon /> */}
+                  {/* <FontAwesomeIcon icon={faBarcode} /> */}
+                  <QrCodeIcon />
                 </Avatar>
               </ListItemAvatar>
-              <ListItemText primary="Download Bar Code" />
+              <ListItemText primary="Download Qr Code" />
             </ListItemButton>
           </ListItem>
         </List>

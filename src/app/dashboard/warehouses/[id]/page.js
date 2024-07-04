@@ -26,7 +26,6 @@ import Link from "next/link";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ShelfSearchModel from "@/src/components/admin/shelf/sheflSearchModel";
 import QRCodeScanner from "@/src/components/functions/qrCodeScanner";
-// import BarcodeScanner from "@/src/components/functions/barcodeScanner";
 
 const Page = ({ params }) => {
   // console.log(params.id);
@@ -92,7 +91,7 @@ const Page = ({ params }) => {
 
   // console.log(scannedData);
   const [scannerOpen, setScannerOpen] = useState(false);
-  const [scannedData, setScannedData] = useState("");
+  const [scanData, setScanData] = useState("");
 
   const handleOpenScanner = () => {
     setScannerOpen(true);
@@ -101,12 +100,7 @@ const Page = ({ params }) => {
   const handleCloseScanner = () => {
     setScannerOpen(false);
   };
-
-  const handleScan = (data) => {
-    setScannedData(data);
-    // Handle scanned data as needed
-    console.log("Scanned Data:", data);
-  };
+  console.log(scanData);
   return (
     <div>
       <Container maxWidth="xl">
@@ -160,13 +154,12 @@ const Page = ({ params }) => {
             </Box>
           </Container>
 
-          <button onClick={handleOpenScanner}>Open Scanner</button>
+          {/* <button onClick={handleOpenScanner}>Open Scanner</button>
           <QRCodeScanner
             isOpen={scannerOpen}
             onClose={handleCloseScanner}
-            onScan={handleScan}
-          />
-          <p>Scanned Data: {scannedData}</p>
+            setScanData={setScanData}
+          /> */}
           {/* <Button
             variant="contained"
             color="primary"
