@@ -1,59 +1,34 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { QrReader } from "react-qr-reader"; // Import QrReader as named import
 import Box from "@mui/material/Box";
-// import { closeMessage } from "./message";
-// import { MyContext } from "../context";
 
 const QRCodeScanner = ({ isOpen, onClose, setScanData, searchShelf }) => {
   const [scannerEnabled, setScannerEnabled] = useState(false);
-  // const { messageApi } = useContext(MyContext);
+  const flagRef = useRef(1);
 
-  // useEffect(() => {
-  //   const handleWindowBack = (event) => {
-  //     if (isOpen && scannerEnabled) {
-  //       event.preventDefault(); // Prevent default behavior of browser back button
-  //       event.stopPropagation(); // Stop propagation to the previous URL
-  //       onClose(); // Close the scanner
-  //       // Push a state object with a unique identifier to manage browser history
-  //       window.history.pushState(
-  //         { scannerClosed: true },
-  //         "",
-  //         window.location.href
-  //       );
-  //     }
-  //   };
-
-  //   // console.log("inside");
-
-  //   // Initialize the history state with a unique identifier
-  //   // window.history.pushState({ initial: true }, "", window.location.href);
-  //   window.addEventListener("popstate", handleWindowBack);
-
-  //   return () => {
-  //     window.removeEventListener("popstate", handleWindowBack);
-  //   };
-  // }, [isOpen, scannerEnabled, onClose]);
-
-  let flag = 1;
   useEffect(() => {
     if (isOpen) {
-      if (flag) {
-        flag = 0;
+      if (flagRef.current) {
+        flagRef.current = 0;
         setScannerEnabled(true);
-      } // Enable scanner when isOpen changes to true
+      }
     } else {
-      setScanData(""); // Clear scan result when scanner is closed
-      setScannerEnabled(false); // Disable scanner when isOpen changes to false
+      setScanData("");
+      setScannerEnabled(false);
+      flagRef.current = 1;
     }
-  }, [isOpen]);
 
-  // const handleScan = (data) => {
-  //   if (data) {
-  //     setScanResult(data);
-  //     console.log(data);
-  //     onScan(data);
-  //   }
-  // };
+    return () => {
+      setScannerEnabled(false); // Ensure scanner is disabled when component unmounts
+    };
+  }, [isOpen, setScanData]);
+
+  useEffect(() => {
+    return () => {
+      // Perform any necessary cleanup here
+      setScannerEnabled(false);
+    };
+  }, []);
 
   const handleError = (err) => {
     console.log(err);
@@ -111,21 +86,15 @@ const QRCodeScanner = ({ isOpen, onClose, setScanData, searchShelf }) => {
                 if (!!result) {
                   setScanData(result.text);
                   searchShelf(result.text);
-                  onClose();
-                  // console.log(result);
-                  // setData(result?.text);
+                  setScannerEnabled(false); // Disable scanner when result is obtained
+                  onClose(); // Close scanner
                 }
 
                 if (!!error) {
-                  // closeMessage(messageApi, error, "error");
-                  // console.log("in");
-                  // console.log(error);
-                  // onClose();
-                  // console.info(error);
+                  console.error(error);
                 }
               }}
               constraints={{ facingMode: "environment" }}
-              // onScan={handleScan}
               style={{ width: "100%" }}
             />
           </div>
