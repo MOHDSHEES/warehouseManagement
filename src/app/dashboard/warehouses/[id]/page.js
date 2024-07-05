@@ -3,7 +3,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { MyContext } from "@/src/components/context";
-import { closeMessage } from "@/src/components/functions/message";
+import { closeMessage, openMessage } from "@/src/components/functions/message";
 import { useRouter } from "next/navigation";
 import {
   Box,
@@ -103,12 +103,14 @@ const Page = ({ params }) => {
 
   async function searchShelf(id) {
     console.log("in", id);
+    openMessage(messageApi, "Searching...");
     const { data } = await axios.post("/api/shelf/findById", {
       shelfId: id,
       warehouse: warehouse,
     });
-    console.log(data);
+    // console.log(data);
     if (data.status === 200) {
+      messageApi.destroy();
       setSearchedShelfModel(true);
       setShelfDetail(data.data);
     } else closeMessage(messageApi, data.msg, "error");

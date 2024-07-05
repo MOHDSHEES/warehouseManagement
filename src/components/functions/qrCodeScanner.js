@@ -4,40 +4,51 @@ import Box from "@mui/material/Box";
 
 const QRCodeScanner = ({ isOpen, onClose, setScanData, searchShelf }) => {
   const [scannerEnabled, setScannerEnabled] = useState(false);
-  const flagRef = useRef(1);
+  const streamRef = useRef(null);
 
   useEffect(() => {
     if (isOpen) {
-      if (flagRef.current) {
-        flagRef.current = 0;
-        setScannerEnabled(true);
-      }
+      setScannerEnabled(true);
     } else {
       setScanData("");
       setScannerEnabled(false);
-      flagRef.current = 1;
     }
 
     return () => {
       setScannerEnabled(false); // Ensure scanner is disabled when component unmounts
+      stopMediaStream();
     };
   }, [isOpen, setScanData]);
 
-  useEffect(() => {
-    return () => {
-      // Perform any necessary cleanup here
-      setScannerEnabled(false);
-    };
-  }, []);
+  const stopMediaStream = () => {
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach((track) => track.stop());
+    }
+  };
 
   const handleError = (err) => {
-    console.log(err);
-    // closeMessage(messageApi, err, "error");
-    // onClose();
+    console.error(err);
+    // Additional error handling if needed
   };
 
   const handleOverlayClick = () => {
+    setScannerEnabled(false);
+    stopMediaStream();
     onClose(); // Close the scanner when overlay is clicked
+  };
+
+  const handleResult = (result) => {
+    if (!!result) {
+      setScanData(result.text);
+      searchShelf(result.text);
+      setScannerEnabled(false); // Disable scanner when result is obtained
+      stopMediaStream();
+      onClose(); // Close scanner
+    }
+  };
+
+  const handleLoad = (stream) => {
+    streamRef.current = stream;
   };
 
   const blackOverlayStyle = {
@@ -75,25 +86,15 @@ const QRCodeScanner = ({ isOpen, onClose, setScanData, searchShelf }) => {
 
   return (
     <>
-      <div style={blackOverlayStyle} />
-      <Box sx={scannerContainerStyle} onClick={handleOverlayClick}>
+      <div style={blackOverlayStyle} onClick={handleOverlayClick} />
+      <Box sx={scannerContainerStyle}>
         {isOpen && scannerEnabled && (
           <div style={scannerStyle}>
             <QrReader
               delay={300}
               onError={handleError}
-              onResult={(result, error = null) => {
-                if (!!result) {
-                  setScanData(result.text);
-                  searchShelf(result.text);
-                  setScannerEnabled(false); // Disable scanner when result is obtained
-                  onClose(); // Close scanner
-                }
-
-                if (!!error) {
-                  console.error(error);
-                }
-              }}
+              onResult={handleResult}
+              onLoad={(result) => handleLoad(result)}
               constraints={{ facingMode: "environment" }}
               style={{ width: "100%" }}
             />
