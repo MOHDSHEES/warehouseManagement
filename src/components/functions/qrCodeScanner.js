@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 // import { closeMessage } from "./message";
 // import { MyContext } from "../context";
 
-const QRCodeScanner = ({ isOpen, onClose, setScanData }) => {
+const QRCodeScanner = ({ isOpen, onClose, setScanData, searchShelf }) => {
   const [scannerEnabled, setScannerEnabled] = useState(false);
   // const { messageApi } = useContext(MyContext);
 
@@ -109,7 +109,8 @@ const QRCodeScanner = ({ isOpen, onClose, setScanData }) => {
               onError={handleError}
               onResult={(result, error = null) => {
                 if (!!result) {
-                  setScanData(result);
+                  setScanData(result.text);
+                  searchShelf(result.text);
                   onClose();
                   // console.log(result);
                   // setData(result?.text);

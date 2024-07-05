@@ -26,10 +26,16 @@ import Link from "next/link";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import ShelfSearchModel from "@/src/components/admin/shelf/sheflSearchModel";
 import QRCodeScanner from "@/src/components/functions/qrCodeScanner";
+import SearchedShelfModel from "@/src/components/admin/shelf/searchedShelfModel";
 
 const Page = ({ params }) => {
   // console.log(params.id);
-  const { warehouses, messageApi, privileges, isAdmin } = useContext(MyContext);
+  const {
+    warehouses = "null",
+    messageApi,
+    privileges,
+    isAdmin,
+  } = useContext(MyContext);
   const [warehouse, setWarehouse] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -92,6 +98,21 @@ const Page = ({ params }) => {
   // console.log(scannedData);
   const [scannerOpen, setScannerOpen] = useState(false);
   const [scanData, setScanData] = useState("");
+  const [searchedShelfModel, setSearchedShelfModel] = useState(false);
+  const [shelfDetail, setShelfDetail] = useState(null);
+
+  async function searchShelf(id) {
+    console.log("in", id);
+    const { data } = await axios.post("/api/shelf/findById", {
+      shelfId: id,
+      warehouse: warehouse,
+    });
+    console.log(data);
+    if (data.status === 200) {
+      setSearchedShelfModel(true);
+      setShelfDetail(data.data);
+    } else closeMessage(messageApi, data.msg, "error");
+  }
 
   const handleOpenScanner = () => {
     setScannerOpen(true);
@@ -100,7 +121,7 @@ const Page = ({ params }) => {
   const handleCloseScanner = () => {
     setScannerOpen(false);
   };
-  console.log(scanData);
+  // console.log(scanData);
   return (
     <div>
       <Container maxWidth="xl">
@@ -154,27 +175,6 @@ const Page = ({ params }) => {
             </Box>
           </Container>
 
-          {/* <button onClick={handleOpenScanner}>Open Scanner</button>
-          <QRCodeScanner
-            isOpen={scannerOpen}
-            onClose={handleCloseScanner}
-            setScanData={setScanData}
-          /> */}
-          {/* <Button
-            variant="contained"
-            color="primary"
-            onClick={handleOpenScanner}
-            sx={{ ml: 2 }}
-          >
-            Open Barcode Scanner
-          </Button>
-          {scannerOpen && (
-            <BarcodeScanner
-              open={scannerOpen}
-              onDetected={handleDetected}
-              onClose={() => setScannerOpen(false)}
-            />
-          )} */}
           {/* shelf table */}
           <Container maxWidth="xl" sx={{ mt: 1, mb: 4, padding: 0 }}>
             <Box
@@ -229,6 +229,13 @@ const Page = ({ params }) => {
                           >
                             Search Shelf
                           </MenuItem>
+                          <MenuItem
+                            onClick={() => {
+                              handleClose(), handleOpenScanner();
+                            }}
+                          >
+                            Scan Shelf
+                          </MenuItem>
                           {((privileges && privileges.Add_Shelf) ||
                             isAdmin) && (
                             <MenuItem
@@ -256,10 +263,22 @@ const Page = ({ params }) => {
           </Container>
         </Stack>
       </Container>
+      <QRCodeScanner
+        isOpen={scannerOpen}
+        onClose={handleCloseScanner}
+        setScanData={setScanData}
+        searchShelf={searchShelf}
+      />
       <ShelfSearchModel
         open={shelfSearchModel}
         setOpen={setShelfSearchModel}
         warehouse={params.id}
+      />
+      <SearchedShelfModel
+        setOpen={setSearchedShelfModel}
+        open={searchedShelfModel}
+        shelf={shelfDetail}
+        warehouse={warehouse}
       />
     </div>
   );
