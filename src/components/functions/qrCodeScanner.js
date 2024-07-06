@@ -1,61 +1,68 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import { QrReader } from "react-qr-reader";
+import React, { useState, useEffect, useContext } from "react";
+import { QrReader } from "react-qr-reader"; // Import QrReader as named import
 import Box from "@mui/material/Box";
+// import { closeMessage } from "./message";
+// import { MyContext } from "../context";
 
-const QRCodeScanner = ({ isOpen, onClose, setScanData, searchShelf }) => {
+const QRCodeScanner = ({ isOpen, onClose, searchShelf }) => {
   const [scannerEnabled, setScannerEnabled] = useState(false);
-  const streamRef = useRef(null);
-  const canvasRef = useRef(null);
-  const contextRef = useRef(null); // Reference for canvas context
+  // const { messageApi } = useContext(MyContext);
 
-  const stopMediaStream = useCallback(() => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach((track) => track.stop());
-      streamRef.current = null;
-    }
-  }, []);
+  // useEffect(() => {
+  //   const handleWindowBack = (event) => {
+  //     if (isOpen && scannerEnabled) {
+  //       event.preventDefault(); // Prevent default behavior of browser back button
+  //       event.stopPropagation(); // Stop propagation to the previous URL
+  //       onClose(); // Close the scanner
+  //       // Push a state object with a unique identifier to manage browser history
+  //       window.history.pushState(
+  //         { scannerClosed: true },
+  //         "",
+  //         window.location.href
+  //       );
+  //     }
+  //   };
 
+  //   // console.log("inside");
+
+  //   // Initialize the history state with a unique identifier
+  //   // window.history.pushState({ initial: true }, "", window.location.href);
+  //   window.addEventListener("popstate", handleWindowBack);
+
+  //   return () => {
+  //     window.removeEventListener("popstate", handleWindowBack);
+  //   };
+  // }, [isOpen, scannerEnabled, onClose]);
+
+  let flag = 1;
   useEffect(() => {
     if (isOpen) {
-      setScannerEnabled(true);
+      if (flag) {
+        flag = 0;
+        setScannerEnabled(true);
+      } // Enable scanner when isOpen changes to true
     } else {
-      setScanData("");
-      setScannerEnabled(false);
-      stopMediaStream();
+      // setScanData(""); // Clear scan result when scanner is closed
+      setScannerEnabled(false); // Disable scanner when isOpen changes to false
     }
+  }, [isOpen]);
 
-    return () => {
-      stopMediaStream(); // Ensure scanner is disabled when component unmounts
-    };
-  }, [isOpen, setScanData, stopMediaStream]);
+  // const handleScan = (data) => {
+  //   if (data) {
+  //     setScanResult(data);
+  //     console.log(data);
+  //     onScan(data);
+  //   }
+  // };
 
   const handleError = (err) => {
-    console.error(err);
+    console.log(err);
+    // closeMessage(messageApi, err, "error");
+    // onClose();
   };
 
   const handleOverlayClick = () => {
-    setScannerEnabled(false);
-    stopMediaStream();
     onClose(); // Close the scanner when overlay is clicked
-  };
-
-  const handleResult = (result) => {
-    if (result) {
-      setScanData(result.text);
-      searchShelf(result.text);
-      setScannerEnabled(false); // Disable scanner when result is obtained
-      stopMediaStream();
-      onClose(); // Close scanner
-    }
-  };
-
-  const handleLoad = (stream) => {
-    streamRef.current = stream;
-    const canvas = canvasRef.current;
-    if (canvas) {
-      const context = canvas.getContext("2d", { willReadFrequently: true });
-      contextRef.current = context; // Store the canvas context
-    }
   };
 
   const blackOverlayStyle = {
@@ -67,7 +74,7 @@ const QRCodeScanner = ({ isOpen, onClose, setScanData, searchShelf }) => {
     backgroundColor: "rgba(0, 0, 0, 0.8)",
     zIndex: 9998,
     cursor: "pointer",
-    display: isOpen && scannerEnabled ? "block" : "none",
+    display: isOpen && scannerEnabled ? "block" : "none", // Display overlay when scanner is open
   };
 
   const scannerContainerStyle = {
@@ -80,11 +87,11 @@ const QRCodeScanner = ({ isOpen, onClose, setScanData, searchShelf }) => {
     left: 0,
     width: "100%",
     zIndex: 9999,
-    pointerEvents: isOpen && scannerEnabled ? "auto" : "none",
+    pointerEvents: isOpen && scannerEnabled ? "auto" : "none", // Allow pointer events when scanner is open
   };
 
   const scannerStyle = {
-    width: "300px",
+    width: "300px", // Adjust width for visibility
     height: "300px",
     border: "2px solid #fff",
     borderRadius: "5px",
@@ -97,15 +104,29 @@ const QRCodeScanner = ({ isOpen, onClose, setScanData, searchShelf }) => {
       <Box sx={scannerContainerStyle} onClick={handleOverlayClick}>
         {isOpen && scannerEnabled && (
           <div style={scannerStyle}>
-            <canvas ref={canvasRef} style={{ display: "none" }} />
             <QrReader
               delay={300}
               onError={handleError}
-              onResult={handleResult}
-              onLoad={handleLoad}
+              onResult={(result, error = null) => {
+                if (!!result) {
+                  // setScanData(result.text);
+                  searchShelf(result.text);
+                  onClose();
+                  // console.log(result);
+                  // setData(result?.text);
+                }
+
+                if (!!error) {
+                  // closeMessage(messageApi, error, "error");
+                  // console.log("in");
+                  // console.log(error);
+                  // onClose();
+                  // console.info(error);
+                }
+              }}
               constraints={{ facingMode: "environment" }}
+              // onScan={handleScan}
               style={{ width: "100%" }}
-              videoId="qr-reader-video"
             />
           </div>
         )}

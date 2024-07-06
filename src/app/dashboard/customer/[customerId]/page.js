@@ -102,7 +102,10 @@ const CustomerAnalytics = ({ params }) => {
 
   return (
     <UserAccessLayout>
-      <ThemeProvider requiredprivilege="View_Customer" theme={defaultTheme}>
+      <ThemeProvider
+        requiredprivilege="Customer_Analytics"
+        theme={defaultTheme}
+      >
         <Container component="main" maxWidth="xl">
           {/* <CssBaseline /> */}
           <Stack spacing={3}>

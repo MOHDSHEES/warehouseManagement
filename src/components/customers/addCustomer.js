@@ -44,7 +44,7 @@ const AddCustomer = () => {
       const { data } = await axios.post("/api/customer/add", {
         data: { ...state, company: user.company },
       });
-      console.log(data);
+      // console.log(data);
       if (data.status === 200) {
         setValidated(false);
         clear();
@@ -70,21 +70,6 @@ const AddCustomer = () => {
         <Divider />
         <CardContent>
           <AddCustomerForm state={state} Inputchange={Inputchange} />
-          {/* <AddEmployeeForm
-            state={state}
-            Inputchange={Inputchange}
-            error={error}
-            setError={setError}
-            warehousesSelected={warehousesSelected}
-            setWarehousesSelected={setWarehousesSelected}
-            warehouses={warehouses}
-            privilegesTemplate={privilegesTemplate}
-            setPrivilegesTemplate={setPrivilegesTemplate}
-            privileges={privileges}
-            handleChange={handleChange}
-            templates={templates}
-            onPrivilegesChange={onPrivilegesChange}
-          /> */}
         </CardContent>
         <Divider />
         <CardActions sx={{ justifyContent: "flex-end" }}>

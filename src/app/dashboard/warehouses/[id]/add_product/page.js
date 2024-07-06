@@ -182,7 +182,7 @@ export default function ProductAdd({ params }) {
             If you have an Excel sheet, you can upload it here!
           </Typography>
           <IconButton
-            // onClick={() => setOpenExcel(true)}
+            onClick={() => setOpenExcel(true)}
             aria-label="Upload"
             color="primary"
             size="large"

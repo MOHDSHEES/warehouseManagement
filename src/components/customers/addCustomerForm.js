@@ -23,14 +23,14 @@ const AddCustomerForm = ({ state, Inputchange }) => {
           </Form.Control.Feedback>
         </Form.Group>
         <Form.Group as={Col} md="6" className="mb-3" controlId="email">
-          <Form.Label>Email *</Form.Label>
+          <Form.Label>Email</Form.Label>
           <Form.Control
             type="email"
             name="email"
             value={state.email}
             onChange={Inputchange}
             placeholder="Enter Email"
-            required
+            // required
           />
           <Form.Control.Feedback type="invalid">
             Enter Valid Email.
@@ -55,14 +55,13 @@ const AddCustomerForm = ({ state, Inputchange }) => {
           </Form.Control.Feedback>
         </Form.Group>
         <Form.Group as={Col} md="6" className="mb-3" controlId="mobileNo">
-          <Form.Label>Mobile/Phone No. *</Form.Label>
+          <Form.Label>Mobile/Phone No.</Form.Label>
           <Form.Control
             type="tel"
             name="mobileNo"
             value={state.mobileNo}
             onChange={Inputchange}
             placeholder="Enter Phone No."
-            required
           />
           <Form.Control.Feedback type="invalid">
             Please Enter Phone No.

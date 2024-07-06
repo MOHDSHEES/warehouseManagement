@@ -106,7 +106,9 @@ export default function AddSubShelf({
             margin="dense"
             id="name"
             value={shelfName}
-            onChange={(e) => setShelfName(e.target.value.toUpperCase())}
+            onChange={(e) =>
+              setShelfName(e.target.value.slice(0, 10).trim().toUpperCase())
+            }
             name="subShelf"
             label="Sub Shelf Name or Id"
             fullWidth

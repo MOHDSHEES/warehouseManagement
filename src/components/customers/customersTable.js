@@ -15,9 +15,11 @@ import axios from "axios";
 import { closeMessage } from "../functions/message";
 import Alert from "@mui/material/Alert";
 import Stack from "@mui/material/Stack";
-import { AlertTitle, Button, LinearProgress } from "@mui/material";
+import { AlertTitle, Button, IconButton, LinearProgress } from "@mui/material";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import SettingsIcon from "@mui/icons-material/Settings";
+import CustomerMenuModel from "./customerMenuModel";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -47,20 +49,20 @@ const columns = [
     label: "Address",
     minWidth: 170,
   },
-  //   {
-  //     id: "settings",
-  //     label: "Settings",
-  //     minWidth: 100,
-  //     align: "center",
-  //     format: (value, row, handleWarehouseModel) => (
-  //       <IconButton
-  //         onClick={() => handleWarehouseModel(row)}
-  //         aria-label="settings"
-  //       >
-  //         <SettingsIcon color="primary" fontSize="small" />
-  //       </IconButton>
-  //     ),
-  //   },
+  {
+    id: "settings",
+    label: "Settings",
+    minWidth: 100,
+    align: "center",
+    format: (row, handleCustomerModel) => (
+      <IconButton
+        onClick={() => handleCustomerModel(row)}
+        aria-label="settings"
+      >
+        <SettingsIcon color="primary" fontSize="small" />
+      </IconButton>
+    ),
+  },
 ];
 
 export default function CustomersTable() {
@@ -71,6 +73,8 @@ export default function CustomersTable() {
   const [loading, setLoading] = React.useState(true);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const [customers, setCustomers] = React.useState(null);
+  const [customerClicked, setCustomerClicked] = React.useState(null);
+  const [customerModel, setCustomerModel] = React.useState(false);
   // console.log(customers);
   //   const router = useRouter();
   //   const [warehouseClicked, setWarehouseClicked] = React.useState("");
@@ -100,6 +104,18 @@ export default function CustomersTable() {
       getCustomers();
   }, [user, customers]);
 
+  function handleCustomerModel(row) {
+    if (isAdmin || privileges.Add_Customer) {
+      setCustomerClicked(row);
+      setCustomerModel(true);
+    }
+  }
+
+  // Filter columns based on privilege.Add_Customer
+  const filteredColumns =
+    isAdmin || privileges.Add_Customer
+      ? columns
+      : columns.filter((column) => column.id !== "settings");
   return (
     <>
       <Paper sx={{ width: "100%", overflow: "hidden" }}>
@@ -127,7 +143,7 @@ export default function CustomersTable() {
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
                   <TableRow>
-                    {columns.map((column) => {
+                    {filteredColumns.map((column) => {
                       return (
                         <StyledTableCell
                           key={column.id}
@@ -147,21 +163,35 @@ export default function CustomersTable() {
                       return (
                         <TableRow
                           className="pointer"
-                          onClick={() =>
-                            router.push(`/dashboard/customer/${row._id}`)
-                          }
                           hover
                           role="checkbox"
                           tabIndex={-1}
                           key={idx}
                         >
-                          {columns.map((column) => {
+                          {filteredColumns.map((column) => {
                             const value = row[column.id];
                             return (
-                              <TableCell key={column.id} align={column.align}>
+                              <TableCell
+                                onClick={() => {
+                                  if (column.id !== "settings") {
+                                    (isAdmin ||
+                                      privileges.Customer_Analytics) &&
+                                      router.push(
+                                        `/dashboard/customer/${row._id}`
+                                      );
+                                  }
+                                }}
+                                key={column.id}
+                                align={column.align}
+                              >
                                 {column.format && typeof value === "number"
                                   ? column.format(value)
-                                  : value}
+                                  : column.format &&
+                                    typeof column.format === "function"
+                                  ? column.format(row, handleCustomerModel)
+                                  : value
+                                  ? value
+                                  : "-"}
                               </TableCell>
                             );
                           })}
@@ -185,6 +215,14 @@ export default function CustomersTable() {
           </>
         )}
       </Paper>
+      <CustomerMenuModel
+        setCustomerModel={setCustomerModel}
+        customerModel={customerModel}
+        customerClicked={customerClicked}
+        setCustomerClicked={setCustomerClicked}
+        customers={customers}
+        setCustomers={setCustomers}
+      />
     </>
   );
 }

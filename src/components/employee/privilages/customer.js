@@ -39,6 +39,15 @@ export const CustomerPrivileges = ({ state, handleChange }) => {
               label="View Customer"
             />
           </Grid>
+          <Grid>
+            <FormControlLabel
+              control={<Switch size="small" sx={{ marginRight: "5px" }} />}
+              name="Customer_Analytics"
+              checked={state.Customer_Analytics}
+              onChange={handleChange}
+              label="Customer Analytics"
+            />
+          </Grid>
         </Grid>
       </FormGroup>
     </CardContent>

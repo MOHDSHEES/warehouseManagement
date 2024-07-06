@@ -111,7 +111,10 @@ export default function AddShelf({ warehouseId }) {
                   onChange={(e) =>
                     setstate({
                       ...state,
-                      shelfName: e.target.value.toUpperCase(),
+                      shelfName: e.target.value
+                        .slice(0, 10)
+                        .trim()
+                        .toUpperCase(),
                     })
                   }
                   label="shelf Name  or Id"

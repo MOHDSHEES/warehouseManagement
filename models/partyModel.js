@@ -13,8 +13,6 @@ const partySchema = new mongoose.Schema(
     },
     email: {
       type: String,
-      required: true,
-      unique: true,
     },
     mobileNo: {
       type: String,

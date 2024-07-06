@@ -97,12 +97,11 @@ const Page = ({ params }) => {
 
   // console.log(scannedData);
   const [scannerOpen, setScannerOpen] = useState(false);
-  const [scanData, setScanData] = useState("");
+  // const [scanData, setScanData] = useState("");
   const [searchedShelfModel, setSearchedShelfModel] = useState(false);
   const [shelfDetail, setShelfDetail] = useState(null);
 
   async function searchShelf(id) {
-    console.log("in", id);
     openMessage(messageApi, "Searching...");
     const { data } = await axios.post("/api/shelf/findById", {
       shelfId: id,
@@ -110,9 +109,13 @@ const Page = ({ params }) => {
     });
     // console.log(data);
     if (data.status === 200) {
-      messageApi.destroy();
-      setSearchedShelfModel(true);
-      setShelfDetail(data.data);
+      if (data.data._id) {
+        messageApi.destroy();
+        setSearchedShelfModel(true);
+        setShelfDetail(data.data);
+      } else {
+        closeMessage(messageApi, "Shelf Details Not Found");
+      }
     } else closeMessage(messageApi, data.msg, "error");
   }
 
@@ -268,7 +271,7 @@ const Page = ({ params }) => {
       <QRCodeScanner
         isOpen={scannerOpen}
         onClose={handleCloseScanner}
-        setScanData={setScanData}
+        // setScanData={setScanData}
         searchShelf={searchShelf}
       />
       <ShelfSearchModel
