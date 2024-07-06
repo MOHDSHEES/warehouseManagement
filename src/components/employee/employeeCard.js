@@ -120,7 +120,14 @@ export default function EmployeeCard({
               </Typography>
               <Typography fontWeight="lg">{employee.jobType}</Typography>
             </div>
-
+            <div>
+              <Typography level="body-xs" fontWeight="lg">
+                Status
+              </Typography>
+              <Typography fontWeight="lg">
+                {employee.status ? "Enabled" : "Disabled"}
+              </Typography>
+            </div>
             <div>
               <Typography level="body-xs" fontWeight="lg">
                 Gender

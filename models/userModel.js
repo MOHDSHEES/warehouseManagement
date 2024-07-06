@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Privilege",
   },
-  // privilegesTemplate: { type: String },
+  status: { type: Number, default: 1 },
   warehouse: [
     {
       type: mongoose.Schema.Types.ObjectId,

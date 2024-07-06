@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { FormHelperText, Stack } from "@mui/material";
+import { FormControlLabel, FormHelperText, Stack, Switch } from "@mui/material";
 import Form from "react-bootstrap/Form";
 import { MyContext } from "../context";
 import Col from "react-bootstrap/Col";
@@ -155,6 +155,23 @@ const AddEmployeeForm = ({
             Select privelege Template.
           </Form.Control.Feedback>
         </Form.Group>
+        {component === "Update" && (
+          <>
+            <FormControlLabel
+              control={<Switch size="small" sx={{ marginRight: "5px" }} />}
+              name="status"
+              checked={state.status}
+              onChange={Inputchange}
+              label={
+                state.status ? "Employee is Enabled" : "Employee is Disabled"
+              }
+            />
+            <FormHelperText>
+              Use the switch above to enable or disable the employee's status.
+              Once an employee is disabled, they will not be able to log in.
+            </FormHelperText>
+          </>
+        )}
       </Row>
       {privilegesTemplate !== "" && (
         <Privilages

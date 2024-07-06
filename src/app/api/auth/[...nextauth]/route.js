@@ -48,7 +48,11 @@ const authOptions = {
         await dbConnect();
 
         const user = await userModel.findOne(
-          { email: credentials.email, password: credentials.password },
+          {
+            email: credentials.email,
+            password: credentials.password,
+            status: 1,
+          },
           {
             password: 0,
           }

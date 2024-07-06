@@ -13,7 +13,7 @@ export async function POST(req) {
       //   .findOne({ email: data.email }, { password: 0 })
       //   .populate("warehouses");
       const resu = await userModel
-        .findOne({ email: data.email }, { password: 0 })
+        .findOne({ email: data.email, status: 1 }, { password: 0 })
         .populate({
           path: "company",
           select: { password: 0 },

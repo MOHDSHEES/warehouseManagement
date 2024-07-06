@@ -52,6 +52,7 @@ export default function EditEmployeeModel({
     joiningDate: "",
     post: "",
     jobType: "",
+    status: 1,
   });
   useEffect(() => {
     setstate({
@@ -59,6 +60,7 @@ export default function EditEmployeeModel({
       joiningDate: employeeData.joiningDate,
       post: employeeData.post,
       jobType: employeeData.jobType,
+      status: employeeData && employeeData.status ? employeeData.status : false,
     });
     if (employeeData && employeeData.privilegesTemplate) {
       setPrivilegesTemplate(employeeData.privilegesTemplate.name);
@@ -120,10 +122,12 @@ export default function EditEmployeeModel({
   const Inputchange = (event) => {
     setValidated(false);
     const { name, value } = event.target;
-    setstate({
-      ...state,
-      [name]: value,
-    });
+    if (name === "status") setstate({ ...state, [name]: event.target.checked });
+    else
+      setstate({
+        ...state,
+        [name]: value,
+      });
   };
 
   async function submitHandler(event) {
@@ -155,6 +159,7 @@ export default function EditEmployeeModel({
             post: state.post,
             jobType: state.jobType,
             warehouse: filteredWarehouseIds,
+            status: state.status,
             privilegesTemplate: newPrivileges[0]._id,
           },
         });
@@ -211,7 +216,6 @@ export default function EditEmployeeModel({
     const data = templates.filter((template) => template.name === value);
     if (data && data.length) setPrivileges(data[0].roles);
   }
-
   // useEffect(() => {
   //   if (user && templates === "") getPrivelegeTemplate();
   // }, [user]);

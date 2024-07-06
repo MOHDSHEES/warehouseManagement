@@ -44,6 +44,7 @@ const EmployeeRegister = ({ data }) => {
       warehouse: data.warehouse,
       privilegesTemplate: data.privilegesTemplate,
       company: data.company,
+      status: 1,
     };
     if (state.password === confirmPassword) {
       setBackDropOpen(true);

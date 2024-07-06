@@ -3,7 +3,7 @@ import axios from "axios";
 import { message } from "antd";
 import { signOut, useSession } from "next-auth/react";
 import BackdropComponent from "./UI-component/backdrop";
-import { closeMessage } from "./functions/message";
+// import { closeMessage } from "./functions/message";
 
 // Create the context
 const MyContext = createContext();

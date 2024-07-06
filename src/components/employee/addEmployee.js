@@ -21,6 +21,7 @@ export const AddEmployee = () => {
     joiningDate: "",
     post: "",
     jobType: "",
+    status: 1,
   });
   const [privilegesTemplate, setPrivilegesTemplate] = useState("");
   //   console.log(role);
@@ -46,6 +47,7 @@ export const AddEmployee = () => {
       joiningDate: "",
       post: "",
       jobType: "",
+      status: 1,
     });
   }
   const Inputchange = (event) => {

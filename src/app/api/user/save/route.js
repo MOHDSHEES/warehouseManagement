@@ -30,6 +30,7 @@ export async function POST(req) {
           jobType: "Permanent Employee",
           post: "Owner",
           address: da.address,
+          status: 1,
           // privileges: {
           //   Add_Employee: true,
           //   Add_Warehouse: true,
