@@ -167,8 +167,9 @@ const AddEmployeeForm = ({
               }
             />
             <FormHelperText>
-              Use the switch above to enable or disable the employee's status.
-              Once an employee is disabled, they will not be able to log in.
+              Use the switch above to enable or disable the employee&apos;s
+              status. Once an employee is disabled, they will not be able to log
+              in.
             </FormHelperText>
           </>
         )}
