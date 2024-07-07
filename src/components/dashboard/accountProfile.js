@@ -44,17 +44,17 @@ export const AccountProfile = () => {
             <Badge
               overlap="circular"
               anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              badgeContent={
-                <SmallAvatar
-                  className="pointer"
-                  onClick={() => setUploadShow(true)}
-                  sx={{ bgcolor: "white" }}
-                >
-                  <EditIcon sx={{ color: "black", fontSize: "15px" }} />
-                </SmallAvatar>
-              }
+              // badgeContent={
+              //   <SmallAvatar
+              //     className="pointer"
+              //     onClick={() => setUploadShow(true)}
+              //     sx={{ bgcolor: "white" }}
+              //   >
+              //     <EditIcon sx={{ color: "black", fontSize: "15px" }} />
+              //   </SmallAvatar>
+              // }
             >
-              {user && user.profileImg ? (
+              {/* {user && user.profileImg ? (
                 <Avatar
                   sx={{
                     height: 100,
@@ -64,18 +64,20 @@ export const AccountProfile = () => {
                   alt={user && user.name ? user.name : "Profile"}
                   src={user.profileImg}
                 />
-              ) : (
-                <Avatar
-                  // src={user.avatar}
-                  sx={{
-                    height: 100,
-                    width: 100,
-                    //   bgcolor: green[500],
-                  }}
-                >
-                  {user && user.name && user.name.slice(0, 1)}
-                </Avatar>
-              )}
+              ) 
+              :  (*/}
+
+              <Avatar
+                // src={user.avatar}
+                sx={{
+                  height: 100,
+                  width: 100,
+                  bgcolor: "green",
+                }}
+              >
+                {user && user.name && user.name.slice(0, 1)}
+              </Avatar>
+              {/* )} */}
             </Badge>
 
             <Typography className="mt-3" gutterBottom variant="h5">

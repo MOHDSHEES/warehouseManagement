@@ -6,32 +6,37 @@ import ProductAnalytics from "@/models/analyticsModels/productAnalytics";
 import orderModel from "@/models/orderModel";
 import Product from "@/models/productModel";
 import mongoose from "mongoose";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req) {
-  try {
-    await dbConnect();
-    const data = await req.json();
-    // console.log(data);
-    if (req.method === "POST") {
-      const newOrder = await new orderModel(data.data).save();
-      const populatedOrder = await orderModel
-        .findById(newOrder._id)
-        .populate("party");
-      // Update analytics for each product in the order
-      await updateProductAnalytics(data.data.order);
-      await updateCustomerAnalytics(
-        data.data.order,
-        data.data.party,
-        data.data.payment
-      );
+  const session = await getServerSession(req);
+  // Check if the user is authenticated
+  if (session && session.user && session.user.name) {
+    try {
+      await dbConnect();
+      const data = await req.json();
+      // console.log(data);
+      if (req.method === "POST") {
+        const newOrder = await new orderModel(data.data).save();
+        const populatedOrder = await orderModel
+          .findById(newOrder._id)
+          .populate("party");
+        // Update analytics for each product in the order
+        await updateProductAnalytics(data.data.order);
+        await updateCustomerAnalytics(
+          data.data.order,
+          data.data.party,
+          data.data.payment
+        );
 
-      return NextResponse.json({ status: 200, data: populatedOrder });
+        return NextResponse.json({ status: 200, data: populatedOrder });
+      }
+    } catch (error) {
+      console.log(error);
+      return NextResponse.json({ status: 500, msg: error.message });
     }
-  } catch (error) {
-    console.log(error);
-    return NextResponse.json({ status: 500, msg: error.message });
-  }
+  } else return NextResponse.json({ status: 501, msg: "Not Authorized" });
 }
 
 // Function to update product analytics using bulk operations

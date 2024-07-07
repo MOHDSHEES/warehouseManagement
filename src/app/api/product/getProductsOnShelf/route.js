@@ -2,6 +2,7 @@ import dbConnect from "@/lib/mongoose";
 import Product from "@/models/productModel";
 import Shelf from "@/models/shelfModel";
 import WarehouseModel from "@/models/wareHouseModels";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
 async function getChildrenShelfIds(shelfId, warehouse) {
@@ -55,68 +56,72 @@ async function getChildrenShelfIds(shelfId, warehouse) {
 // }
 
 export async function POST(req) {
-  try {
-    await dbConnect();
-    const data = await req.json();
-    // console.log(data);
-    const childrenShelfIds = await getChildrenShelfIds(
-      data.shelfId,
-      data.warehouse
-    );
-    const products = await Product.find({
-      "shelves.shelf": { $in: childrenShelfIds },
-    }).populate({
-      path: "shelves.shelf",
-      model: Shelf,
-      match: {
-        _id: { $in: childrenShelfIds },
-      },
-    });
-
-    // const products = await Product.aggregate([
-    //   {
-    //     $match: {
-    //       "shelves.shelf": { $in: childrenShelfIds },
-    //     },
-    //   },
-    //   {
-    //     $unwind: "$shelves",
-    //   },
-    //   {
-    //     $match: {
-    //       "shelves.shelf": { $in: childrenShelfIds },
-    //     },
-    //   },
-    //   {
-    //     $lookup: {
-    //       from: "shelf", // Assuming the name of your Shelf model's collection is "shelves"
-    //       localField: "shelves.shelf",
-    //       foreignField: "_id",
-    //       as: "shelves.shelf",
-    //     },
-    //   },
-    // ]);
-    // await Product.populate(products, {
-    //   path: "shelves.shelf",
-    //   model: Shelf,
-    //   match: {
-    //     _id: { $in: childrenShelfIds },
-    //   },
-    // });
-    // console.log(products);
-
-    // console.log(products);
-    if (products)
-      return NextResponse.json({
-        status: 200,
-        data: products,
+  const session = await getServerSession(req);
+  // Check if the user is authenticated
+  if (session && session.user && session.user.name) {
+    try {
+      await dbConnect();
+      const data = await req.json();
+      // console.log(data);
+      const childrenShelfIds = await getChildrenShelfIds(
+        data.shelfId,
+        data.warehouse
+      );
+      const products = await Product.find({
+        "shelves.shelf": { $in: childrenShelfIds },
+      }).populate({
+        path: "shelves.shelf",
+        model: Shelf,
+        match: {
+          _id: { $in: childrenShelfIds },
+        },
       });
-    return NextResponse.json({
-      status: 500,
-      msg: "Details not found. Try again later.",
-    });
-  } catch (error) {
-    // console.log(error);
-    return NextResponse.json({ status: 500, msg: error.message });
-  }
+
+      // const products = await Product.aggregate([
+      //   {
+      //     $match: {
+      //       "shelves.shelf": { $in: childrenShelfIds },
+      //     },
+      //   },
+      //   {
+      //     $unwind: "$shelves",
+      //   },
+      //   {
+      //     $match: {
+      //       "shelves.shelf": { $in: childrenShelfIds },
+      //     },
+      //   },
+      //   {
+      //     $lookup: {
+      //       from: "shelf", // Assuming the name of your Shelf model's collection is "shelves"
+      //       localField: "shelves.shelf",
+      //       foreignField: "_id",
+      //       as: "shelves.shelf",
+      //     },
+      //   },
+      // ]);
+      // await Product.populate(products, {
+      //   path: "shelves.shelf",
+      //   model: Shelf,
+      //   match: {
+      //     _id: { $in: childrenShelfIds },
+      //   },
+      // });
+      // console.log(products);
+
+      // console.log(products);
+      if (products)
+        return NextResponse.json({
+          status: 200,
+          data: products,
+        });
+      return NextResponse.json({
+        status: 500,
+        msg: "Details not found. Try again later.",
+      });
+    } catch (error) {
+      // console.log(error);
+      return NextResponse.json({ status: 500, msg: error.message });
+    }
+  } else return NextResponse.json({ status: 501, msg: "Not Authorized" });
 }

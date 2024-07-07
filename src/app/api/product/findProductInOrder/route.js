@@ -5,46 +5,51 @@ import Shelf from "@/models/shelfModel";
 import WarehouseModel from "@/models/wareHouseModels";
 import { NextRequest, NextResponse } from "next/server";
 import mongoose from "mongoose";
+import { getServerSession } from "next-auth";
 
 // recheck if it is used or not
 
 export async function POST(req) {
-  try {
-    await dbConnect();
-    const data = await req.json();
-    // console.log(data);
-    if (req.method === "POST") {
-      const orders = await orderModel
-        .find({
-          company: new mongoose.Types.ObjectId(data.companyId),
-          orderType: "New Order",
-          "order.productId": data.productId,
-        })
-        .sort({ createdAt: -1 })
-        .limit(5);
-      // console.log(orders);
-      if (orders.length) {
-        const filteredOrders = orders.map((order) => {
-          const filteredItems = filterOrderByProductId(order, data.productId);
-          // console.log(filteredItems);
-          return {
-            orderId: order.orderId,
-            date: order.createdAt,
-            item: filteredItems,
-          };
-        });
-        // const filteredOrder = filterOrderByProductId(order, data.productId);
-        return NextResponse.json({
-          status: 200,
-          data: filteredOrders,
-        });
+  const session = await getServerSession(req);
+  // Check if the user is authenticated
+  if (session && session.user && session.user.name) {
+    try {
+      await dbConnect();
+      const data = await req.json();
+      // console.log(data);
+      if (req.method === "POST") {
+        const orders = await orderModel
+          .find({
+            company: new mongoose.Types.ObjectId(data.companyId),
+            orderType: "New Order",
+            "order.productId": data.productId,
+          })
+          .sort({ createdAt: -1 })
+          .limit(5);
+        // console.log(orders);
+        if (orders.length) {
+          const filteredOrders = orders.map((order) => {
+            const filteredItems = filterOrderByProductId(order, data.productId);
+            // console.log(filteredItems);
+            return {
+              orderId: order.orderId,
+              date: order.createdAt,
+              item: filteredItems,
+            };
+          });
+          // const filteredOrder = filterOrderByProductId(order, data.productId);
+          return NextResponse.json({
+            status: 200,
+            data: filteredOrders,
+          });
+        }
+        return NextResponse.json({ status: 500, msg: "Product Not found." });
       }
-      return NextResponse.json({ status: 500, msg: "Product Not found." });
+    } catch (error) {
+      // console.log(error);
+      return NextResponse.json({ status: 500, msg: error.message });
     }
-  } catch (error) {
-    // console.log(error);
-    return NextResponse.json({ status: 500, msg: error.message });
-  }
+  } else return NextResponse.json({ status: 501, msg: "Not Authorized" });
 }
 
 const filterOrderByProductId = (order, productId) => {

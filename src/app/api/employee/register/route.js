@@ -23,7 +23,10 @@ export async function POST(req) {
           msg: "Registration successful.",
         });
       } else
-        return NextResponse.json({ status: 500, msg: "Something went Wrong." });
+        return NextResponse.json({
+          status: 500,
+          msg: "Something went Wrong.",
+        });
     }
   } catch (error) {
     return NextResponse.json({ status: 500, msg: error.message });

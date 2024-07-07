@@ -39,10 +39,6 @@ export default function Dashboard() {
                 </Grid>
               </Grid>
             </div>
-            {/* <TaskStatsComponent /> */}
-            {/* <div>
-                <Tasks />
-              </div> */}
           </Container>
         </Stack>
       </Container>

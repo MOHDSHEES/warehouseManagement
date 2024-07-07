@@ -2,6 +2,7 @@ import dbConnect from "@/lib/mongoose";
 import orderModel from "@/models/orderModel";
 import Party from "@/models/partyModel";
 import userModel from "@/models/userModel";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 const comparisonOperators = {
@@ -40,45 +41,49 @@ function constructQuery(filter, parties) {
 }
 
 export async function POST(req) {
-  try {
-    await dbConnect();
-    const data = await req.json();
-    const params = req.nextUrl.searchParams;
-    const page = params.get("page");
-    const perPage = params.get("perPage");
-    const pageNumber = parseInt(page) || 1;
-    const itemsPerPage = parseInt(perPage) || 10;
-    let parties = "";
-    if (data.filter && data.filter.party) {
-      const regex = new RegExp(data.filter.party, "i");
-      parties = await Party.find({ name: { $regex: regex } }).select("_id");
-    }
-    const filter = constructQuery(data.filter, parties);
-    if (req.method === "POST") {
-      const query = { company: data.company, ...filter };
-      //   console.log(query);
-      const orders = await orderModel
-        // .find({ company: data.company })
-        .find(query)
-        .sort({ createdAt: -1 })
-        .skip((pageNumber - 1) * itemsPerPage)
-        .limit(itemsPerPage)
-        .populate({
-          path: "party",
-          model: Party,
-        })
-        .populate({
-          path: "placedBy",
-          select: { name: 1 },
-          model: userModel,
+  const session = await getServerSession(req);
+  // Check if the user is authenticated
+  if (session && session.user && session.user.name) {
+    try {
+      await dbConnect();
+      const data = await req.json();
+      const params = req.nextUrl.searchParams;
+      const page = params.get("page");
+      const perPage = params.get("perPage");
+      const pageNumber = parseInt(page) || 1;
+      const itemsPerPage = parseInt(perPage) || 10;
+      let parties = "";
+      if (data.filter && data.filter.party) {
+        const regex = new RegExp(data.filter.party, "i");
+        parties = await Party.find({ name: { $regex: regex } }).select("_id");
+      }
+      const filter = constructQuery(data.filter, parties);
+      if (req.method === "POST") {
+        const query = { company: data.company, ...filter };
+        //   console.log(query);
+        const orders = await orderModel
+          // .find({ company: data.company })
+          .find(query)
+          .sort({ createdAt: -1 })
+          .skip((pageNumber - 1) * itemsPerPage)
+          .limit(itemsPerPage)
+          .populate({
+            path: "party",
+            model: Party,
+          })
+          .populate({
+            path: "placedBy",
+            select: { name: 1 },
+            model: userModel,
+          });
+        return NextResponse.json({
+          status: 200,
+          data: orders,
         });
-      return NextResponse.json({
-        status: 200,
-        data: orders,
-      });
+      }
+    } catch (error) {
+      // console.log(error);
+      return NextResponse.json({ status: 500, msg: error.message });
     }
-  } catch (error) {
-    // console.log(error);
-    return NextResponse.json({ status: 500, msg: error.message });
-  }
+  } else return NextResponse.json({ status: 501, msg: "Not Authorized" });
 }
