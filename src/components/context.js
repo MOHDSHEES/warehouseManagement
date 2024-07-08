@@ -78,6 +78,7 @@ const MyProvider = ({ children }) => {
 
       // update(da.data);
     } else {
+      console.log("in else context");
       signOut();
     }
     setLoading(false);
