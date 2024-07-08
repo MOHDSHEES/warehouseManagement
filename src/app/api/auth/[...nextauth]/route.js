@@ -66,6 +66,7 @@ const authOptions = {
         if (!user) {
           return null;
         }
+        console.log(user);
 
         // Check if password matches
         const isMatch = await bcrypt.compare(
