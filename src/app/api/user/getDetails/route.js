@@ -40,7 +40,7 @@ export async function POST(req) {
         throw new Error(`Unsupported HTTP method: ${req.method}`);
       }
     } catch (error) {
-      // console.log(error);
+      console.log(error);
       return NextResponse.json({ error });
     }
   } else return NextResponse.json({ status: 501, msg: "Not Response" });
