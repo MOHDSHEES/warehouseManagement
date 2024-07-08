@@ -7,7 +7,8 @@ import dbConnect from "@/lib/mongoose";
 import CredentialsProvider from "next-auth/providers/credentials";
 // import companyModel from "@/models/companyModel";
 import userModel from "@/models/userModel";
-import WarehouseModel from "@/models/wareHouseModels";
+// import WarehouseModel from "@/models/wareHouseModels";
+import bcrypt from "bcryptjs";
 // import dbConnect from "../../lib/mongoose";
 // import GithubProvider from "next-auth/providers/github"
 
@@ -47,37 +48,38 @@ const authOptions = {
       async authorize(credentials, req) {
         await dbConnect();
 
-        const user = await userModel.findOne(
-          {
-            email: credentials.email,
-            password: credentials.password,
-            status: 1,
-          },
-          {
-            password: 0,
-          }
-        );
-        // .populate({
-        //   path: "company",
-        //   select: { password: 0, privilegesTemplate: 0 },
-        // });
-        // .populate({ path: "warehouse" });
-
-        // const emp = {};
-        // const emp = await userModel.findOne(
-        //   { email: credentials.email, password: credentials.password },
+        // const user = await userModel.findOne(
+        //   {
+        //     email: credentials.email,
+        //     password: credentials.password,
+        //     status: 1,
+        //   },
         //   {
         //     password: 0,
         //   }
         // );
-        // If no error and we have user data, return it
-        // if (admin && admin.email) {
-        //   return admin;
-        // }
-        // else
 
-        if (user && user.email) {
-          return user;
+        const user = await userModel.findOne({
+          email: credentials.email,
+          status: 1,
+        });
+        if (!user) {
+          return null;
+        }
+
+        // Check if password matches
+        const isMatch = await bcrypt.compare(
+          credentials.password,
+          user.password
+        );
+        if (!isMatch) {
+          return null;
+        }
+        const userResponse = user.toObject();
+        delete userResponse.password;
+
+        if (user && user.email && isMatch) {
+          return userResponse;
         }
         // Return null if user data could not be retrieved
         return null;

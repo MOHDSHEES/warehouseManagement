@@ -207,7 +207,7 @@ const ChooseProductsForm = ({
         selectedValue.productId !== "NA" &&
         !!selectedValue.shelves &&
         !selectedValue.shelves.length &&
-        selectedValue.color.length && (
+        selectedValue.color.length > 0 && (
           <Grid xs={6} sm={3}>
             <Variant
               selectedProductDetails={selectedValue}

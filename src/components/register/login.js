@@ -25,6 +25,8 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import BackdropComponent from "../UI-component/backdrop";
 import { MyContext } from "../context";
+import ForgetPassword from "./forgetPassword";
+import { Button } from "@mui/material";
 // import ForgetPassword from "../modal/forgetPassword";
 
 const Login = () => {
@@ -33,7 +35,7 @@ const Login = () => {
   const { messageApi } = useContext(MyContext);
   // const [messageApi, contextHolder] = message.useMessage();
   const [disable, setdisable] = useState(false);
-  const router = useRouter();
+  // const router = useRouter();
   const [modalShow, setModalShow] = useState(false);
   const [open, setOpen] = useState(false);
   // const { isAuth, setIsAuth, setData } = useContext(MyContext);
@@ -53,10 +55,16 @@ const Login = () => {
 
   const Inputchange = (event) => {
     const { name, value } = event.target;
-    setstate({
-      ...state,
-      [name]: value,
-    });
+    if (name === "email")
+      setstate({
+        ...state,
+        [name]: value.toLowerCase().trim(),
+      });
+    else
+      setstate({
+        ...state,
+        [name]: value,
+      });
   };
   //   console.log(state);
   async function submitHandler(e) {
@@ -214,13 +222,16 @@ const Login = () => {
                   class="col-4 mt-4"
                   style={{ textAlign: "center", margin: "auto" }}
                 >
-                  <button
+                  <Button variant="contained" disabled={disable} type="submit">
+                    Login
+                  </Button>
+                  {/* <button
                     disabled={disable}
                     type="submit"
                     class="btn btn-primary primary-1"
                   >
                     Login
-                  </button>
+                  </button> */}
                 </div>
                 <div className="mt-4">
                   <small className="a-primary">
@@ -228,7 +239,7 @@ const Login = () => {
                       Dont&apos;t have an account? SignUp
                     </Link>
                   </small>
-                  <small className="a-red">
+                  {/* <small className="a-red">
                     <Link
                       style={{ float: "right", marginLeft: "20px" }}
                       //   variant="primary"
@@ -237,7 +248,7 @@ const Login = () => {
                     >
                       Forget Password?
                     </Link>
-                  </small>
+                  </small> */}
                 </div>
               </Form>
               {/* </div>
@@ -256,7 +267,7 @@ const Login = () => {
       <div>
         <BackdropComponent open={open} />
       </div>
-      {/* <ForgetPassword show={modalShow} onHide={() => setModalShow(false)} /> */}
+      <ForgetPassword show={modalShow} onHide={() => setModalShow(false)} />
     </div>
   );
 };

@@ -1,7 +1,5 @@
 import dbConnect from "@/lib/mongoose";
 import Product from "@/models/productModel";
-import Shelf from "@/models/shelfModel";
-import WarehouseModel from "@/models/wareHouseModels";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 

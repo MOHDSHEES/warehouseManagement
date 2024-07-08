@@ -53,10 +53,16 @@ export const AddEmployee = () => {
   const Inputchange = (event) => {
     setValidated(false);
     const { name, value } = event.target;
-    setstate({
-      ...state,
-      [name]: value,
-    });
+    if (name === "email") {
+      setstate({
+        ...state,
+        [name]: value.toLowerCase().trim(),
+      });
+    } else
+      setstate({
+        ...state,
+        [name]: value,
+      });
   };
 
   async function submitHandler(event) {

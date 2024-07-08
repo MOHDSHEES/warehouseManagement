@@ -32,11 +32,12 @@ export default function OrderDetailsModel({
   };
 
   const { user } = useContext(MyContext);
-  const handleDownload = () => {
-    const doc = generateInvoiceDocument(
+  const handleDownload = async () => {
+    const doc = await generateInvoiceDocument(
       selectedOrder,
       user.company.companyName
     );
+    // console.log(doc);
     downloadInvoice(doc, `Invoice(${selectedOrder.orderId}).pdf`);
   };
 

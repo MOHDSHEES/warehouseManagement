@@ -4,7 +4,6 @@ import Stepper from "@mui/material/Stepper";
 import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import Check from "@mui/icons-material/Check";
 import { styled } from "@mui/material/styles";
 import PropTypes from "prop-types";

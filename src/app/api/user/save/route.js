@@ -7,18 +7,17 @@ export async function POST(req) {
   try {
     await dbConnect();
     const data = await req.json();
-    // console.log(data);
     if (req.method === "POST") {
-      //   const resu = await userModel.findOne(
-      //     { email: data.email },
-      //     { password: 0 }
-      //   );
-      //   console.log(data.detail);
       const ifUser = await userModel.findOne({ email: data.detail.email });
       if (ifUser) {
         throw new Error("E11000 duplicate key error collection: ");
       } else {
-        const company = await new companyModel(data.detail);
+        const details = data.detail;
+        const detailObject = details.toObject();
+
+        // Exclude the password field from the user object
+        delete detailObject.password;
+        const company = await new companyModel(detailObject);
         const newComp = await company.save();
         const da = data.detail;
         const empData = {
@@ -31,22 +30,8 @@ export async function POST(req) {
           post: "Owner",
           address: da.address,
           status: 1,
-          // privileges: {
-          //   Add_Employee: true,
-          //   Add_Warehouse: true,
-          //   Edit_Warehouse: true,
-          //   Add_Shelf: true,
-          //   Delete_Shelf: true,
-          //   Add_Product_To_Shelf: true,
-          //   Out_Of_Stock: true,
-          //   Register_Product: true,
-          //   Update_Product: true,
-          // },
         };
-        const emp = await new userModel(empData).save();
-        // console.log(emp);
-        // let trending = resu.map((a) => a.title);
-        // console.log(resu);
+        await new userModel(empData).save();
         const {
           _doc: { password, ...user },
         } = newComp;
@@ -55,7 +40,6 @@ export async function POST(req) {
       }
     }
   } catch (error) {
-    // console.log(error);
     return NextResponse.json({ msg: error.message });
   }
 }

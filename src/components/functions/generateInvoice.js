@@ -1,7 +1,35 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+// Function to convert image URL to base64
+function getBase64ImageFromURL(url) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.src = url;
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
 
-export default function generateInvoiceDocument(data, company) {
+      // Set opacity (e.g., 0.5 for 50% opacity)
+      ctx.globalAlpha = 0.1;
+
+      ctx.drawImage(img, 0, 0);
+      const dataURL = canvas.toDataURL("image/png");
+      resolve(dataURL);
+    };
+    img.onerror = (error) => {
+      reject(error);
+    };
+  });
+}
+
+export default async function generateInvoiceDocument(data, company) {
+  const watermarkImage = await getBase64ImageFromURL(
+    "https://res.cloudinary.com/shees/image/upload/v1720472693/Youtube_Profile_Logo_nq3cbk.png"
+  );
+
   const { party, payment, order } = data;
   // Create a new jsPDF instance
   const doc = new jsPDF({
@@ -10,9 +38,24 @@ export default function generateInvoiceDocument(data, company) {
     format: "a4",
   });
 
+  // Function to add watermark image at the center of the page
+  function addImageWatermark(doc, image) {
+    const totalPages = doc.internal.getNumberOfPages();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const imageWidth = 100; // Adjust image width as needed
+    const imageHeight = 100; // Adjust image height as needed
+    const xPos = (pageWidth - imageWidth) / 2;
+    const yPos = (pageHeight - imageHeight) / 2;
+
+    for (let i = 1; i <= totalPages; i++) {
+      doc.setPage(i);
+      doc.addImage(image, "PNG", xPos, yPos, imageWidth, imageHeight);
+    }
+  }
   // Add content to the invoice
   doc.setFontSize(20);
-  doc.text(company, 105, 20, null, null, "center");
+  doc.text(company.toUpperCase().trim(0, 20), 105, 20, null, null, "center");
 
   // Add invoice details
   doc.setFontSize(10);
@@ -102,6 +145,8 @@ export default function generateInvoiceDocument(data, company) {
     },
   });
 
+  // Add the image watermark after all content
+  addImageWatermark(doc, watermarkImage);
   // Function to calculate total price
   function calculateTotalPrice(qty, price) {
     return (parseInt(qty) * parseFloat(price)).toFixed(2);

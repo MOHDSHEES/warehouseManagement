@@ -27,7 +27,7 @@ const OrderSuccess = ({ invoiceData, handleReset }) => {
 
   const handleDownload = () => {
     const doc = generateInvoice(invoiceData, user.company.companyName);
-    downloadInvoice(doc, `Invoice(${selectedOrder.orderId}).pdf`);
+    downloadInvoice(doc, `Invoice(${invoiceData.orderId}).pdf`);
   };
 
   const handlePreview = () => {
@@ -41,7 +41,7 @@ const OrderSuccess = ({ invoiceData, handleReset }) => {
         <CardContent sx={{ pt: 0 }}>
           <Alert sx={{ mt: 3 }} severity="success">
             Hooray! Order has been successfully placed. Order ID:
-            <b>{invoiceData.orderId}</b>
+            <b> {invoiceData.orderId}</b>
           </Alert>
           <Stack sx={{ mt: 3 }} direction="row" spacing={2}>
             <Button
