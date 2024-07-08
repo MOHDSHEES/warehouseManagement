@@ -64,12 +64,13 @@ const MyProvider = ({ children }) => {
   // }, [user, privileges]);
   // console.log(privileges);
   async function getUser() {
-    // console.log("in");
+    // console.log(data);
+    // console.log("in context");
     flag = 0;
     const { data: da } = await axios.post("/api/user/getDetails", {
       email: data.user.email,
     });
-    console.log(da);
+    // console.log(da);
     if (da && da.status === 200) {
       if (da.data && da.data._id === da.data.company._id) setIsAdmin(true);
       else setPrivileges(da.data.privilegesTemplate.roles);
@@ -77,11 +78,10 @@ const MyProvider = ({ children }) => {
       // filterPrivileges(da.data);
 
       // update(da.data);
+    } else {
+      console.log("in else context");
+      signOut();
     }
-    // else {
-    //   console.log("in else context");
-    //   signOut();
-    // }
     setLoading(false);
   }
 
