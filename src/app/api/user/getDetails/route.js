@@ -20,14 +20,14 @@ export async function POST(req) {
           .findOne({ email: data.email, status: 1 }, { password: 0 })
           .populate({
             path: "company",
-            // select: { password: 0 },
+            select: { password: 0 },
           })
           .populate("warehouse")
           .populate({ path: "privilegesTemplate", model: privilegesModel });
         // if (admin) {
         //   return NextResponse.json({ status: 200, data: admin });
         // }
-        // console.log(resu);
+        console.log(resu);
         if (resu) {
           return NextResponse.json({ status: 200, data: resu });
         } else {
@@ -43,5 +43,5 @@ export async function POST(req) {
       console.log(error);
       return NextResponse.json({ error });
     }
-  } else return NextResponse.json({ status: 501, msg: "Not Response" });
+  } else return NextResponse.json({ status: 501, msg: "Not Authorized" });
 }
