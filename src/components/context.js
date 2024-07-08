@@ -77,15 +77,16 @@ const MyProvider = ({ children }) => {
       // filterPrivileges(da.data);
 
       // update(da.data);
-    } else {
-      console.log("in else context");
-      signOut();
     }
+    // else {
+    //   console.log("in else context");
+    //   signOut();
+    // }
     setLoading(false);
   }
 
   const { data, status, update } = useSession();
-  // console.log(data);
+  console.log(data);
   let flag = 1;
   useEffect(() => {
     if (data && data.user && !user) {
