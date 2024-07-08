@@ -48,44 +48,42 @@ const authOptions = {
       async authorize(credentials, req) {
         await dbConnect();
 
-        // const user = await userModel.findOne(
-        //   {
-        //     email: credentials.email,
-        //     password: credentials.password,
-        //     status: 1,
-        //   },
-        //   {
-        //     password: 0,
-        //   }
-        // );
+        const user = await userModel.findOne(
+          {
+            email: credentials.email,
+            password: credentials.password,
+          },
+          {
+            password: 0,
+          }
+        );
 
-        const user = await userModel.findOne({
-          email: credentials.email,
-          status: 1,
-        });
-        if (!user) {
-          return null;
-        }
-        console.log(user);
+        // const user = await userModel.findOne({
+        //   email: credentials.email,
+        //   status: 1,
+        // });
+        // if (!user) {
+        //   return null;
+        // }
+        // console.log(user);
 
         // Check if password matches
-        const isMatch = await bcrypt.compare(
-          credentials.password,
-          user.password
-        );
-        if (!isMatch) {
-          return null;
-        }
-        const userResponse = user.toObject();
-        delete userResponse.password;
+        // const isMatch = await bcrypt.compare(
+        //   credentials.password,
+        //   user.password
+        // );
+        // if (!isMatch) {
+        //   return null;
+        // }
+        // const userResponse = user.toObject();
+        // delete userResponse.password;
 
-        if (user && user.email && isMatch) {
+        if (user && user.email) {
           return userResponse;
         }
         // Return null if user data could not be retrieved
-        else {
-          return null;
-        }
+
+        return null;
         // return null;
       },
     }),
