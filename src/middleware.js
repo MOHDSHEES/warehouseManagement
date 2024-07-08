@@ -4,7 +4,7 @@ import { NextResponse } from "next/server";
 
 export default async function middleware(req, event) {
   const token = await getToken({ req });
-
+  console.log(token);
   // const match = req.nextUrl.pathname.match(
   //   /^\/dashboard\/warehouses\/([^/]+)\//
   // );
