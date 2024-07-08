@@ -79,7 +79,7 @@ const authOptions = {
         // delete userResponse.password;
 
         if (user && user.email) {
-          return userResponse;
+          return user;
         }
         // Return null if user data could not be retrieved
 
