@@ -82,7 +82,10 @@ const authOptions = {
           return userResponse;
         }
         // Return null if user data could not be retrieved
-        return null;
+        else {
+          return null;
+        }
+        // return null;
       },
     }),
   ],
