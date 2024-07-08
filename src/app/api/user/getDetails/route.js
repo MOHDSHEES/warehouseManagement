@@ -22,7 +22,7 @@ export async function POST(req) {
           .findOne({ email: data.email, status: 1 }, { password: 0 })
           .populate({
             path: "company",
-            select: { password: 0 },
+            // select: { password: 0 },
             model: companyModel,
           })
           .populate({ path: "warehouse", model: WarehouseModel })
