@@ -1,5 +1,6 @@
 import dbConnect from "@/lib/mongoose";
 import Product from "@/models/productModel";
+import Shelf from "@/models/shelfModel";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -28,7 +29,7 @@ export async function POST(req) {
           //   },
           // })
 
-          .populate("shelves.shelf")
+          .populate({ path: "shelves.shelf", model: Shelf })
           // .populate("shelves.shelf.parentShelf")
           // .populate({
           //   path: "company",

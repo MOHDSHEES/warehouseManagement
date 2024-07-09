@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import TableTop from "./productDetailsTable/tableTop";
 import ProductShelfTable from "./productDetailsTable/productShelfTable";
-import EditIcon from "@mui/icons-material/Edit";
+// import EditIcon from "@mui/icons-material/Edit";
 import EditProductModel from "../../update/editProductModel";
 import { MyContext } from "../../context";
 import MoreVertIcon from "@mui/icons-material/MoreVert";

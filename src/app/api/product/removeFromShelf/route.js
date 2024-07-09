@@ -1,7 +1,7 @@
 import dbConnect from "@/lib/mongoose";
 import Product from "@/models/productModel";
 import Shelf from "@/models/shelfModel";
-import WarehouseModel from "@/models/wareHouseModels";
+// import WarehouseModel from "@/models/wareHouseModels";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -19,7 +19,7 @@ export async function POST(req) {
       const product = await Product.findOne({
         productId: data.productId,
         warehouse: warehouse,
-      }).populate("shelves.shelf");
+      }).populate({ path: "shelves.shelf", model: Shelf });
 
       if (!product) {
         return NextResponse.json({ status: 404, msg: "Product not found" });
