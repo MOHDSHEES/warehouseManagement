@@ -167,7 +167,7 @@ const AddProductForm = ({
               </Grid>
               <Grid item xs={12} sm={12}>
                 <TextField
-                  required
+                  // required
                   margin="dense"
                   id="productDescription"
                   name="description"

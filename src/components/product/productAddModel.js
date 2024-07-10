@@ -6,7 +6,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
-import { Grid, MenuItem, Typography } from "@mui/material";
+import { Autocomplete, Grid, MenuItem, Typography } from "@mui/material";
 import axios from "axios";
 import { closeMessage, openMessage } from "../functions/message";
 import { MyContext } from "../context";
@@ -30,8 +30,8 @@ export default function ProductAddModel({
   // const [size, setSize] = useState("");
   const [productIdsData, setProductIdData] = useState(null);
   // const [productNameData, setProductNameData] = useState(null);
-  const [productId, setProductId] = useState("");
-  const [productName, setProductName] = useState("");
+  const [productId, setProductId] = useState(null);
+  const [productName, setProductName] = useState(null);
   const [selectedProductDetails, setSelectedProductDetails] = useState("");
   //   const [productIds, setProductIds] = useState([]);
   // const [state, setstate] = useState({
@@ -39,35 +39,38 @@ export default function ProductAddModel({
   //   productId: "",
   // });
   // console.log(state);
-  const Inputchange = (event) => {
-    const { name, value } = event.target;
-    // setSelectedProductDetails("");
-    setColor("");
-    if (name === "productId") {
-      const selectedData = productIdsData.filter(
-        (data) => data.productId === value
-      );
-      if (selectedData && selectedData.length !== 0)
-        setProductName(selectedData[0].productName);
-      getProductData(value);
-      setProductId(value);
-    } else {
-      const selectedData = productIdsData.filter(
-        (data) => data.productName === value
-      );
-      if (selectedData && selectedData.length !== 0) setProductName(value);
-      setProductId(selectedData[0].productId);
-      getProductData(selectedData[0].productId);
-    }
+  // console.log(productId);
+  // console.log(productName);
+  // const Inputchange = (event) => {
+  //   const { name, value } = event.target;
+  //   // setSelectedProductDetails("");
+  //   // console.log(value);
+  //   setColor("");
+  //   if (name === "productId") {
+  //     const selectedData = productIdsData.filter(
+  //       (data) => data.productId === value
+  //     );
+  //     if (selectedData && selectedData.length !== 0)
+  //       setProductName(selectedData[0].productName);
+  //     getProductData(value);
+  //     setProductId(value);
+  //   } else {
+  //     const selectedData = productIdsData.filter(
+  //       (data) => data.productName === value
+  //     );
+  //     if (selectedData && selectedData.length !== 0) setProductName(value);
+  //     setProductId(selectedData[0].productId);
+  //     getProductData(selectedData[0].productId);
+  //   }
 
-    // setstate({
-    //   ...state,
-    //   [name]: value.trim(),
-    // });
-  };
+  //   //   // setstate({
+  //   //   //   ...state,
+  //   //   //   [name]: value.trim(),
+  //   //   // });
+  // };
   function clear() {
-    setProductName("");
-    setProductId("");
+    // setProductName(null);
+    setProductId(null);
     setColor("");
     // setSize("");
     setSelectedProductDetails("");
@@ -161,7 +164,7 @@ export default function ProductAddModel({
             // size: size,
           },
         },
-        productId: productId,
+        productId: productId.productId,
         warehouse: warehouseId,
       });
       // console.log(data);
@@ -218,19 +221,39 @@ export default function ProductAddModel({
           </Typography> */}
           <Grid container spacing={2} className="mt-1">
             <Grid item xs={12} sm={12}>
-              {/* <TextField
-                // autoFocus
-                // required
-                disabled
-                margin="dense"
+              <Autocomplete
+                disablePortal
+                sx={{ width: "100%" }}
                 id="productName"
-                name="productName"
-                label="Product Name"
-                value={productName}
-                // onChange={Inputchange}
                 fullWidth
-              /> */}
-              <TextField
+                options={productIdsData}
+                value={productId}
+                getOptionLabel={(option) => option.productName}
+                // sx={{ width: 300 }}
+                onChange={(event, newValue) => {
+                  if (newValue) {
+                    // const selectedData = productIdsData.filter(
+                    //   (data) => data.productName === newValue.productName
+                    // );
+                    // if (selectedData && selectedData.length !== 0)
+                    //   setProductName(newValue);
+                    setProductId(newValue);
+                    getProductData(newValue.productId);
+                  }
+                  //  else {
+                  //   setProductId(null);
+                  // }
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    // value={productName}
+                    label="Product Name"
+                  />
+                )}
+              />
+
+              {/* <TextField
                 required
                 margin="dense"
                 select
@@ -253,11 +276,39 @@ export default function ProductAddModel({
                 ) : (
                   <MenuItem value="">No product found</MenuItem>
                 )}
-              </TextField>
+              </TextField> */}
             </Grid>
 
-            <Grid item xs={4}>
-              <TextField
+            <Grid item xs={12}>
+              <Autocomplete
+                disablePortal
+                sx={{ width: "100%", marginBottom: 0 }}
+                id="productId"
+                fullWidth
+                options={productIdsData}
+                value={productId}
+                getOptionLabel={(option) => option.productId}
+                // sx={{ width: 300 }}
+                onChange={(event, newValue) => {
+                  if (newValue) {
+                    // const selectedData = productIdsData.filter(
+                    //   (data) => data.productId === newValue.productId
+                    // );
+                    // if (selectedData && selectedData.length !== 0)
+                    //   setProductName(selectedData[0]);
+                    getProductData(newValue.productId);
+                    setProductId(newValue);
+                  }
+                  // else {
+                  //   setProductName(null);
+                  // }
+                }}
+                renderInput={(params) => (
+                  <TextField {...params} label="Product Id" />
+                )}
+              />
+
+              {/* <TextField
                 required
                 margin="dense"
                 select
@@ -280,7 +331,7 @@ export default function ProductAddModel({
                 ) : (
                   <MenuItem value="">No product found</MenuItem>
                 )}
-              </TextField>
+              </TextField> */}
             </Grid>
             <Grid item xs={4}>
               <TextField
@@ -311,7 +362,7 @@ export default function ProductAddModel({
                 // variant="standard"
               />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={4}>
               <TextField
                 margin="dense"
                 id="color"
