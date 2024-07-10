@@ -220,66 +220,6 @@ export default function ProductAddModel({
               : "Loading..."}
           </Typography> */}
           <Grid container spacing={2} className="mt-1">
-            <Grid item xs={12} sm={12}>
-              <Autocomplete
-                freeSolo
-                disablePortal
-                sx={{ width: "100%" }}
-                id="productName"
-                fullWidth
-                options={productIdsData}
-                value={productId}
-                getOptionLabel={(option) => option.productName}
-                // sx={{ width: 300 }}
-                onChange={(event, newValue) => {
-                  if (newValue) {
-                    // const selectedData = productIdsData.filter(
-                    //   (data) => data.productName === newValue.productName
-                    // );
-                    // if (selectedData && selectedData.length !== 0)
-                    //   setProductName(newValue);
-                    setProductId(newValue);
-                    getProductData(newValue.productId);
-                  }
-                  //  else {
-                  //   setProductId(null);
-                  // }
-                }}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    // value={productName}
-                    label="Product Name"
-                  />
-                )}
-              />
-
-              {/* <TextField
-                required
-                margin="dense"
-                select
-                id="productName"
-                name="productName"
-                label="Product Name"
-                value={productName}
-                onChange={Inputchange}
-                fullWidth
-                // variant="standard"
-              >
-                {!productIdsData ? (
-                  <MenuItem value="">Loading...</MenuItem>
-                ) : productIdsData && productIdsData.length > 0 ? (
-                  productIdsData.map((option, id) => (
-                    <MenuItem key={id} value={option.productName}>
-                      {option.productName}
-                    </MenuItem>
-                  ))
-                ) : (
-                  <MenuItem value="">No product found</MenuItem>
-                )}
-              </TextField> */}
-            </Grid>
-
             <Grid item xs={12}>
               <Autocomplete
                 disablePortal
@@ -327,6 +267,68 @@ export default function ProductAddModel({
                   productIdsData.map((option, id) => (
                     <MenuItem key={id} value={option.productId}>
                       {option.productId}
+                    </MenuItem>
+                  ))
+                ) : (
+                  <MenuItem value="">No product found</MenuItem>
+                )}
+              </TextField> */}
+            </Grid>
+            <Grid item xs={12} sm={12}>
+              <Autocomplete
+                freeSolo
+                disablePortal
+                sx={{ width: "100%" }}
+                id="productName"
+                fullWidth
+                options={productIdsData}
+                value={productId}
+                getOptionLabel={(option) =>
+                  (option.productId && option.productId) +
+                  (option.productName && ": " + option.productName)
+                }
+                // sx={{ width: 300 }}
+                onChange={(event, newValue) => {
+                  if (newValue) {
+                    // const selectedData = productIdsData.filter(
+                    //   (data) => data.productName === newValue.productName
+                    // );
+                    // if (selectedData && selectedData.length !== 0)
+                    //   setProductName(newValue);
+                    setProductId(newValue);
+                    getProductData(newValue.productId);
+                  }
+                  //  else {
+                  //   setProductId(null);
+                  // }
+                }}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    // value={productName}
+                    label="Product Name"
+                  />
+                )}
+              />
+
+              {/* <TextField
+                required
+                margin="dense"
+                select
+                id="productName"
+                name="productName"
+                label="Product Name"
+                value={productName}
+                onChange={Inputchange}
+                fullWidth
+                // variant="standard"
+              >
+                {!productIdsData ? (
+                  <MenuItem value="">Loading...</MenuItem>
+                ) : productIdsData && productIdsData.length > 0 ? (
+                  productIdsData.map((option, id) => (
+                    <MenuItem key={id} value={option.productName}>
+                      {option.productName}
                     </MenuItem>
                   ))
                 ) : (
