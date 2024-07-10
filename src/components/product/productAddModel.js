@@ -222,6 +222,7 @@ export default function ProductAddModel({
           <Grid container spacing={2} className="mt-1">
             <Grid item xs={12} sm={12}>
               <Autocomplete
+                freeSolo
                 disablePortal
                 sx={{ width: "100%" }}
                 id="productName"
