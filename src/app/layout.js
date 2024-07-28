@@ -7,8 +7,8 @@ import { useEffect, useState } from "react";
 import { SessionProvider } from "next-auth/react";
 import { MyProvider } from "../components/context";
 
-import { Alert, Box, Container, Typography } from "@mui/material";
-import BackdropComponent from "../components/UI-component/backdrop";
+// import { Alert, Box, Container, Typography } from "@mui/material";
+// import BackdropComponent from "../components/UI-component/backdrop";
 
 // const inter = Inter({ subsets: ['latin'] })
 

@@ -12,11 +12,13 @@ export async function POST(req) {
       if (ifUser) {
         throw new Error("E11000 duplicate key error collection: ");
       } else {
-        const details = data.detail;
-        const detailObject = details.toObject();
+        // const details = data.detail;
+        // const detailObject = details.toObject();
 
         // Exclude the password field from the user object
-        delete detailObject.password;
+        // delete detailObject.password;
+        const { password: pass, ...detailObject } = data.detail;
+        // console.log(detailObject);
         const company = await new companyModel(detailObject);
         const newComp = await company.save();
         const da = data.detail;
@@ -40,6 +42,7 @@ export async function POST(req) {
       }
     }
   } catch (error) {
+    // console.log(error);
     return NextResponse.json({ msg: error.message });
   }
 }

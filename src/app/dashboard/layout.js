@@ -55,29 +55,7 @@ export default function NavbarLayout({ children }) {
     } else if (pathname === "/dashboard/warehouses") return true;
     return false;
   }
-  // function checkIfAuthentic() {
-  //   setLoading(true);
-  //   if (params && params.id && data && data.user) {
-  //     if (
-  //       !data.user._id === data.user.company._id &&
-  //       !data.user.privileges &&
-  //       !data.user.privileges.Add_Warehouse
-  //     ) {
-  //       return data.user.warehouse.some(
-  //         (warehouse) => warehouse._id === params.id
-  //       );
-  //     } else if (
-  //       data.user._id === data.user.company._id ||
-  //       (data.user.privileges && data.user.privileges.Add_Warehouse)
-  //     ) {
-  //       return data.user.company.warehouses.includes(params.id);
-  //     }
-  //   } else if (pathname === "/dashboard/warehouses") return true;
-  //   return false;
-  // }
-  // const isWarehouseIdPresent = useMemo(checkIfAuthentic, [params.id, data]);
-  // console.log(isWarehouseIdPresent);
-  // console.log(loading);
+
   useEffect(() => {
     if (status !== "loading" && user) {
       const isWarehouseIdPresent = checkIfAuthentic();
@@ -99,26 +77,6 @@ export default function NavbarLayout({ children }) {
       signOut();
     }
   }, [status]);
-
-  // if (params && params.id && data && data.user) {
-  //   if (!data.user.privileges.Add_Warehouse) {
-  //     const isWarehouseIdPresent = data.user.warehouse.some(
-  //       (warehouse) => warehouse._id === params.id
-  //     );
-  //     if (!isWarehouseIdPresent) {
-  //       router.replace("/dashboard");
-  //       return null;
-  //     }
-  //   } else if (data.user.privileges.Add_Warehouse) {
-  //     const isWarehouseIdPresent = data.user.company.warehouses.includes(
-  //       params.id
-  //     );
-  //     if (!isWarehouseIdPresent) {
-  //       router.replace("/dashboard");
-  //       return null;
-  //     }
-  //   }
-  // }
 
   if (loading)
     return (
