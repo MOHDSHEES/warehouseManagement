@@ -23,8 +23,8 @@ export default function Homepage() {
             Welcome to
           </Typography>
           <Typography variant="h2" className="home-h2" gutterBottom>
-            <span style={{ color: "red" }}>OFF</span>THE
-            <span style={{ color: "red" }}>WEB</span>
+            W<span style={{ color: "blue" }}>M</span>S
+            {/* <span style={{ color: "red" }}>WEB</span> */}
           </Typography>
 
           {loading ? (

@@ -29,6 +29,7 @@ export async function POST(req) {
             .limit(itemsPerPage)
             .populate({
               path: "warehouse",
+              model: WarehouseModel,
               select: { warehouseName: 1 },
             })
             .populate({
