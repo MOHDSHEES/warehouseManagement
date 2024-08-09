@@ -1,7 +1,7 @@
 import { Alert, Box, Button, CardContent, Stack } from "@mui/material";
 import React, { useContext, useRef } from "react";
 import { Card } from "react-bootstrap";
-import generateInvoice, {
+import generateInvoiceDocument, {
   downloadInvoice,
   previewInvoice,
 } from "../../functions/generateInvoice";
@@ -25,13 +25,19 @@ const OrderSuccess = ({ invoiceData, handleReset }) => {
   const { user } = useContext(MyContext);
   // console.log(invoiceData);
 
-  const handleDownload = () => {
-    const doc = generateInvoice(invoiceData, user.company.companyName);
+  const handleDownload = async () => {
+    const doc = await generateInvoiceDocument(
+      invoiceData,
+      user.company.companyName
+    );
     downloadInvoice(doc, `Invoice(${invoiceData.orderId}).pdf`);
   };
 
-  const handlePreview = () => {
-    const doc = generateInvoice(invoiceData, user.company.companyName);
+  const handlePreview = async () => {
+    const doc = await generateInvoiceDocument(
+      invoiceData,
+      user.company.companyName
+    );
     previewInvoice(doc);
   };
 

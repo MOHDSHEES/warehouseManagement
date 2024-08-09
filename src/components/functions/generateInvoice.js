@@ -173,12 +173,12 @@ export function downloadInvoice(doc, fileName) {
 }
 
 export function previewInvoice(doc) {
-  // Convert PDF to data URI
-  const pdfDataUri = doc.output("datauristring");
+  // Convert PDF to Blob
+  const pdfBlob = doc.output("blob");
 
-  // Open the PDF in a new tab
-  const newTab = window.open();
-  newTab.document.write(
-    "<iframe width='100%' height='100%' src='" + pdfDataUri + "'></iframe>"
-  );
+  // Create a Blob URL
+  const blobUrl = URL.createObjectURL(pdfBlob);
+
+  // Open the Blob URL in a new tab
+  window.open(blobUrl);
 }
