@@ -75,7 +75,7 @@ export default function SideBar(props) {
             width: 32,
           }}
         >
-          OFFTHEWEB
+          WMS
         </Box>
       </Box>
       <Divider sx={{ borderColor: "neutral.700" }} />
