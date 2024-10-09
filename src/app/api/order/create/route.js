@@ -4,6 +4,7 @@ import CustomerAnalytics from "@/models/analyticsModels/customerAnalytics";
 import ProductAnalytics from "@/models/analyticsModels/productAnalytics";
 // import ProductAnalytics from "@/models/analyticsModels/productAnalytics";
 import orderModel from "@/models/orderModel";
+import Party from "@/models/partyModel";
 import Product from "@/models/productModel";
 import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
@@ -21,7 +22,7 @@ export async function POST(req) {
         const newOrder = await new orderModel(data.data).save();
         const populatedOrder = await orderModel
           .findById(newOrder._id)
-          .populate("party");
+          .populate({ model: Party, path: "party" });
         // Update analytics for each product in the order
         await updateProductAnalytics(data.data.order);
         await updateCustomerAnalytics(

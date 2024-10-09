@@ -13,7 +13,7 @@ const purchaseHistorySchema = new mongoose.Schema(
 const customerAnalyticsSchema = new mongoose.Schema({
   customerId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Customer",
+    ref: "Parties",
     required: true,
   },
   totalSpent: { type: Number, default: 0 },
