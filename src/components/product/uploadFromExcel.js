@@ -78,7 +78,7 @@ export default function UploadFromExcel({ open, setOpen, warehouse }) {
         for (let i = 0; i < formatedData.length; i += chunkSize) {
           setChunk(i + 1);
           const chunk = formatedData.slice(i, i + chunkSize);
-          console.log("chunk: ", chunk);
+          // console.log("chunk: ", chunk);
           const { data } = await axios.post("/api/product/addBulk", {
             products: chunk,
             warehouse: warehouse,
