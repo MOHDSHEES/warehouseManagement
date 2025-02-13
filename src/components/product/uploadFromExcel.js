@@ -34,14 +34,14 @@ export default function UploadFromExcel({ open, setOpen, warehouse }) {
       const ws = wb.Sheets[wsname];
 
       const data = XLSX.utils.sheet_to_json(ws, { header: 1 });
-      const formatedData = data.slice(2).map((row) => {
+      const formatedData = data.slice(1).map((row) => {
         const productName = row[1];
         const productId = row[0];
         const retailPrice = parseFloat(row[2]);
         const wholesalePrice = (retailPrice / 2).toFixed(2); // Calculate wholesalePrice as half of retailPrice
         return {
           productName: productName,
-          productId: productId,
+          productId: productId.toUpperCase(),
           retailPrice: parseFloat(retailPrice),
           wholesalePrice: parseFloat(wholesalePrice),
           company: user.company._id,
@@ -67,6 +67,8 @@ export default function UploadFromExcel({ open, setOpen, warehouse }) {
     setOpen(false);
   };
   const handleSubmit = async () => {
+    // console.log("in");
+    // console.log("formatedData: ", formatedData);
     try {
       if (formatedData && formatedData.length > 0) {
         setLoading(true);
@@ -76,8 +78,10 @@ export default function UploadFromExcel({ open, setOpen, warehouse }) {
         for (let i = 0; i < formatedData.length; i += chunkSize) {
           setChunk(i + 1);
           const chunk = formatedData.slice(i, i + chunkSize);
+          console.log("chunk: ", chunk);
           const { data } = await axios.post("/api/product/addBulk", {
             products: chunk,
+            warehouse: warehouse,
           });
           if (data.status === 200) {
             setStatus((preValue) => [...preValue, ...data.statuses]);

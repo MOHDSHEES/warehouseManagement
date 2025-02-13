@@ -1,5 +1,6 @@
 import dbConnect from "@/lib/mongoose";
 import Product from "@/models/productModel";
+import mongoose from "mongoose";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -10,25 +11,42 @@ export async function POST(req) {
     try {
       await dbConnect();
       const requestData = await req.json();
-
       if (req.method === "POST") {
-        const { products } = requestData;
+        const { products, warehouse } = requestData;
+        // console.log(warehouse);
 
+        const uniqueProducts = [];
+        const seenProductIds = new Set();
+
+        for (const product of products) {
+          const productIdUpper = product.productId; // Convert to uppercase for consistency
+
+          if (!seenProductIds.has(productIdUpper)) {
+            seenProductIds.add(productIdUpper);
+            uniqueProducts.push({ ...product, productId: productIdUpper }); // Store with uppercase productId
+          }
+        }
+
+        // console.log(uniqueProducts);
+        const warehouseObjectId = new mongoose.Types.ObjectId(warehouse);
         // Check for existing products
         const existingProducts = await Product.find({
-          productId: { $in: products.map((p) => p.productId) },
+          productId: {
+            $in: uniqueProducts.map((p) => p.productId),
+          },
+          warehouse: warehouseObjectId,
         });
         const existingProductIds = existingProducts.map((p) => p.productId);
-
+        // console.log(existingProductIds);
         // Filter out products that are already present
-        const newProducts = products.filter(
+        const newProducts = uniqueProducts.filter(
           (product) => !existingProductIds.includes(product.productId)
         );
 
         await Product.insertMany(newProducts);
 
         // Prepare status for each product
-        const statuses = products.map((product) => ({
+        const statuses = uniqueProducts.map((product) => ({
           productId: product.productId,
           status: existingProductIds.includes(product.productId)
             ? "Skipped (Already Exists)"
