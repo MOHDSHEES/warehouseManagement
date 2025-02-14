@@ -122,8 +122,12 @@ export default function UploadFromExcel({ open, setOpen, warehouse }) {
       <DialogTitle>Add Products</DialogTitle>
       <DialogContent>
         <Typography variant="body2">
-          Note: You can upload up to 2000 items at once. If more than 2000 items
-          are detected, only the first 2000 will be included in the upload.
+          Note: You can upload up to 2,000 items at a time. If your upload
+          contains more than 2,000 items, only the first 2,000 will be
+          processed.
+          <br />
+          If a duplicate product is found, the first occurrence will be updated
+          with the new values.
         </Typography>
         <Typography sx={{ mt: 2 }} variant="body2">
           Total rows found:{" "}

@@ -1,4 +1,5 @@
 import dbConnect from "@/lib/mongoose";
+import Product from "@/models/productModel";
 import WarehouseModel from "@/models/wareHouseModels";
 import { getServerSession } from "next-auth";
 // import { getSession } from "next-auth/react";
@@ -6,6 +7,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(req) {
   const session = await getServerSession(req);
+  // await Product.updateMany({}, [
+  //   { $set: { productId: { $toUpper: "$productId" } } },
+  // ]);
+
   // Check if the user is authenticated
   if (session && session.user && session.user.name) {
     try {
