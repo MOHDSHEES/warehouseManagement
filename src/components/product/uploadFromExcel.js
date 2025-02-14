@@ -41,7 +41,7 @@ export default function UploadFromExcel({ open, setOpen, warehouse }) {
         const wholesalePrice = (retailPrice / 2).toFixed(2); // Calculate wholesalePrice as half of retailPrice
         return {
           productName: productName,
-          productId: productId.toUpperCase(),
+          productId: String(productId).toUpperCase(),
           retailPrice: parseFloat(retailPrice),
           wholesalePrice: parseFloat(wholesalePrice),
           company: user.company._id,
